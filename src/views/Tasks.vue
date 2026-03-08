@@ -6,8 +6,31 @@
       <img src="/src/components/icons/task.png" />
       <h1>My Tasks</h1>
     </div>
-    <div class="under-head">
-      <button class="add-btn" @click="showModal = true">+ Add Task</button>
+
+    <div class="header">
+      <!-- Left: Add Task button -->
+
+      <div class="filters">
+        <input v-model="searchQuery" placeholder="Search task..." class="filter-input" />
+        <select v-model="filterCategory" class="filter-select">
+          <option value="">All categories</option>
+          <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
+            {{ cat.cat_name }}
+          </option>
+        </select>
+        <select v-model="filterStatus" class="filter-select">
+          <option value="">All statuses</option>
+          <option v-for="sts in statuses" :key="sts.sts_id" :value="sts.sts_id">
+            {{ sts.sts_name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="under-head">
+        <button class="add-btn" @click="openAddModal">+ Add Task</button>
+      </div>
+
+      <!-- Right: Filters -->
     </div>
 
     <!-- Tasks List -->
@@ -20,7 +43,10 @@
       >
         <div class="task-header">
           <h3>{{ task.tsk_title }}</h3>
-          <button class="delete-btn" @click="openDeleteModal(task.tsk_id)">✕</button>
+          <div class="task-actions">
+            <button class="edit-btn" @click="openEditModal(task)">✎</button>
+            <button class="delete-btn" @click="openDeleteModal(task.tsk_id)">✕</button>
+          </div>
         </div>
 
         <p class="desc">{{ task.tsk_description }}</p>
@@ -71,7 +97,7 @@
 
         <!-- Actions -->
         <div class="modal-actions">
-          <button class="cancel" @click="showModal = false">Cancel</button>
+          <button class="cancel" @click="closeModal">Cancel</button>
           <button class="save" @click="saveTask">Save</button>
         </div>
       </div>
@@ -87,6 +113,52 @@
         </div>
       </div>
     </div>
+
+    <div v-if="showEditModal" class="modal-overlay">
+      <div class="modal">
+        <h2>Edit Task</h2>
+
+        <!-- Title -->
+        <input v-model="title" placeholder="Title" class="modal-input" />
+
+        <!-- Description -->
+        <textarea v-model="description" placeholder="Description" class="modal-textarea"></textarea>
+
+        <!-- Date / Time -->
+        <input type="date" v-model="date" class="modal-input modern-date" />
+        <input type="time" v-model="time" class="modal-input modern-time" />
+
+        <!-- Category -->
+        <select v-model="cat_id" class="modal-input modal-select">
+          <option disabled value="">Select category</option>
+          <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
+            {{ cat.cat_name }}
+          </option>
+        </select>
+
+        <!-- Status -->
+        <div class="div-select">
+          <p>Mark task</p>
+          <select v-model="newStatus" class="modal-select">
+            <option v-for="status in statuses" :key="status.sts_id" :value="status.sts_id">
+              {{ status.sts_name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- File -->
+        <label class="file-upload">
+          Replace file
+          <input type="file" @change="onFileChange" hidden />
+        </label>
+
+        <!-- Actions -->
+        <div class="modal-actions">
+          <button class="cancel" @click="showEditModal = false">Cancel</button>
+          <button class="save" @click="saveEdit">Save</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -96,55 +168,88 @@ import api from '@/api'
 import { useSessionStore } from '@/stores/sessionUser'
 
 const session = useSessionStore()
-
 const tasks = ref([])
 const categories = ref([])
+const statuses = ref([])
+
+const searchQuery = ref('')
+const filterCategory = ref('') // <-- prazno = "All categories"
+const filterStatus = ref('')
 
 const title = ref('')
 const description = ref('')
 const date = ref()
 const time = ref()
 const cat_id = ref()
+const newStatus = ref(null)
+const file = ref(null)
 
+const showModal = ref(false)
+const showEditModal = ref(false)
 const showDeleteModal = ref(false)
 const taskToDelete = ref(null)
-const showModal = ref(false)
+const editTask = ref(null)
 
-function openDeleteModal(id) {
-  taskToDelete.value = id
-  showDeleteModal.value = true
+function openAddModal() {
+  resetForm()
+  showModal.value = true
 }
 
-async function confirmDelete() {
-  await api.deleteTask(session.sid, taskToDelete.value)
-
-  tasks.value = tasks.value.filter((t) => t.tsk_id !== taskToDelete.value)
-
-  showDeleteModal.value = false
-  taskToDelete.value = null
+function closeModal() {
+  showModal.value = false
+  showEditModal.value = false
+  resetForm()
 }
 
+function resetForm() {
+  title.value = ''
+  description.value = ''
+  date.value = ''
+  time.value = ''
+  cat_id.value = ''
+  newStatus.value = null
+  file.value = null
+  editTask.value = null
+}
+
+// GET TASKS / CATEGORIES / STATUSES
 async function getTasks() {
   const res = await api.userAllTasks(session.sid)
   tasks.value = res.data.data
 }
-
 async function getCategories() {
   const res = await api.getCategories()
   categories.value = res.data.data
+}
+async function getStatuses() {
+  const res = await api.getStatuses()
+  statuses.value = res.data.data
 }
 
 onMounted(() => {
   getTasks()
   getCategories()
+  getStatuses()
 })
 
-const file = ref(null)
+// DELETE
+function openDeleteModal(id) {
+  taskToDelete.value = id
+  showDeleteModal.value = true
+}
+async function confirmDelete() {
+  await api.deleteTask(session.sid, taskToDelete.value)
+  tasks.value = tasks.value.filter((t) => t.tsk_id !== taskToDelete.value)
+  showDeleteModal.value = false
+  taskToDelete.value = null
+}
 
+// FILE CHANGE
 function onFileChange(e) {
   file.value = e.target.files[0]
 }
 
+// ADD TASK
 async function saveTask() {
   const fd = new FormData()
   fd.append('title', title.value)
@@ -153,15 +258,45 @@ async function saveTask() {
   fd.append('time', time.value)
   fd.append('cat_id', Number(cat_id.value))
   fd.append('sid', session.sid)
-
   if (file.value) {
-    fd.append('file', file.value) // sadržaj fajla
-    fd.append('file_name', file.value.name) // ime fajla
+    fd.append('file', file.value)
+    fd.append('file_name', file.value.name)
   }
-
   await api.postTask(fd)
-
   showModal.value = false
+  file.value = null
+  getTasks()
+}
+
+// EDIT TASK
+function openEditModal(task) {
+  editTask.value = { ...task }
+  title.value = task.tsk_title
+  description.value = task.tsk_description
+  date.value = task.tsk_date
+  time.value = task.tsk_time
+  cat_id.value = task.cat_id
+  newStatus.value = task.sts_id
+  showEditModal.value = true
+}
+
+async function saveEdit() {
+  const fd = new FormData()
+  fd.append('tsk_id', editTask.value.tsk_id)
+  fd.append('title', title.value)
+  fd.append('description', description.value)
+  fd.append('date', date.value)
+  fd.append('time', time.value)
+  fd.append('cat_id', Number(cat_id.value))
+  fd.append('status', newStatus.value)
+  fd.append('sid', session.sid)
+  if (file.value) {
+    fd.append('file', file.value)
+    fd.append('file_name', file.value.name)
+  }
+  await api.editTask(fd)
+  showEditModal.value = false
+  editTask.value = null
   file.value = null
   getTasks()
 }
@@ -262,6 +397,12 @@ async function saveTask() {
   backdrop-filter: blur(14px);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
   transition: all 0.3s ease;
+}
+
+.modal-select option {
+  background: #1f2937; /* tamnija pozadina */
+  color: white;
+  border-radius: 20px;
 }
 
 /* Common input styles */
@@ -387,9 +528,23 @@ async function saveTask() {
   transition: 0.2s;
 }
 
+.edit-btn {
+  background: transparent;
+  border: none;
+  color: #c7bd2c;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
 .delete-btn:hover {
-  transform: scale(1.2);
+  transform: scale(1.3);
   color: #dc2626;
+}
+
+.edit-btn:hover {
+  transform: scale(1.3);
+  color: #c7bd2c;
 }
 
 .delete-modal {
@@ -451,7 +606,7 @@ async function saveTask() {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .head img {
@@ -465,10 +620,43 @@ async function saveTask() {
   margin: 0;
 }
 
-.under-head {
+.header {
   display: flex;
+  justify-content: space-between; /* dugme levo, filteri desno */
   align-items: center;
-  justify-content: center;
-  margin: 40px;
+  flex-wrap: wrap; /* da filteri idu ispod na manjim ekranima */
+  margin: 20px 0px;
+}
+
+.under-head {
+  /* dugme levo */
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap; /* responsive */
+}
+
+.filter-input,
+.filter-select {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 14px;
+  outline: none;
+  min-width: 150px;
+}
+
+.filter-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
 }
 </style>

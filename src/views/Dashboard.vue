@@ -1,7 +1,19 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="dashboard">
+    <div class="head">
+      <img src="/src/components/icons/dashboard.png" />
+      <h1>Your dashboard</h1>
+    </div>
     <div class="info">
+      <div class="info-card task-left" style="margin-top: 10px">
+        <span
+          ><h1 class="today-title">
+            You have <strong style="color: #f39c12">{{ tasksToday }}</strong> tasks ToDo today!
+          </h1></span
+        >
+      </div>
+
       <div class="info-card">
         <span>This month</span>
         <h2>{{ tasksDoneThisMonth }}</h2>
@@ -13,9 +25,6 @@
         <span>Tasks <span style="color: red; font-weight: bold">late</span></span>
       </div>
     </div>
-
-    <h1 class="today-title">You have {{ tasksToday }} tasks ToDo today!</h1>
-
     <div class="calendar-container">
       <FullCalendar :options="calendarOptions" />
     </div>
@@ -26,20 +35,19 @@
     <div class="modal">
       <!-- HEADER sa bojom taska -->
       <div class="modal-header" :style="{ background: selectedTask?.color || '#2563eb' }">
-        <h2>{{ selectedTask.title }}</h2>
+        <h2>{{ selectedTask.category }}</h2>
       </div>
 
       <!-- GLAVNI SADRŽAJ MODALA -->
       <div class="modal-content">
+        <h2 style="font-weight: bold">{{ selectedTask.title }}</h2>
         <p>{{ selectedTask.description }}</p>
-        <h3>Rok: {{ selectedTask.date }} • {{ selectedTask.time }}</h3>
+        <h3>Until {{ selectedTask.date }} • {{ selectedTask.time }}</h3>
 
         <!-- Attachment -->
         <div v-if="selectedTask.fileName" class="attachment">
-          <p>Download content for this task</p>
-          <button @click="downloadFile" class="download">
-            Download {{ selectedTask.fileName }}
-          </button>
+          <p>Document {{ selectedTask.fileName }}</p>
+          <button @click="downloadFile" class="download">Download</button>
         </div>
 
         <div class="div-select">
@@ -266,6 +274,14 @@ onMounted(() => {
   color: white;
 }
 
+.info-card.task-left {
+  grid-column: span 2; /* zauzima oba stupca */
+}
+
+.task-left:hover {
+  box-shadow: 0 20px 60px rgba(243, 156, 18, 0.3);
+}
+
 .info-card h2 {
   margin: 10px 0 6px;
   font-size: 36px;
@@ -275,6 +291,11 @@ onMounted(() => {
 .info-card p {
   font-size: 13px;
   opacity: 0.7;
+}
+
+.today-title {
+  font-size: 40px;
+  font-weight: bold;
 }
 
 .info-card.late {
@@ -454,40 +475,49 @@ onMounted(() => {
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
-  max-width: 200px;
+  max-width: 150px;
 }
 .download:hover {
   background: #b8b8b8;
 }
 
 /* ===== STATUS SELECT ===== */
+
 .modal-select {
   width: 100%;
   padding: 8px 10px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
   color: white;
-  font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   outline: none;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
   cursor: pointer;
 }
+
+.modal-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-left: 12px;
+}
+
 .modal-select:hover {
   background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.7);
+  box-shadow: 0 10px 25px rgba(133, 133, 133, 0.7);
 }
 .modal-select:focus {
-  border: 1px solid #60a5fa;
-  box-shadow: 0 0 14px rgba(96, 165, 250, 0.9);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 20px rgba(133, 133, 133, 0.7);
+  transform: scale(1.02);
 }
 .modal-select option {
-  background: rgba(255, 255, 255, 0.8);
-  color: black;
-  font-weight: 600;
+  background: #1f2937; /* tamnija pozadina */
+  color: white;
 }
 
 /* ===== DONE WARNING ===== */
@@ -520,7 +550,7 @@ onMounted(() => {
 }
 .cancel:hover {
   background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.9);
+  box-shadow: 0 10px 25px rgba(133, 133, 133, 0.7);
 }
 
 /* Save / Keep dugme */
@@ -560,8 +590,27 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
-  border: 2px solid #2563eb;
+
   padding: 10px;
   border-radius: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.head img {
+  height: 40px;
+  filter: brightness(0) invert(1);
+}
+.head h1 {
+  font-weight: bold;
+  font-size: 30px;
+  color: white;
+  margin: 0;
 }
 </style>

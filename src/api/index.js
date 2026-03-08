@@ -10,6 +10,7 @@ export default {
   userAllTasks: (sid) => axios.get('tasks', { params: { sid } }),
   postTask: (data) => axios.post('tasks', data),
   deleteTask: (sid, tsk_id) => axios.delete('tasks', { params: { sid, tsk_id } }),
+  editTask: (data) => axios.put('tasks', data),
   updateTaskStatus: (sid, tsk_id, sts_id) =>
     axios.put('dashboard/tasks/updateStatus', { sid, tsk_id, sts_id }),
 
