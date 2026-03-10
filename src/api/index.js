@@ -26,4 +26,12 @@ export default {
     }),
 
   filterCategory: (cat_id) => axios.get('categories/filter', { params: { cat_id } }),
+  filterStatus: (sts_id) => axios.get('statuses/filter', { params: { sts_id } }),
+  filterTitle: (tsk_title) => axios.get('tasks/filterByTitle', { params: { tsk_title } }),
+
+  getAllReminders: (sid) => axios.get('reminders', { params: { sid } }),
+  addReminder: (data) => axios.post('reminders', data),
+  editReminder: (data) => axios.put('reminders', data),
+  deleteReminder: (rem_id, sid) => axios.delete('reminders', { params: { rem_id, sid } }),
+  filterRemindersByTask: (tsk_id) => axios.get('reminders/filterByTask', { params: { tsk_id } }),
 }

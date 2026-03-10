@@ -11,14 +11,23 @@
       <!-- Left: Add Task button -->
 
       <div class="filters">
-        <input v-model="searchQuery" placeholder="Search task..." class="filter-input" />
-        <select v-model="filterCategory" class="filter-select" @change="filterByCategory">
+        <input
+          v-model="searchQuery"
+          placeholder="Search task by title..."
+          class="filter-input"
+          @input="filterByTitle"
+        />
+        <select
+          v-model="filterCategory"
+          class="filter-select modal-select2"
+          @change="filterByCategory"
+        >
           <option value="">All categories</option>
           <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
             {{ cat.cat_name }}
           </option>
         </select>
-        <select v-model="filterStatus" class="filter-select">
+        <select v-model="filterStatus" class="filter-select modal-select2" @change="filterByStatus">
           <option value="">All statuses</option>
           <option v-for="sts in statuses" :key="sts.sts_id" :value="sts.sts_id">
             {{ sts.sts_name }}
@@ -34,7 +43,7 @@
     </div>
 
     <!-- Tasks List -->
-    <div class="tasks-grid">
+    <div class="tasks-grid" v-if="tasks.length">
       <div
         v-for="task in tasks"
         :key="task.tsk_id"
@@ -62,6 +71,9 @@
           </span>
         </div>
       </div>
+    </div>
+    <div class="noresult" v-else>
+      <img src="/src/components/icons/noresult.png" />
     </div>
 
     <!-- Modal -->
@@ -190,6 +202,39 @@ const showDeleteModal = ref(false)
 const taskToDelete = ref(null)
 const editTask = ref(null)
 
+async function filterByTitle() {
+  if (!searchQuery.value) {
+    getTasks()
+    return
+  }
+  try {
+    const res = await api.filterTitle(searchQuery.value)
+    tasks.value = res.data.data
+
+    filterCategory.value = ''
+    filterStatus.value = ''
+
+    console.log(res.data)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function filterByStatus() {
+  if (!filterStatus.value) {
+    getTasks()
+    return
+  }
+  try {
+    const res = await api.filterStatus(filterStatus.value)
+    tasks.value = res.data.data
+
+    searchQuery.value = ''
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 async function filterByCategory() {
   if (!filterCategory.value) {
     getTasks()
@@ -198,6 +243,8 @@ async function filterByCategory() {
   try {
     const res = await api.filterCategory(filterCategory.value)
     tasks.value = res.data.data
+
+    searchQuery.value = ''
   } catch (error) {
     console.log(error)
   }
@@ -468,8 +515,35 @@ async function saveEdit() {
   padding-left: 12px;
 }
 
-/* Modern Date & Time */
-.modern-date,
+.modal-select2 option {
+  background: #1f2937; /* tamnija pozadina */
+  color: white;
+  border-radius: 20px;
+}
+
+.modal-select2 {
+  border-radius: 14px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.modal-select2:focus {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+  transform: scale(1.02);
+}
+
 .modern-time {
   height: 44px;
 }
@@ -671,5 +745,16 @@ async function saveEdit() {
 .filter-select:focus {
   background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+}
+
+.noresult {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+}
+
+.noresult img {
+  height: 500px;
 }
 </style>
