@@ -12,7 +12,7 @@
 
       <div class="filters">
         <input v-model="searchQuery" placeholder="Search task..." class="filter-input" />
-        <select v-model="filterCategory" class="filter-select">
+        <select v-model="filterCategory" class="filter-select" @change="filterByCategory">
           <option value="">All categories</option>
           <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
             {{ cat.cat_name }}
@@ -173,7 +173,7 @@ const categories = ref([])
 const statuses = ref([])
 
 const searchQuery = ref('')
-const filterCategory = ref('') // <-- prazno = "All categories"
+const filterCategory = ref('')
 const filterStatus = ref('')
 
 const title = ref('')
@@ -189,6 +189,19 @@ const showEditModal = ref(false)
 const showDeleteModal = ref(false)
 const taskToDelete = ref(null)
 const editTask = ref(null)
+
+async function filterByCategory() {
+  if (!filterCategory.value) {
+    getTasks()
+    return
+  }
+  try {
+    const res = await api.filterCategory(filterCategory.value)
+    tasks.value = res.data.data
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 function openAddModal() {
   resetForm()

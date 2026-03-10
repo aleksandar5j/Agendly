@@ -24,4 +24,6 @@ export default {
     axios.get('taskStatistics/fullYearProgress', {
       params: { sid, month, year },
     }),
+
+  filterCategory: (cat_id) => axios.get('categories/filter', { params: { cat_id } }),
 }
