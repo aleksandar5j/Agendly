@@ -8,6 +8,8 @@ import Tasks from '@/views/Tasks.vue'
 import Reminders from '@/views/Reminders.vue'
 import Settings from '@/views/Settings.vue'
 
+import { useSessionStore } from '@/stores/sessionUser'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -30,28 +32,47 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
+      meta: { requiresAuth: true },
     },
     {
       path: '/statistics',
       name: 'statistics',
       component: Statistics,
+      meta: { requiresAuth: true },
     },
     {
       path: '/tasks',
       name: 'tasks',
       component: Tasks,
+      meta: { requiresAuth: true },
     },
     {
       path: '/reminders',
       name: 'reminders',
       component: Reminders,
+      meta: { requiresAuth: true },
     },
     {
       path: '/settings',
       name: 'settings',
       component: Settings,
+      meta: { requiresAuth: true },
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const session = useSessionStore()
+
+  if ((to.path === '/login' || to.path === '/register') && session.isLoggedIn) {
+    return next('/dashboard')
+  }
+
+  if (to.meta.requiresAuth && !session.isLoggedIn) {
+    return next('/login')
+  }
+
+  next()
 })
 
 export default router

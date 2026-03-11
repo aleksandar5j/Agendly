@@ -9,7 +9,9 @@
       <div class="info-card task-left" style="margin-top: 10px">
         <span
           ><h1 class="today-title">
-            You have <strong style="color: #f39c12">{{ tasksToday }}</strong> tasks ToDo today!
+            You have
+            <strong style="color: #f39c12; font-weight: bold">{{ tasksToday }}</strong> tasks ToDo
+            today!
           </h1></span
         >
       </div>

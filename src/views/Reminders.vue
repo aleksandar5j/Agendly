@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="reminders-page">
     <div class="head">
@@ -6,24 +7,7 @@
     </div>
 
     <div class="filters">
-      <input
-        v-model="searchQuery"
-        placeholder="Search by task title..."
-        class="filter-input"
-        @input="filterByTask"
-      />
-      <select v-model="filterCategory" class="filter-select" @change="filterByCategory">
-        <option value="">All categories</option>
-        <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
-          {{ cat.cat_name }}
-        </option>
-      </select>
-      <select v-model="filterStatus" class="filter-select" @change="filterByStatus">
-        <option value="">All statuses</option>
-        <option v-for="sts in statuses" :key="sts.sts_id" :value="sts.sts_id">
-          {{ sts.sts_name }}
-        </option>
-      </select>
+      <h1>Active reminders</h1>
     </div>
 
     <!-- Reminders list -->
@@ -101,10 +85,6 @@ const tasks = ref([])
 const categories = ref([])
 const statuses = ref([])
 
-const searchQuery = ref('')
-const filterCategory = ref('')
-const filterStatus = ref('')
-
 const tsk_id = ref('')
 const rem_minutes_before = ref('')
 const editReminder = ref(null)
@@ -140,21 +120,6 @@ onMounted(() => {
   getCategories()
   getStatuses()
 })
-
-// Filters
-async function filterByTask() {
-  if (!searchQuery.value) return getReminders()
-  const res = await api.filterRemindersByTask(searchQuery.value)
-  reminders.value = res.data.data
-}
-
-// Modals
-function openAddModal() {
-  editReminder.value = null
-  tsk_id.value = ''
-  rem_minutes_before.value = ''
-  showModal.value = true
-}
 
 function openEditModal(rem) {
   editReminder.value = rem

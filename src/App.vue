@@ -30,9 +30,17 @@
           Tasks
         </RouterLink>
 
-        <RouterLink to="/reminders" class="menu-item outline-text" exact>
+        <RouterLink
+          to="/reminders"
+          class="menu-item outline-text"
+          exact
+          @click.prevent="handleReminderClick"
+        >
           <img src="/src/components/icons/bell.png" />
           Reminders
+          <span v-if="reminderStore.activeCount > 0" class="reminder-badge">
+            {{ reminderStore.activeCount }}
+          </span>
         </RouterLink>
 
         <RouterLink to="/settings" class="menu-item outline-text" exact>
@@ -44,21 +52,67 @@
     <main :class="['content', { 'with-sidebar': session.isLoggedIn }]">
       <RouterView />
     </main>
+
+    <div v-if="reminderStore.activeReminders.length" class="reminder-popup">
+      <strong>Tasks reminder:</strong>
+      <ul>
+        <li v-for="rem in reminderStore.activeReminders" :key="rem.rem_id">
+          {{ rem.tsk_title }} {{ rem.remMinutesLeft }} minutes left to do
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useSessionStore } from './stores/sessionUser'
+import { useReminderStore } from '@/stores/reminders'
+import { onMounted, watch } from 'vue'
 
 const router = useRouter()
 
 const session = useSessionStore()
+const reminderStore = useReminderStore()
+
+const handleReminderClick = () => {
+  reminderStore.showPopupManually() // popup se prikazuje odmah
+  router.push('/reminders') // ide na rutu
+}
 
 const logout = () => {
   session.logout()
   router.push('/')
 }
+
+onMounted(async () => {
+  if (session.isLoggedIn) {
+    await reminderStore.loadReminders()
+    reminderStore.startChecker()
+  }
+})
+
+watch(
+  () => session.isLoggedIn,
+  async (logged) => {
+    if (logged) {
+      await reminderStore.loadReminders()
+      reminderStore.startChecker()
+    }
+  },
+)
+
+watch(
+  () => reminderStore.activeReminders.length,
+  (val) => {
+    if (val > 0) {
+      setTimeout(() => {
+        reminderStore.activeReminders = []
+        reminderStore.activeCount = 0
+      }, 5000) // popup traje 5 sekundi
+    }
+  },
+)
 </script>
 
 <style scoped>
@@ -209,5 +263,48 @@ const logout = () => {
 
 .content.with-sidebar {
   margin-left: 320px;
+}
+
+.reminder-badge {
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.reminder-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ef4444;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  animation: fadeInOut 5s forwards;
+  font-weight: bold;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }
 </style>
