@@ -160,7 +160,7 @@
 
         <!-- File -->
         <label class="file-upload">
-          Replace file
+          Add or Replace file
           <input type="file" @change="onFileChange" hidden />
         </label>
 

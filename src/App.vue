@@ -53,7 +53,7 @@
       <RouterView />
     </main>
 
-    <div v-if="reminderStore.activeReminders.length" class="reminder-popup">
+    <div v-if="reminderStore.showPopup" class="reminder-popup">
       <strong>Tasks reminder:</strong>
       <ul>
         <li v-for="rem in reminderStore.activeReminders" :key="rem.rem_id">
@@ -76,8 +76,8 @@ const session = useSessionStore()
 const reminderStore = useReminderStore()
 
 const handleReminderClick = () => {
-  reminderStore.showPopupManually() // popup se prikazuje odmah
-  router.push('/reminders') // ide na rutu
+  reminderStore.showPopupManually()
+  router.push('/reminders')
 }
 
 const logout = () => {
@@ -101,18 +101,6 @@ watch(
     }
   },
 )
-
-watch(
-  () => reminderStore.activeReminders.length,
-  (val) => {
-    if (val > 0) {
-      setTimeout(() => {
-        reminderStore.activeReminders = []
-        reminderStore.activeCount = 0
-      }, 5000) // popup traje 5 sekundi
-    }
-  },
-)
 </script>
 
 <style scoped>
@@ -132,7 +120,7 @@ watch(
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh; /* puni ekran po visini */
+  height: 100vh;
 }
 
 .logo-wrap {
@@ -148,22 +136,46 @@ watch(
   padding: 40px;
 }
 
+.user-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  margin-bottom: 40px;
+  box-sizing: border-box;
+}
+
 .user-info {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 10px;
 }
 
-.user-box {
+.logout-btn {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 40px;
-  padding: 0.6rem 1rem;
-  margin-bottom: 40px;
-  margin-left: 30px;
-  margin-right: 30px;
+  justify-content: center;
+  padding: 9px;
+  border-radius: 50%;
+  border: none;
+  background: rgb(255, 255, 255);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn img {
+  height: 23px;
+  filter: invert(0);
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: rgb(150, 42, 42);
+}
+
+.logout-btn:hover img {
+  filter: brightness(0) invert(1);
 }
 
 .user-box .user {
@@ -225,38 +237,6 @@ watch(
   padding-top: 20px;
   text-align: center;
 }
-
-.logout-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: 12px;
-  border-radius: 50%;
-  border: none;
-  background: rgb(255, 255, 255);
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 16px;
-}
-
-.logout-btn img {
-  height: 25px;
-  filter: invert(0);
-  transition: 0.3s;
-}
-
-.logout-btn:hover {
-  background: rgb(150, 42, 42);
-}
-
-.logout-btn:hover img {
-  filter: brightness(0) invert(1);
-}
-
 .content {
   flex: 1;
 }

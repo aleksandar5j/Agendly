@@ -6,7 +6,7 @@
       <h1>My Reminders</h1>
     </div>
 
-    <div class="filters">
+    <div class="filters" v-if="reminders.length">
       <h1>Active reminders</h1>
     </div>
 
@@ -21,20 +21,21 @@
         <div class="reminder-header">
           <h3>{{ rem.tsk_title }}</h3>
           <div class="reminder-actions">
-            <button @click="openEditModal(rem)">✎</button>
-            <button @click="openDeleteModal(rem.rem_id)">✕</button>
+            <button class="edit-btn" @click="openEditModal(rem)">✎</button>
+            <button class="delete-btn" @click="openDeleteModal(rem.rem_id)">✕</button>
           </div>
         </div>
 
-        <p>Task Date: {{ rem.tsk_date }} • {{ rem.tsk_time }}</p>
+        <p>To Do until {{ rem.tsk_date }} • {{ rem.tsk_time }}</p>
         <p>Category: {{ rem.cat_name }}</p>
-        <p>Status: {{ rem.sts_name }}</p>
         <p>Reminder: {{ rem.rem_minutes_before }} minutes before</p>
       </div>
     </div>
-    <img v-else src="/src/components/icons/noresult.png" class="no-results" />
+    <div v-else class="noresult">
+      <img src="/src/components/icons/noreminderss.png" class="no-results" />
+      <button>Add reminder</button>
+    </div>
 
-    <!-- Modals for Add/Edit/Delete -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
         <h2>{{ editReminder ? 'Edit' : 'Add' }} Reminder</h2>
@@ -74,13 +75,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import api from '@/api'
 import { useSessionStore } from '@/stores/sessionUser'
+import { useReminderStore } from '@/stores/reminders'
+
+const reminderStore = useReminderStore()
+
+const reminders = computed(() => reminderStore.reminders)
 
 const session = useSessionStore()
 
-const reminders = ref([])
 const tasks = ref([])
 const categories = ref([])
 const statuses = ref([])
@@ -119,6 +124,7 @@ onMounted(() => {
   getTasks()
   getCategories()
   getStatuses()
+  reminderStore.startAutoDelete()
 })
 
 function openEditModal(rem) {
@@ -146,7 +152,7 @@ async function saveReminder() {
     await api.addReminder(data)
   }
   closeModal()
-  getReminders()
+  await getReminders()
 }
 
 // Delete
@@ -157,14 +163,14 @@ function openDeleteModal(rem_id) {
 
 async function confirmDelete() {
   await api.deleteReminder(reminderToDelete.value, session.sid)
-  reminders.value = reminders.value.filter((r) => r.rem_id !== reminderToDelete.value)
+  await reminderStore.loadReminders() // refresh liste
   showDeleteModal.value = false
 }
 </script>
 
 <style scoped>
 .reminders-page {
-  padding: 40px;
+  padding: 40px 80px;
   background: linear-gradient(135deg, #46638b, #26344b);
   color: white;
   min-height: 100vh;
@@ -172,6 +178,7 @@ async function confirmDelete() {
 .head {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -186,6 +193,7 @@ async function confirmDelete() {
 
 .filters {
   display: flex;
+  justify-content: center;
   gap: 12px;
   margin-bottom: 20px;
 }
@@ -256,5 +264,113 @@ async function confirmDelete() {
   padding: 6px 12px;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.reminder-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.reminder-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.5);
+}
+
+.reminder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reminder-header h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.reminder-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* Edit dugme */
+.edit-btn {
+  background: rgba(59, 130, 246, 0.25);
+  color: #60a5fa;
+}
+
+.edit-btn:hover {
+  background: #3b82f6;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Delete dugme */
+.delete-btn {
+  background: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.1);
+}
+
+.reminder-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.noresult {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 70vh;
+  margin-top: 50px;
+}
+
+.noresult img {
+  height: 500px;
+}
+
+.noresult button {
+  padding: 15px 25px;
+  border-radius: 10px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.noresult button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
 }
 </style>

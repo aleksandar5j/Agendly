@@ -4,9 +4,10 @@ import { useSessionStore } from '@/stores/sessionUser'
 
 export const useReminderStore = defineStore('reminders', {
   state: () => ({
-    reminders: [], // svi reminders iz baze
-    activeReminders: [], // samo trenutno aktivni (za popup)
-    activeCount: 0, // broj aktivnih
+    reminders: [],
+    activeReminders: [],
+    activeCount: 0,
+    showPopup: false,
   }),
 
   actions: {
@@ -24,7 +25,6 @@ export const useReminderStore = defineStore('reminders', {
       this.updateActiveReminders()
     },
 
-    // RUČNI popup za klik na sidebar Reminders
     showPopupManually() {
       const now = Date.now()
       const active = []
@@ -32,7 +32,7 @@ export const useReminderStore = defineStore('reminders', {
       this.reminders.forEach((rem) => {
         const taskTime = new Date(rem.tsk_date + ' ' + rem.tsk_time).getTime()
         const reminderTime = taskTime - rem.rem_minutes_before * 60000
-        const reminderEndTime = taskTime // popup nestaje kada prođe task vreme
+        const reminderEndTime = taskTime
 
         if (now >= reminderTime && now <= reminderEndTime) {
           const remMinutesLeft = Math.round((taskTime - now) / 60000)
@@ -42,6 +42,14 @@ export const useReminderStore = defineStore('reminders', {
 
       this.activeReminders = active
       this.activeCount = active.length
+
+      if (active.length > 0) {
+        this.showPopup = true
+
+        setTimeout(() => {
+          this.showPopup = false
+        }, 5000)
+      }
     },
 
     // updateActiveReminders se koristi za eventualni refresh bez notifikacija
@@ -52,6 +60,26 @@ export const useReminderStore = defineStore('reminders', {
     // više nema Windows/Browser notifikacija
     checkReminders() {
       this.updateActiveReminders()
+    },
+
+    async autoDeleteExpired() {
+      const session = useSessionStore()
+
+      try {
+        const res = await api.autoDeleteReminders(session.sid)
+
+        // ponovo učitaj reminders posle brisanja
+        await this.loadReminders()
+        console.log(res.data)
+      } catch (err) {
+        console.error('Auto delete reminders error', err)
+      }
+    },
+
+    startAutoDelete() {
+      setInterval(() => {
+        this.autoDeleteExpired()
+      }, 60000)
     },
   },
 })
