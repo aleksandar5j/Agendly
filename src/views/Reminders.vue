@@ -7,28 +7,16 @@
     </div>
 
     <div class="filters" v-if="reminders.length">
-      <h1>Active reminders</h1>
+      <h1><strong style="color: green; font-weight: bold">Active</strong> reminders</h1>
     </div>
 
-    <!-- Reminders list -->
     <div v-if="reminders.length" class="reminders-grid">
-      <div
-        v-for="rem in reminders"
-        :key="rem.rem_id"
-        class="reminder-card"
-        :style="{ borderLeft: '6px solid ' + rem.cat_color }"
-      >
-        <div class="reminder-header">
-          <h3>{{ rem.tsk_title }}</h3>
-          <div class="reminder-actions">
-            <button class="edit-btn" @click="openEditModal(rem)">✎</button>
-            <button class="delete-btn" @click="openDeleteModal(rem.rem_id)">✕</button>
-          </div>
+      <div v-for="rem in reminders" :key="rem.rem_id" class="reminder-card">
+        <div class="reminder-content">
+          <img src="/src/components/icons/bell.png" class="reminder-bell" />
+          <h3 class="reminder-title">{{ rem.tsk_title }}</h3>
+          <button class="edit-btn" @click="openEditModal(rem)">✎</button>
         </div>
-
-        <p>To Do until {{ rem.tsk_date }} • {{ rem.tsk_time }}</p>
-        <p>Category: {{ rem.cat_name }}</p>
-        <p>Reminder: {{ rem.rem_minutes_before }} minutes before</p>
       </div>
     </div>
     <div v-else class="noresult">
@@ -98,10 +86,8 @@ const showModal = ref(false)
 const showDeleteModal = ref(false)
 const reminderToDelete = ref(null)
 
-// Fetch initial data
 async function getReminders() {
-  const res = await api.getAllReminders(session.sid)
-  reminders.value = res.data.data
+  await reminderStore.loadReminders()
 }
 
 async function getTasks() {
@@ -195,26 +181,17 @@ async function confirmDelete() {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 20px;
+  margin: 50px;
 }
-.filter-input,
-.filter-select {
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+
+.filters h1 {
+  font-weight: bold;
 }
 
 .reminders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-.reminder-card {
-  padding: 20px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.05);
+  grid-template-columns: repeat(auto-fill, minmax(157px, 1fr));
+  gap: 40px;
 }
 
 .modal-overlay {
@@ -273,12 +250,56 @@ async function confirmDelete() {
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
   transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .reminder-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.5);
+}
+
+.reminder-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reminder-bell {
+  height: 70px;
+  filter: invert(1);
+}
+
+.reminder-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+.edit-btn {
+  background: rgba(59, 130, 246, 0.25);
+  color: #60a5fa;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: #3b82f6;
+  color: white;
+  transform: scale(1.1);
 }
 
 .reminder-header {
@@ -298,7 +319,6 @@ async function confirmDelete() {
   gap: 8px;
 }
 
-.edit-btn,
 .delete-btn {
   border: none;
   width: 32px;
@@ -311,18 +331,6 @@ async function confirmDelete() {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-}
-
-/* Edit dugme */
-.edit-btn {
-  background: rgba(59, 130, 246, 0.25);
-  color: #60a5fa;
-}
-
-.edit-btn:hover {
-  background: #3b82f6;
-  color: white;
-  transform: scale(1.1);
 }
 
 /* Delete dugme */

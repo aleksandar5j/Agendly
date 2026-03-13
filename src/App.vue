@@ -88,7 +88,7 @@ const logout = () => {
 onMounted(async () => {
   if (session.isLoggedIn) {
     await reminderStore.loadReminders()
-    reminderStore.startChecker()
+    reminderStore.startAutoDelete()
   }
 })
 
@@ -97,7 +97,7 @@ watch(
   async (logged) => {
     if (logged) {
       await reminderStore.loadReminders()
-      reminderStore.startChecker()
+      reminderStore.startAutoDelete()
     }
   },
 )

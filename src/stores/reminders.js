@@ -11,17 +11,15 @@ export const useReminderStore = defineStore('reminders', {
   }),
 
   actions: {
-    // učitavanje svih reminders iz baze
     async loadReminders() {
       const session = useSessionStore()
       const res = await api.getAllReminders(session.sid)
 
       this.reminders = res.data.data.map((r) => ({
         ...r,
-        lastPopupTime: 0, // može ostati, ali se više ne koristi
+        lastPopupTime: 0,
       }))
 
-      // inicijalni refresh active reminders
       this.updateActiveReminders()
     },
 
@@ -52,12 +50,10 @@ export const useReminderStore = defineStore('reminders', {
       }
     },
 
-    // updateActiveReminders se koristi za eventualni refresh bez notifikacija
     updateActiveReminders() {
       this.showPopupManually()
     },
 
-    // više nema Windows/Browser notifikacija
     checkReminders() {
       this.updateActiveReminders()
     },
@@ -65,19 +61,24 @@ export const useReminderStore = defineStore('reminders', {
     async autoDeleteExpired() {
       const session = useSessionStore()
 
+      console.log('AUTO DELETE CHECK START')
+
       try {
         const res = await api.autoDeleteReminders(session.sid)
 
-        // ponovo učitaj reminders posle brisanja
+        console.log('AUTO DELETE RESPONSE:', res.data)
+
         await this.loadReminders()
-        console.log(res.data)
       } catch (err) {
         console.error('Auto delete reminders error', err)
       }
     },
 
     startAutoDelete() {
+      console.log('START AUTO DELETE TIMER')
+
       setInterval(() => {
+        console.log('CHECKING FOR EXPIRED REMINDERS')
         this.autoDeleteExpired()
       }, 60000)
     },
