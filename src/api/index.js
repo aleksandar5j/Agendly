@@ -30,7 +30,7 @@ export default {
   filterTitle: (tsk_title) => axios.get('tasks/filterByTitle', { params: { tsk_title } }),
 
   getAllReminders: (sid) => axios.get('reminders', { params: { sid } }),
-  addReminder: (data) => axios.post('reminders', data),
+  addReminder: (tsk_id, rem_minutes_before) => axios.post('reminders', tsk_id, rem_minutes_before),
   editReminder: (data) => axios.put('reminders', data),
   deleteReminder: (rem_id) => axios.delete('reminders', { params: { rem_id } }),
   filterRemindersByTask: (tsk_id) => axios.get('reminders/filterByTask', { params: { tsk_id } }),

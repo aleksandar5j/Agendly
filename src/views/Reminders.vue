@@ -11,25 +11,42 @@
     </div>
 
     <div v-if="reminders.length" class="reminders-grid">
-      <div v-for="rem in reminders" :key="rem.rem_id" class="reminder-card">
+      <div
+        v-for="rem in reminders"
+        :key="rem.rem_id"
+        class="reminder-card"
+        @click="openTaskInDashboard(rem)"
+      >
         <div class="reminder-content">
           <img src="/src/components/icons/bell.png" class="reminder-bell" />
           <h3 class="reminder-title">{{ rem.tsk_title }}</h3>
-          <button class="edit-btn" @click="openEditModal(rem)">✎</button>
+          <p>{{ rem.rem_minutes_before }} minutes before</p>
+          <div class="reminder-actions">
+            <button class="edit-btn" @click.stop="openEditModal(rem)">✎</button>
+            <button class="delete-btn" @click.stop="openDeleteModal(rem)">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DUGME KAO KARTICA -->
+      <div class="reminder-card add-card" @click="openAddModal">
+        <div class="reminder-content">
+          <h3 class="reminder-title">Add Reminder</h3>
+          <img src="/src/components/icons/add.png" alt="Add reminder" />
         </div>
       </div>
     </div>
     <div v-else class="noresult">
       <img src="/src/components/icons/noreminderss.png" class="no-results" />
-      <button>Add reminder</button>
+      <button @click="openAddModal">Add reminder</button>
     </div>
 
-    <div v-if="showModal" class="modal-overlay">
+    <div v-if="showAddModal" class="modal-overlay">
       <div class="modal">
-        <h2>{{ editReminder ? 'Edit' : 'Add' }} Reminder</h2>
+        <h2>Add Reminder</h2>
 
         <select v-model="tsk_id" class="modal-select">
-          <option disabled value="">Select Task</option>
+          <option value="">Select Task</option>
           <option v-for="task in tasks" :key="task.tsk_id" :value="task.tsk_id">
             {{ task.tsk_title }}
           </option>
@@ -44,7 +61,25 @@
 
         <div class="modal-actions">
           <button class="cancel" @click="closeModal">Cancel</button>
-          <button class="save" @click="saveReminder">Save</button>
+          <button class="save" @click="addReminder">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal">
+        <h2>Edit Reminder</h2>
+
+        <input
+          type="number"
+          v-model="rem_minutes_before"
+          placeholder="Minutes before"
+          class="modal-input"
+        />
+
+        <div class="modal-actions">
+          <button class="cancel" @click="closeModal">Cancel</button>
+          <button class="save" @click="edittReminder">Save</button>
         </div>
       </div>
     </div>
@@ -68,6 +103,26 @@ import api from '@/api'
 import { useSessionStore } from '@/stores/sessionUser'
 import { useReminderStore } from '@/stores/reminders'
 
+import { useTaskModalStore } from '@/stores/taskModal'
+const taskModal = useTaskModalStore()
+
+function openTaskInDashboard(rem) {
+  const task = {
+    id: rem.tsk_id,
+    title: rem.tsk_title,
+    description: rem.tsk_description,
+    category: rem.cat_name,
+    time: rem.tsk_time,
+    date: rem.tsk_date,
+    status: rem.sts_id,
+    color: rem.cat_color,
+    fileName: rem.atc_file_name,
+    file: rem.atc_file,
+  }
+
+  taskModal.openTask(task)
+}
+
 const reminderStore = useReminderStore()
 
 const reminders = computed(() => reminderStore.reminders)
@@ -85,6 +140,12 @@ const editReminder = ref(null)
 const showModal = ref(false)
 const showDeleteModal = ref(false)
 const reminderToDelete = ref(null)
+
+const showAddModal = ref(false)
+
+function openAddModal() {
+  showAddModal.value = true
+}
 
 async function getReminders() {
   await reminderStore.loadReminders()
@@ -105,6 +166,57 @@ async function getStatuses() {
   statuses.value = res.data.data
 }
 
+function openDeleteModal(rem) {
+  reminderToDelete.value = rem
+  showDeleteModal.value = true
+}
+
+async function edittReminder() {
+  try {
+    const payload = {
+      rem_id: editReminder.value.rem_id,
+      rem_minutes_before: rem_minutes_before.value,
+    }
+
+    const res = await api.editReminder(payload)
+    await reminderStore.loadReminders()
+    console.log(res.data)
+    tsk_id.value = ''
+    rem_minutes_before.value = ''
+    showModal.value = false
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function confirmDelete() {
+  try {
+    await api.deleteReminder(reminderToDelete.value.rem_id)
+
+    await reminderStore.loadReminders()
+
+    showDeleteModal.value = false
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function addReminder() {
+  try {
+    await api.addReminder({
+      tsk_id: tsk_id.value,
+      rem_minutes_before: rem_minutes_before.value,
+    })
+
+    await getReminders()
+    tsk_id.value = ''
+    rem_minutes_before.value = ''
+    showAddModal.value = false
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 onMounted(() => {
   getReminders()
   getTasks()
@@ -115,42 +227,13 @@ onMounted(() => {
 
 function openEditModal(rem) {
   editReminder.value = rem
-  tsk_id.value = rem.tsk_id
   rem_minutes_before.value = rem.rem_minutes_before
   showModal.value = true
 }
 
 function closeModal() {
   showModal.value = false
-}
-
-// Save Add/Edit
-async function saveReminder() {
-  const data = {
-    sid: session.sid,
-    tsk_id: tsk_id.value,
-    rem_minutes_before: rem_minutes_before.value,
-  }
-  if (editReminder.value) {
-    data.rem_id = editReminder.value.rem_id
-    await api.editReminder(data)
-  } else {
-    await api.addReminder(data)
-  }
-  closeModal()
-  await getReminders()
-}
-
-// Delete
-function openDeleteModal(rem_id) {
-  reminderToDelete.value = rem_id
-  showDeleteModal.value = true
-}
-
-async function confirmDelete() {
-  await api.deleteReminder(reminderToDelete.value, session.sid)
-  await reminderStore.loadReminders() // refresh liste
-  showDeleteModal.value = false
+  showAddModal.value = false
 }
 </script>
 
@@ -180,7 +263,7 @@ async function confirmDelete() {
 .filters {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 60px;
   margin: 50px;
 }
 
@@ -190,7 +273,7 @@ async function confirmDelete() {
 
 .reminders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(157px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 40px;
 }
 
@@ -212,35 +295,77 @@ async function confirmDelete() {
   gap: 12px;
 }
 
+.delete-modal {
+  background: #111827;
+  padding: 40px;
+  border-radius: 14px;
+  text-align: center;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-}
-.cancel {
-  background: #6b7280;
-}
-.save {
-  background: #3b82f6;
+  margin-top: 10px;
 }
 
-.delete-modal {
-  background: #111827;
-  padding: 20px;
-  border-radius: 14px;
-  text-align: center;
+.modal-actions button {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
+
+/* CANCEL */
+.cancel {
+  background: #6b7280;
+  color: white;
+}
+
+.cancel:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+}
+
+/* SAVE / ADD */
+.save {
+  background: #3b82f6;
+  color: white;
+}
+
+.save:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* DELETE MODAL */
 .delete-actions {
   display: flex;
   justify-content: center;
   gap: 12px;
+  margin-top: 15px;
 }
+
+.delete-actions button {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 .delete-confirm {
   background: #ef4444;
   color: white;
-  padding: 6px 12px;
-  border-radius: 10px;
-  cursor: pointer;
+}
+
+.delete-confirm:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
 }
 
 .reminder-card {
@@ -256,11 +381,12 @@ async function confirmDelete() {
   position: relative;
   flex-direction: column;
   gap: 12px;
+  cursor: pointer;
 }
 
 .reminder-card:hover {
-  transform: translateY(-6px);
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.5);
+  background: rgba(241, 27, 27, 0.1);
 }
 
 .reminder-content {
@@ -273,6 +399,33 @@ async function confirmDelete() {
 .reminder-bell {
   height: 70px;
   filter: invert(1);
+}
+@keyframes bell-shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(15deg);
+  }
+  30% {
+    transform: rotate(-10deg);
+  }
+  45% {
+    transform: rotate(15deg);
+  }
+  60% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.reminder-card:hover .reminder-bell {
+  animation: bell-shake 0.6s ease-in-out;
 }
 
 .reminder-title {
@@ -333,7 +486,6 @@ async function confirmDelete() {
   transition: all 0.2s ease;
 }
 
-/* Delete dugme */
 .delete-btn {
   background: rgba(239, 68, 68, 0.25);
   color: #f87171;
@@ -380,5 +532,105 @@ async function confirmDelete() {
 .noresult button:hover {
   background: #2563eb;
   transform: translateY(-2px);
+}
+
+.add-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(59, 130, 246, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-card:hover {
+  background: rgba(59, 130, 246, 0.6);
+  transform: translateY(-4px);
+}
+
+.add-card .reminder-title {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+.add-card img {
+  height: 40px;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  transform: scale(1.1);
+  background: #dc2626;
+  color: white;
+}
+
+.modal-input,
+.modal-select {
+  width: 100%;
+  padding: 10px 12px;
+  height: 42px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #374151;
+  background: #111827;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+/* placeholder */
+.modal-input::placeholder {
+  color: #9ca3af;
+}
+
+/* hover */
+.modal-input:hover,
+.modal-select:hover {
+  border-color: #4b5563;
+}
+
+/* focus */
+.modal-input:focus,
+.modal-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* select dropdown */
+.modal-select option {
+  background: #111827;
+  color: white;
+}
+
+/* uklanja spinner za number */
+.modal-input::-webkit-outer-spin-button,
+.modal-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.modal-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.modal-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 </style>

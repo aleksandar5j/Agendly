@@ -615,6 +615,11 @@ async function saveEdit() {
   transition: 0.2s;
 }
 
+.delete-btn:hover {
+  transform: scale(1.3);
+  color: #dc2626;
+}
+
 .edit-btn {
   background: transparent;
   border: none;
@@ -622,11 +627,6 @@ async function saveEdit() {
   font-size: 18px;
   cursor: pointer;
   transition: 0.2s;
-}
-
-.delete-btn:hover {
-  transform: scale(1.3);
-  color: #dc2626;
 }
 
 .edit-btn:hover {

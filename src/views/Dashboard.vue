@@ -84,27 +84,28 @@ import { ref, onMounted } from 'vue'
 import api from '@/api'
 import { useSessionStore } from '@/stores/sessionUser'
 
+import { useTaskModalStore } from '@/stores/taskModal'
+const taskModal = useTaskModalStore()
+
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
 const session = useSessionStore()
 const tasks = ref([])
 
-const selectedTask = ref(null)
-const showModal = ref(false)
-
 const statuses = ref([])
-const newStatus = ref(null)
 
+// ======= DOWNLOAD FILE =======
 function downloadFile() {
-  const base64 = selectedTask.value.file
-  const filename = selectedTask.value.fileName
+  if (!taskModal.selectedTask) return
+
+  const base64 = taskModal.selectedTask.file
+  const filename = taskModal.selectedTask.fileName
 
   const byteCharacters = atob(base64)
   const byteNumbers = Array.from(byteCharacters, (c) => c.charCodeAt(0))
   const byteArray = new Uint8Array(byteNumbers)
 
-  // odredi MIME tip po ekstenziji
   const ext = filename.split('.').pop().toLowerCase()
   const mimeTypes = {
     png: 'image/png',
@@ -126,23 +127,14 @@ function downloadFile() {
   URL.revokeObjectURL(link.href)
 }
 
-function closeModal() {
-  showModal.value = false
-  selectedTask.value = null
-}
-
-async function getStatuses() {
-  const res = await api.getStatuses()
-  statuses.value = res.data.data
-}
-
+// ======= CALENDAR =======
 const calendarOptions = ref({
   plugins: [dayGridPlugin],
   initialView: 'dayGridMonth',
   events: [],
-
   eventClick: (info) => {
-    selectedTask.value = {
+    // kada se klikne task u kalendaru, otvori modal preko store-a
+    const task = {
       id: info.event.extendedProps.id,
       title: info.event.title,
       description: info.event.extendedProps.description,
@@ -151,32 +143,19 @@ const calendarOptions = ref({
       date: info.event.startStr,
       status: info.event.extendedProps.status,
       color: info.event.extendedProps.color,
-
       fileName: info.event.extendedProps.fileName,
       file: info.event.extendedProps.file,
     }
-
-    newStatus.value = selectedTask.value.status
-
-    showModal.value = true
+    taskModal.openTask(task)
   },
 })
 
-async function deleteTask() {
-  try {
-    await api.deleteTask(session.sid, selectedTask.value.id)
-
-    closeModal()
-    getTasks()
-  } catch (error) {
-    console.log(error)
-  }
-}
-
+// ======= TASK STATISTICS =======
 const tasksDoneThisMonth = ref()
 const tasksLates = ref()
 const tasksToday = ref()
 
+// ======= FETCH TASKS =======
 async function getTasks() {
   try {
     const res = await api.userTasks(session.sid)
@@ -195,7 +174,6 @@ async function getTasks() {
         id: task.tsk_id,
         status: task.sts_id,
         color: task.cat_color,
-
         fileName: task.atc_file_name,
         file: task.atc_file,
       },
@@ -205,18 +183,36 @@ async function getTasks() {
     tasksDoneThisMonth.value = res1.data.data.doneThisMonth
     tasksLates.value = res1.data.data.tasksLate
     tasksToday.value = res1.data.data.tasksForToday
-
-    console.log(res1.data)
   } catch (err) {
     console.log(err)
   }
 }
 
+// ======= FETCH STATUSES =======
+async function getStatuses() {
+  const res = await api.getStatuses()
+  statuses.value = res.data.data
+}
+
+// ======= UPDATE STATUS =======
 async function updateStatus() {
   try {
-    await api.updateTaskStatus(session.sid, selectedTask.value.id, newStatus.value)
+    if (!taskModal.selectedTask) return
 
-    closeModal()
+    await api.updateTaskStatus(session.sid, taskModal.selectedTask.id, taskModal.newStatus)
+    taskModal.closeTaskModal()
+    getTasks()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function deleteTask() {
+  try {
+    if (!taskModal.selectedTask) return
+
+    await api.deleteTask(session.sid, taskModal.selectedTask.id)
+    taskModal.closeTaskModal()
     getTasks()
   } catch (err) {
     console.log(err)
