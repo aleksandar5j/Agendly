@@ -159,7 +159,7 @@ async function getReminders() {
 }
 
 async function getTasks() {
-  const res = await api.userAllTasks(session.sid)
+  const res = await api.userTasks(session.sid)
   tasks.value = res.data.data
 }
 

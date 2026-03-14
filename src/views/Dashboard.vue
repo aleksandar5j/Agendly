@@ -137,9 +137,12 @@ function downloadFile() {
 const calendarOptions = ref({
   plugins: [dayGridPlugin],
   initialView: 'dayGridMonth',
+
+  dayMaxEvents: 2,
+  moreLinkClick: 'popover',
+
   events: [],
   eventClick: (info) => {
-    // kada se klikne task u kalendaru, otvori modal preko store-a
     const task = {
       id: info.event.extendedProps.id,
       title: info.event.title,
@@ -152,6 +155,7 @@ const calendarOptions = ref({
       fileName: info.event.extendedProps.fileName,
       file: info.event.extendedProps.file,
     }
+
     taskModal.openTask(task)
   },
 })
@@ -617,5 +621,91 @@ onMounted(() => {
   font-size: 30px;
   color: white;
   margin: 0;
+}
+
+:deep(.fc-daygrid-more-link) {
+  display: inline-block;
+  margin: 4px 6px;
+  padding: 4px 8px;
+
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white !important;
+
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+  transition: 0.2s ease;
+
+  cursor: pointer;
+}
+
+/* HOVER */
+:deep(.fc-daygrid-more-link:hover) {
+  transform: translateY(-0.2px) scale(1.01);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.9);
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+:deep(.fc-popover) {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(14px);
+  background: rgba(30, 41, 59, 0.95);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  color: white;
+  overflow: hidden;
+}
+
+/* HEADER */
+:deep(.fc-popover-header) {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  font-weight: bold;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: none;
+}
+
+/* BODY */
+:deep(.fc-popover-body) {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* TASK ITEM */
+:deep(.fc-popover-body .fc-event) {
+  border-radius: 10px !important;
+  padding: 6px 10px !important;
+  font-size: 12px;
+  font-weight: 600;
+
+  backdrop-filter: blur(6px);
+  border: none !important;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: 0.2s ease;
+}
+
+/* HOVER TASK */
+:deep(.fc-popover-body .fc-event:hover) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 5, 0.7);
+}
+
+/* CLOSE BUTTON */
+:deep(.fc-popover-close) {
+  color: white;
+  font-size: 16px;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+:deep(.fc-popover-close:hover) {
+  opacity: 1;
 }
 </style>

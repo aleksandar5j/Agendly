@@ -15,10 +15,9 @@ export const useReminderStore = defineStore('reminders', {
       const session = useSessionStore()
       const res = await api.getAllReminders(session.sid)
 
-      this.reminders = res.data.data.map((r) => ({
-        ...r,
-        lastPopupTime: 0,
-      }))
+      this.reminders = res.data.data
+        .filter((r) => r.sts_id !== 5)
+        .map((r) => ({ ...r, lastPopupTime: 0 }))
 
       this.updateActiveReminders()
     },

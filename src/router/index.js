@@ -72,6 +72,10 @@ router.beforeEach((to, from, next) => {
     return next('/login')
   }
 
+  if (session.isLoggedIn && to.path === '/') {
+    return next('/dashboard')
+  }
+
   next()
 })
 
