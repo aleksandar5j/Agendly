@@ -33,28 +33,32 @@
   </div>
 
   <!-- TASK ACTION MODAL -->
-  <div v-if="showModal" class="modal-overlay">
+  <div v-if="taskModal.showModal" class="modal-overlay">
     <div class="modal">
       <!-- HEADER sa bojom taska -->
-      <div class="modal-header" :style="{ background: selectedTask?.color || '#2563eb' }">
-        <h2>{{ selectedTask.category }}</h2>
+      <div class="modal-header" :style="{ background: taskModal.selectedTask?.color || '#2563eb' }">
+        <h2>{{ taskModal.selectedTask.category }}</h2>
       </div>
 
       <!-- GLAVNI SADRŽAJ MODALA -->
       <div class="modal-content">
-        <h2 style="font-weight: bold">{{ selectedTask.title }}</h2>
-        <p>{{ selectedTask.description }}</p>
-        <h3>Until {{ selectedTask.date }} • {{ selectedTask.time }}</h3>
+        <h2 style="font-weight: bold">{{ taskModal.selectedTask.title }}</h2>
+        <p>{{ taskModal.selectedTask.description }}</p>
+        <h3>ToDo until {{ taskModal.selectedTask.date }} • {{ taskModal.selectedTask.time }}</h3>
 
         <!-- Attachment -->
-        <div v-if="selectedTask.fileName" class="attachment">
-          <p>Document {{ selectedTask.fileName }}</p>
+        <div v-if="taskModal.selectedTask.fileName" class="attachment">
+          <p>Document {{ taskModal.selectedTask.fileName }}</p>
           <button @click="downloadFile" class="download">Download</button>
+        </div>
+
+        <div v-else>
+          <p>- No document for this task!</p>
         </div>
 
         <div class="div-select">
           <p>Mark task</p>
-          <select v-model="newStatus" class="modal-select">
+          <select v-model="taskModal.newStatus" class="modal-select">
             <option v-for="status in statuses" :key="status.sts_id" :value="status.sts_id">
               {{ status.sts_name }}
             </option>
@@ -62,17 +66,19 @@
         </div>
 
         <!-- If Done -->
-        <div v-if="newStatus === 5" class="done-warning">
+        <div v-if="taskModal.newStatus === 5" class="done-warning">
           <p>This task is marked as Done.</p>
           <p>Do you want to delete it or keep it?</p>
         </div>
 
         <!-- ACTION DUGMAD -->
         <div class="modal-actions">
-          <button class="cancel" @click="closeModal">Cancel</button>
-          <button v-if="newStatus != 5" class="save" @click="updateStatus">Save</button>
-          <button v-if="newStatus == 5" class="save" @click="updateStatus">Keep</button>
-          <button v-if="newStatus == 5" class="delete" @click="deleteTask()">Delete</button>
+          <button class="cancel" @click="taskModal.closeTaskModal()">Cancel</button>
+          <button v-if="taskModal.newStatus != 5" class="save" @click="updateStatus">Save</button>
+          <button v-if="taskModal.newStatus == 5" class="save" @click="updateStatus">Keep</button>
+          <button v-if="taskModal.newStatus == 5" class="delete" @click="deleteTask()">
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -200,6 +206,7 @@ async function updateStatus() {
     if (!taskModal.selectedTask) return
 
     await api.updateTaskStatus(session.sid, taskModal.selectedTask.id, taskModal.newStatus)
+
     taskModal.closeTaskModal()
     getTasks()
   } catch (err) {

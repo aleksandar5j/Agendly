@@ -37,7 +37,7 @@
       </div>
     </div>
     <div v-else class="noresult">
-      <img src="/src/components/icons/noreminderss.png" class="no-results" />
+      <img src="/src/components/icons/noremindersss.png" class="no-results" />
       <button @click="openAddModal">Add reminder</button>
     </div>
 
@@ -70,6 +70,7 @@
       <div class="modal">
         <h2>Edit Reminder</h2>
 
+        <label>Change minutes before</label>
         <input
           type="number"
           v-model="rem_minutes_before"
@@ -106,6 +107,10 @@ import { useReminderStore } from '@/stores/reminders'
 import { useTaskModalStore } from '@/stores/taskModal'
 const taskModal = useTaskModalStore()
 
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 function openTaskInDashboard(rem) {
   const task = {
     id: rem.tsk_id,
@@ -121,6 +126,8 @@ function openTaskInDashboard(rem) {
   }
 
   taskModal.openTask(task)
+
+  router.push('/dashboard')
 }
 
 const reminderStore = useReminderStore()
@@ -511,10 +518,11 @@ function closeModal() {
   text-align: center;
   height: 70vh;
   margin-top: 50px;
+  gap: 20px;
 }
 
 .noresult img {
-  height: 500px;
+  height: 400px;
 }
 
 .noresult button {

@@ -61,8 +61,6 @@ export const useReminderStore = defineStore('reminders', {
     async autoDeleteExpired() {
       const session = useSessionStore()
 
-      console.log('AUTO DELETE CHECK START')
-
       try {
         const res = await api.autoDeleteReminders(session.sid)
 
@@ -75,10 +73,7 @@ export const useReminderStore = defineStore('reminders', {
     },
 
     startAutoDelete() {
-      console.log('START AUTO DELETE TIMER')
-
       setInterval(() => {
-        console.log('CHECKING FOR EXPIRED REMINDERS')
         this.autoDeleteExpired()
       }, 60000)
     },
