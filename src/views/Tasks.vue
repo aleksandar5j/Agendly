@@ -176,6 +176,10 @@
       </div>
     </div>
   </div>
+
+  <div v-if="popup.show" :class="['popup', popup.type]">
+    {{ popup.message }}
+  </div>
 </template>
 
 <script setup>
@@ -327,11 +331,17 @@ function openDeleteModal(id) {
   showDeleteModal.value = true
 }
 async function confirmDelete() {
-  await api.deleteTask(session.sid, taskToDelete.value)
-  tasks.value = tasks.value.filter((t) => t.tsk_id !== taskToDelete.value)
-  showDeleteModal.value = false
-  taskToDelete.value = null
-  getOverdueTasks()
+  try {
+    await api.deleteTask(session.sid, taskToDelete.value)
+    tasks.value = tasks.value.filter((t) => t.tsk_id !== taskToDelete.value)
+    showDeleteModal.value = false
+    taskToDelete.value = null
+    getOverdueTasks()
+    triggerSuccess(`Task successfully deleted`)
+  } catch (error) {
+    console.log(error)
+    triggerError('Cannot delete task')
+  }
 }
 
 // FILE CHANGE
@@ -341,24 +351,30 @@ function onFileChange(e) {
 
 // ADD TASK
 async function saveTask() {
-  const fd = new FormData()
-  fd.append('title', title.value)
-  fd.append('description', description.value)
-  fd.append('date', date.value)
-  fd.append('time', time.value)
-  fd.append('cat_id', Number(cat_id.value))
-  fd.append('sid', session.sid)
-  if (file.value) {
-    fd.append('file', file.value)
-    fd.append('file_name', file.value.name)
+  try {
+    const fd = new FormData()
+    fd.append('title', title.value)
+    fd.append('description', description.value)
+    fd.append('date', date.value)
+    fd.append('time', time.value)
+    fd.append('cat_id', Number(cat_id.value))
+    fd.append('sid', session.sid)
+    if (file.value) {
+      fd.append('file', file.value)
+      fd.append('file_name', file.value.name)
+    }
+    await api.postTask(fd)
+    showModal.value = false
+    file.value = null
+    getTasks()
+    await reminderStore.loadLateTasks()
+    getOverdueTasks()
+    await reminderStore.loadReminders()
+    triggerSuccess('New task created successfully')
+  } catch (error) {
+    console.log(error)
+    triggerError('Cannot create new task')
   }
-  await api.postTask(fd)
-  showModal.value = false
-  file.value = null
-  getTasks()
-  await reminderStore.loadLateTasks()
-  getOverdueTasks()
-  await reminderStore.loadReminders()
 }
 
 // EDIT TASK
@@ -374,27 +390,65 @@ function openEditModal(task) {
 }
 
 async function saveEdit() {
-  const fd = new FormData()
-  fd.append('tsk_id', editTask.value.tsk_id)
-  fd.append('title', title.value)
-  fd.append('description', description.value)
-  fd.append('date', date.value)
-  fd.append('time', time.value)
-  fd.append('cat_id', Number(cat_id.value))
-  fd.append('status', newStatus.value)
-  fd.append('sid', session.sid)
-  if (file.value) {
-    fd.append('file', file.value)
-    fd.append('file_name', file.value.name)
+  try {
+    const fd = new FormData()
+    fd.append('tsk_id', editTask.value.tsk_id)
+    fd.append('title', title.value)
+    fd.append('description', description.value)
+    fd.append('date', date.value)
+    fd.append('time', time.value)
+    fd.append('cat_id', Number(cat_id.value))
+    fd.append('status', newStatus.value)
+    fd.append('sid', session.sid)
+    if (file.value) {
+      fd.append('file', file.value)
+      fd.append('file_name', file.value.name)
+    }
+    await api.editTask(fd)
+    showEditModal.value = false
+    editTask.value = null
+    file.value = null
+    getTasks()
+
+    triggerSuccess('Task edited successfully')
+
+    await reminderStore.loadLateTasks()
+    await reminderStore.loadReminders()
+    getOverdueTasks()
+  } catch (error) {
+    console.log(error)
+    triggerError('Cannot save edit for task')
   }
-  await api.editTask(fd)
-  showEditModal.value = false
-  editTask.value = null
-  file.value = null
-  getTasks()
-  await reminderStore.loadLateTasks()
-  await reminderStore.loadReminders()
-  getOverdueTasks()
+}
+
+const popup = ref({
+  show: false,
+  type: 'success',
+  message: '',
+})
+
+function triggerSuccess(message) {
+  popup.value = {
+    show: true,
+    type: 'success',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
+}
+
+function triggerError(message) {
+  popup.value = {
+    show: true,
+    type: 'error',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
 }
 </script>
 
@@ -807,5 +861,37 @@ async function saveEdit() {
 .late-btn:hover {
   background: #771a1a;
   transform: translateY(-1px);
+}
+
+.popup {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  padding: 14px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+  z-index: 9999;
+}
+
+.popup.success {
+  background: #27703a;
+}
+
+.popup.error {
+  background: #e74c3c;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 </style>

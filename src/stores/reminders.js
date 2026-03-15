@@ -21,8 +21,6 @@ export const useReminderStore = defineStore('reminders', {
       this.reminders = res.data.data
         .filter((r) => r.sts_id !== 5)
         .map((r) => ({ ...r, lastPopupTime: 0 }))
-
-      this.updateActiveReminders()
     },
 
     async loadLateTasks() {

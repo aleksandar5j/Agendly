@@ -77,6 +77,10 @@
       </div>
     </div>
   </div>
+
+  <div v-if="popup.show" :class="['popup', popup.type]">
+    {{ popup.message }}
+  </div>
 </template>
 
 <script setup>
@@ -201,12 +205,15 @@ async function updateStatus() {
 
     await api.updateTaskStatus(session.sid, taskModal.selectedTask.id, taskModal.newStatus)
 
+    triggerSuccess(`Task status successfully updated`)
+
     taskModal.closeTaskModal()
     getTasks()
     reminderStore.loadLateTasks()
     reminderStore.loadReminders()
   } catch (err) {
     console.log(err)
+    triggerError('Failed to update task')
   }
 }
 
@@ -215,13 +222,45 @@ async function deleteTask() {
     if (!taskModal.selectedTask) return
 
     await api.deleteTask(session.sid, taskModal.selectedTask.id)
+    triggerSuccess(`Task "${taskModal.selectedTask.title}" successfully deleted`)
     taskModal.closeTaskModal()
     getTasks()
     reminderStore.loadLateTasks()
     reminderStore.loadReminders()
   } catch (err) {
     console.log(err)
+    triggerError('Failed to delete task')
   }
+}
+
+const popup = ref({
+  show: false,
+  type: 'success',
+  message: '',
+})
+
+function triggerSuccess(message) {
+  popup.value = {
+    show: true,
+    type: 'success',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
+}
+
+function triggerError(message) {
+  popup.value = {
+    show: true,
+    type: 'error',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
 }
 
 onMounted(() => {
@@ -687,5 +726,37 @@ onMounted(() => {
 
 :deep(.fc-popover-close:hover) {
   opacity: 1;
+}
+
+.popup {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  padding: 14px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+  z-index: 9999;
+}
+
+.popup.success {
+  background: #27703a;
+}
+
+.popup.error {
+  background: #e74c3c;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 </style>

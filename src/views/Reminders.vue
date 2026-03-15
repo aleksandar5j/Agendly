@@ -96,6 +96,10 @@
       </div>
     </div>
   </div>
+
+  <div v-if="popup.show" :class="['popup', popup.type]">
+    {{ popup.message }}
+  </div>
 </template>
 
 <script setup>
@@ -186,13 +190,17 @@ async function edittReminder() {
     }
 
     const res = await api.editReminder(payload)
-    await reminderStore.loadReminders()
     console.log(res.data)
     tsk_id.value = ''
     rem_minutes_before.value = ''
     showModal.value = false
+
+    triggerSuccess('Reminder edited succesfully')
+    await reminderStore.loadReminders()
+    await reminderStore.updateActiveReminders()
   } catch (error) {
     console.log(error)
+    triggerError('Cannot edit this reminder')
   }
 }
 
@@ -201,10 +209,14 @@ async function confirmDelete() {
     await api.deleteReminder(reminderToDelete.value.rem_id)
 
     await reminderStore.loadReminders()
+    await reminderStore.updateActiveReminders()
 
     showDeleteModal.value = false
+
+    triggerSuccess('Reminder deleted succesfully')
   } catch (error) {
     console.log(error)
+    triggerError('Cannot delete this reminder')
   }
 }
 
@@ -219,8 +231,12 @@ async function addReminder() {
     tsk_id.value = ''
     rem_minutes_before.value = ''
     showAddModal.value = false
+    await reminderStore.loadReminders()
+    await reminderStore.updateActiveReminders()
+    triggerSuccess('Reminder added succesfully')
   } catch (error) {
     console.log(error)
+    triggerError('Cannot add a reminder for task')
   }
 }
 
@@ -241,6 +257,36 @@ function openEditModal(rem) {
 function closeModal() {
   showModal.value = false
   showAddModal.value = false
+}
+
+const popup = ref({
+  show: false,
+  type: 'success',
+  message: '',
+})
+
+function triggerSuccess(message) {
+  popup.value = {
+    show: true,
+    type: 'success',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
+}
+
+function triggerError(message) {
+  popup.value = {
+    show: true,
+    type: 'error',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
 }
 </script>
 
@@ -642,5 +688,37 @@ function closeModal() {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+.popup {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  padding: 14px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+  z-index: 9999;
+}
+
+.popup.success {
+  background: #27703a;
+}
+
+.popup.error {
+  background: #e74c3c;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 </style>
