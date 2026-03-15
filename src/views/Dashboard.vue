@@ -3,7 +3,7 @@
   <div class="dashboard">
     <div class="head">
       <img src="/src/components/icons/dashboard.png" />
-      <h1>Your dashboard</h1>
+      <h1>My Dashboard</h1>
     </div>
     <div class="info">
       <div class="info-card task-left" style="margin-top: 10px">
@@ -32,21 +32,17 @@
     </div>
   </div>
 
-  <!-- TASK ACTION MODAL -->
   <div v-if="taskModal.showModal" class="modal-overlay">
     <div class="modal">
-      <!-- HEADER sa bojom taska -->
       <div class="modal-header" :style="{ background: taskModal.selectedTask?.color || '#2563eb' }">
         <h2>{{ taskModal.selectedTask.category }}</h2>
       </div>
 
-      <!-- GLAVNI SADRŽAJ MODALA -->
       <div class="modal-content">
         <h2 style="font-weight: bold">{{ taskModal.selectedTask.title }}</h2>
         <p>{{ taskModal.selectedTask.description }}</p>
         <h3>ToDo until {{ taskModal.selectedTask.date }} • {{ taskModal.selectedTask.time }}</h3>
 
-        <!-- Attachment -->
         <div v-if="taskModal.selectedTask.fileName" class="attachment">
           <p>Document {{ taskModal.selectedTask.fileName }}</p>
           <button @click="downloadFile" class="download">Download</button>
@@ -65,13 +61,11 @@
           </select>
         </div>
 
-        <!-- If Done -->
         <div v-if="taskModal.newStatus === 5" class="done-warning">
           <p>This task is marked as Done.</p>
           <p>Do you want to delete it or keep it?</p>
         </div>
 
-        <!-- ACTION DUGMAD -->
         <div class="modal-actions">
           <button class="cancel" @click="taskModal.closeTaskModal()">Cancel</button>
           <button v-if="taskModal.newStatus != 5" class="save" @click="updateStatus">Save</button>
@@ -88,20 +82,21 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '@/api'
-import { useSessionStore } from '@/stores/sessionUser'
 
+import { useSessionStore } from '@/stores/sessionUser'
+import { useReminderStore } from '@/stores/reminders'
 import { useTaskModalStore } from '@/stores/taskModal'
-const taskModal = useTaskModalStore()
 
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
+const taskModal = useTaskModalStore()
 const session = useSessionStore()
+const reminderStore = useReminderStore()
 const tasks = ref([])
 
 const statuses = ref([])
 
-// ======= DOWNLOAD FILE =======
 function downloadFile() {
   if (!taskModal.selectedTask) return
 
@@ -133,7 +128,6 @@ function downloadFile() {
   URL.revokeObjectURL(link.href)
 }
 
-// ======= CALENDAR =======
 const calendarOptions = ref({
   plugins: [dayGridPlugin],
   initialView: 'dayGridMonth',
@@ -160,12 +154,10 @@ const calendarOptions = ref({
   },
 })
 
-// ======= TASK STATISTICS =======
 const tasksDoneThisMonth = ref()
 const tasksLates = ref()
 const tasksToday = ref()
 
-// ======= FETCH TASKS =======
 async function getTasks() {
   try {
     const res = await api.userTasks(session.sid)
@@ -198,13 +190,11 @@ async function getTasks() {
   }
 }
 
-// ======= FETCH STATUSES =======
 async function getStatuses() {
   const res = await api.getStatuses()
   statuses.value = res.data.data
 }
 
-// ======= UPDATE STATUS =======
 async function updateStatus() {
   try {
     if (!taskModal.selectedTask) return
@@ -213,6 +203,8 @@ async function updateStatus() {
 
     taskModal.closeTaskModal()
     getTasks()
+    reminderStore.loadLateTasks()
+    reminderStore.loadReminders()
   } catch (err) {
     console.log(err)
   }
@@ -225,6 +217,8 @@ async function deleteTask() {
     await api.deleteTask(session.sid, taskModal.selectedTask.id)
     taskModal.closeTaskModal()
     getTasks()
+    reminderStore.loadLateTasks()
+    reminderStore.loadReminders()
   } catch (err) {
     console.log(err)
   }
@@ -238,15 +232,11 @@ onMounted(() => {
 
 <style scoped>
 .dashboard {
-  padding: 32px;
-  font-family: Inter, Arial, sans-serif;
+  padding: 40px 80px;
   min-height: 100vh;
 
-  /* 🔵 MODERNA PLAVA GRADIENT POZADINA */
-  background: linear-gradient(135deg, #55699b 0%, #2f4c85 50%, #335c9e 100%);
+  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
 }
-
-/* ===== INFO KARTICE ===== */
 
 .info {
   display: grid;
@@ -284,7 +274,7 @@ onMounted(() => {
 }
 
 .info-card.task-left {
-  grid-column: span 2; /* zauzima oba stupca */
+  grid-column: span 2;
 }
 
 .task-left:hover {
@@ -332,13 +322,16 @@ onMounted(() => {
   color: white;
 }
 
-/* Header */
 .fc-toolbar-title {
   font-size: 22px;
-  color: rgb(146, 0, 0);
+  color: rgb(255, 255, 255);
 }
 
-/* Dugmad */
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border: 1px solid rgba(255, 255, 255, 5, 0.22);
+}
+
 .fc-button {
   background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
   border: none !important;
@@ -353,10 +346,20 @@ onMounted(() => {
   box-shadow: 0 10px 25px rgba(37, 99, 235, 0.9);
 }
 
-/* Grid */
+.fc-button-primary {
+  background: #3b82f6;
+  border: none;
+
+  transition: 0.2s;
+}
+
+.fc-button-primary:hover {
+  background: #2563eb;
+}
+
 .fc-daygrid-day {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
   transition: 0.2s;
   cursor: pointer;
 }
@@ -370,19 +373,17 @@ onMounted(() => {
 }
 
 .fc-daygrid-day-number {
-  color: #e5e7eb;
+  color: white;
   font-weight: 600;
   font-size: 14px;
 }
 
-/* Danas */
 .fc-day-today {
   background: rgba(37, 99, 235, 0.3) !important;
   box-shadow: inset 0 0 15px rgba(37, 99, 235, 0.8);
   cursor: pointer;
 }
 
-/* Header dana */
 .fc-col-header-cell-cushion {
   color: #ffffff;
   font-weight: 600;
@@ -390,8 +391,6 @@ onMounted(() => {
   font-size: 12px;
   letter-spacing: 0.6px;
 }
-
-/* ===== TASK KARTICE ===== */
 
 .fc-daygrid-event {
   border-radius: 12px !important;
@@ -427,7 +426,6 @@ onMounted(() => {
   z-index: 999;
 }
 
-/* ===== MODAL KONTAINER ===== */
 .modal {
   width: 480px;
   max-width: 90%;
@@ -439,7 +437,6 @@ onMounted(() => {
   font-family: Inter, Arial, sans-serif;
 }
 
-/* ===== MODAL HEADER (BOJA TASKA) ===== */
 .modal-header {
   padding: 20px;
   text-align: center;
@@ -448,9 +445,8 @@ onMounted(() => {
   color: white;
 }
 
-/* ===== MODAL CONTENT ===== */
 .modal-content {
-  background: rgba(255, 255, 255, 0.1); /* svetlija, poluprozirna */
+  background: rgba(255, 255, 255, 0.1);
   padding: 30px 24px;
   display: flex;
   flex-direction: column;
@@ -459,14 +455,12 @@ onMounted(() => {
   border-radius: 0 0 20px 20px;
 }
 
-/* Tekst */
 .modal p {
   opacity: 0.9;
   line-height: 1.6;
   margin-bottom: 6px;
 }
 
-/* ===== ATTACHMENT ===== */
 .attachment {
   display: flex;
   flex-direction: column;
@@ -474,7 +468,6 @@ onMounted(() => {
   margin-top: 12px;
 }
 
-/* Dugme za download */
 .download {
   background: white;
   color: #1e3a8a;
@@ -489,8 +482,6 @@ onMounted(() => {
 .download:hover {
   background: #b8b8b8;
 }
-
-/* ===== STATUS SELECT ===== */
 
 .modal-select {
   width: 100%;
@@ -525,11 +516,10 @@ onMounted(() => {
   transform: scale(1.02);
 }
 .modal-select option {
-  background: #1f2937; /* tamnija pozadina */
+  background: #1f2937;
   color: white;
 }
 
-/* ===== DONE WARNING ===== */
 .done-warning {
   padding: 12px;
   border-radius: 12px;
@@ -538,7 +528,6 @@ onMounted(() => {
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* ===== MODAL ACTION DUGMAD ===== */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -546,7 +535,6 @@ onMounted(() => {
   margin-top: 20px;
 }
 
-/* Cancel dugme */
 .cancel {
   background: rgba(255, 255, 255, 0.15);
   color: white;
@@ -562,7 +550,6 @@ onMounted(() => {
   box-shadow: 0 10px 25px rgba(133, 133, 133, 0.7);
 }
 
-/* Save / Keep dugme */
 .save {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
@@ -578,7 +565,6 @@ onMounted(() => {
   box-shadow: 0 10px 25px rgba(37, 99, 235, 0.9);
 }
 
-/* Delete dugme */
 .delete {
   background: #ef4444;
   color: white;
@@ -618,7 +604,7 @@ onMounted(() => {
 }
 .head h1 {
   font-weight: bold;
-  font-size: 30px;
+  font-size: 33px;
   color: white;
   margin: 0;
 }
@@ -642,7 +628,6 @@ onMounted(() => {
   cursor: pointer;
 }
 
-/* HOVER */
 :deep(.fc-daygrid-more-link:hover) {
   transform: translateY(-0.2px) scale(1.01);
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.9);
@@ -659,7 +644,6 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* HEADER */
 :deep(.fc-popover-header) {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
@@ -669,7 +653,6 @@ onMounted(() => {
   border: none;
 }
 
-/* BODY */
 :deep(.fc-popover-body) {
   padding: 10px;
   display: flex;
@@ -677,7 +660,6 @@ onMounted(() => {
   gap: 6px;
 }
 
-/* TASK ITEM */
 :deep(.fc-popover-body .fc-event) {
   border-radius: 10px !important;
   padding: 6px 10px !important;
@@ -691,13 +673,11 @@ onMounted(() => {
   transition: 0.2s ease;
 }
 
-/* HOVER TASK */
 :deep(.fc-popover-body .fc-event:hover) {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 10px 25px rgba(37, 99, 235, 5, 0.7);
 }
 
-/* CLOSE BUTTON */
 :deep(.fc-popover-close) {
   color: white;
   font-size: 16px;

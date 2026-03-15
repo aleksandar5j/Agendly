@@ -247,7 +247,7 @@ function closeModal() {
 <style scoped>
 .reminders-page {
   padding: 40px 80px;
-  background: linear-gradient(135deg, #46638b, #26344b);
+  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
   color: white;
   min-height: 100vh;
 }
@@ -256,15 +256,17 @@ function closeModal() {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .head img {
   height: 40px;
-  filter: invert(1);
+  filter: brightness(0) invert(1);
 }
 .head h1 {
-  font-size: 28px;
   font-weight: bold;
+  font-size: 33px;
+  color: white;
+  margin: 0;
 }
 
 .filters {

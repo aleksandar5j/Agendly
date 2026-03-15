@@ -15,21 +15,33 @@
       </div>
 
       <nav class="menu">
-        <RouterLink to="/dashboard" class="menu-item outline-text" exact>
+        <!-- Dashboard -->
+        <RouterLink
+          to="/dashboard"
+          class="menu-item outline-text"
+          exact
+          @click.prevent="handleDashboardClick"
+        >
           <img src="/src/components/icons/dashboard.png" />
           Dashboard
+          <span v-if="reminderStore.tasksLate.length > 0" class="reminder-badge">
+            {{ reminderStore.tasksLate.length }}
+          </span>
         </RouterLink>
 
+        <!-- Statistics -->
         <RouterLink to="/statistics" class="menu-item outline-text" exact>
           <img src="/src/components/icons/trend.png" />
           Statistics
         </RouterLink>
 
+        <!-- Tasks -->
         <RouterLink to="/tasks" class="menu-item outline-text" exact>
           <img src="/src/components/icons/task.png" />
           Tasks
         </RouterLink>
 
+        <!-- Reminders -->
         <RouterLink
           to="/reminders"
           class="menu-item outline-text"
@@ -43,12 +55,15 @@
           </span>
         </RouterLink>
 
+        <!-- Settings -->
         <RouterLink to="/settings" class="menu-item outline-text" exact>
           <img src="/src/components/icons/settings.png" />
           Settings
         </RouterLink>
       </nav>
     </aside>
+
+    <!-- Main content -->
     <main :class="['content', { 'with-sidebar': session.isLoggedIn }]">
       <RouterView />
     </main>
@@ -57,7 +72,17 @@
       <strong>Tasks reminder:</strong>
       <ul>
         <li v-for="rem in reminderStore.activeReminders" :key="rem.rem_id">
-          {{ rem.tsk_title }} {{ rem.remMinutesLeft }} minutes left to do
+          {{ rem.tsk_title }} ({{ rem.remMinutesLeft }} minutes left)
+        </li>
+      </ul>
+    </div>
+
+    <!-- Late tasks popup -->
+    <div v-if="reminderStore.showLatePopup" class="taskslate-popup">
+      <strong>Overdue tasks:</strong>
+      <ul>
+        <li v-for="task in reminderStore.lateTasksPopup" :key="task.tsk_id">
+          {{ task.tsk_title }} ({{ task.tsk_date }} • {{ task.tsk_time }})
         </li>
       </ul>
     </div>
@@ -71,15 +96,23 @@ import { useReminderStore } from '@/stores/reminders'
 import { onMounted, watch } from 'vue'
 
 const router = useRouter()
-
 const session = useSessionStore()
 const reminderStore = useReminderStore()
 
+// Klik na Reminders
 const handleReminderClick = () => {
   reminderStore.showPopupManually()
   router.push('/reminders')
 }
 
+// Klik na Dashboard
+const handleDashboardClick = async () => {
+  await reminderStore.loadLateTasks() // učitaj kasne taskove
+  reminderStore.showLateTasksPopup() // prikaži overdue popup
+  router.push('/dashboard')
+}
+
+// Logout
 const logout = () => {
   session.logout()
   router.push('/')
@@ -88,6 +121,8 @@ const logout = () => {
 onMounted(async () => {
   if (session.isLoggedIn) {
     await reminderStore.loadReminders()
+    await reminderStore.loadLateTasks()
+    reminderStore.updateActiveReminders() // odmah postavi badge
     reminderStore.startAutoDelete()
   }
 })
@@ -97,6 +132,8 @@ watch(
   async (logged) => {
     if (logged) {
       await reminderStore.loadReminders()
+      await reminderStore.loadLateTasks()
+      reminderStore.updateActiveReminders() // odmah postavi badge
       reminderStore.startAutoDelete()
     }
   },
@@ -229,7 +266,7 @@ watch(
 }
 
 .menu-item.router-link-exact-active {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .logout-wrap {
@@ -252,6 +289,20 @@ watch(
   padding: 2px 6px;
   border-radius: 10px;
   margin-left: auto;
+  font-weight: bold;
+}
+
+.taskslate-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ef4444;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  animation: fadeInOut 5s forwards;
   font-weight: bold;
 }
 

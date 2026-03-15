@@ -3,7 +3,7 @@
   <div class="statistics">
     <div class="head">
       <img src="/src/components/icons/trend.png" />
-      <h1>Your statistics</h1>
+      <h1>My Statistics</h1>
     </div>
 
     <div class="bar-section">
@@ -218,10 +218,9 @@ onMounted(() => {
 
 <style scoped>
 .statistics {
-  padding: 32px;
-  font-family: Inter, Arial, sans-serif;
+  padding: 40px 80px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #55699b 0%, #2f4c85 50%, #335c9e 100%);
+  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
 }
 
 hr {
@@ -242,7 +241,7 @@ hr {
 }
 .head h1 {
   font-weight: bold;
-  font-size: 30px;
+  font-size: 33px;
   color: white;
   margin: 0;
 }

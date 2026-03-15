@@ -33,6 +33,10 @@
             {{ sts.sts_name }}
           </option>
         </select>
+
+        <button v-if="overdueTasks.length > 0" class="late-btn" @click="seeAllLateTasks">
+          Overdue tasks ({{ overdueTasks.length }})
+        </button>
       </div>
 
       <div class="under-head">
@@ -178,6 +182,9 @@
 import { ref, onMounted } from 'vue'
 import api from '@/api'
 import { useSessionStore } from '@/stores/sessionUser'
+import { useReminderStore } from '@/stores/reminders'
+
+const reminderStore = useReminderStore()
 
 const session = useSessionStore()
 const tasks = ref([])
@@ -202,6 +209,8 @@ const showDeleteModal = ref(false)
 const taskToDelete = ref(null)
 const editTask = ref(null)
 
+const overdueTasks = ref([])
+
 async function filterByTitle() {
   if (!searchQuery.value) {
     getTasks()
@@ -215,6 +224,25 @@ async function filterByTitle() {
     filterStatus.value = ''
 
     console.log(res.data)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function seeAllLateTasks() {
+  try {
+    const res = await api.tasksLate(session.sid)
+    console.log(res.data)
+    tasks.value = res.data.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function getOverdueTasks() {
+  try {
+    const res = await api.tasksLate(session.sid)
+    overdueTasks.value = res.data.data
   } catch (error) {
     console.log(error)
   }
@@ -290,6 +318,7 @@ onMounted(() => {
   getTasks()
   getCategories()
   getStatuses()
+  getOverdueTasks()
 })
 
 // DELETE
@@ -302,6 +331,7 @@ async function confirmDelete() {
   tasks.value = tasks.value.filter((t) => t.tsk_id !== taskToDelete.value)
   showDeleteModal.value = false
   taskToDelete.value = null
+  getOverdueTasks()
 }
 
 // FILE CHANGE
@@ -326,6 +356,9 @@ async function saveTask() {
   showModal.value = false
   file.value = null
   getTasks()
+  await reminderStore.loadLateTasks()
+  getOverdueTasks()
+  await reminderStore.loadReminders()
 }
 
 // EDIT TASK
@@ -359,6 +392,9 @@ async function saveEdit() {
   editTask.value = null
   file.value = null
   getTasks()
+  await reminderStore.loadLateTasks()
+  await reminderStore.loadReminders()
+  getOverdueTasks()
 }
 </script>
 
@@ -366,9 +402,8 @@ async function saveEdit() {
 .tasks-page {
   padding: 40px 80px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #46638b, #26344b);
+  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
   color: white;
-  font-family: Inter, sans-serif;
 }
 
 .top-bar {
@@ -702,7 +737,7 @@ async function saveEdit() {
 }
 .head h1 {
   font-weight: bold;
-  font-size: 30px;
+  font-size: 33px;
   color: white;
   margin: 0;
 }
@@ -756,5 +791,21 @@ async function saveEdit() {
 
 .noresult img {
   height: 500px;
+}
+
+.late-btn {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.late-btn:hover {
+  background: #771a1a;
+  transform: translateY(-1px);
 }
 </style>

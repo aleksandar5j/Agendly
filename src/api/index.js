@@ -14,6 +14,8 @@ export default {
   updateTaskStatus: (sid, tsk_id, sts_id) =>
     axios.put('dashboard/tasks/updateStatus', { sid, tsk_id, sts_id }),
 
+  tasksLate: (sid) => axios.get('tasks/tasksLate', { params: { sid } }),
+
   getCategories: (data) => axios.get('categories', data),
   getStatuses: (data) => axios.get('statuses', data),
 
