@@ -121,8 +121,8 @@ export const useReminderStore = defineStore('reminders', {
     startAutoDelete() {
       setInterval(() => {
         this.autoDeleteExpired()
-        this.updateActiveReminders() // <-- osvežava badge i popup
-      }, 60000)
+        this.updateActiveReminders() // osvežava popup i badge
+      }, 15000) // pre 60000 -> 15000
     },
   },
 })

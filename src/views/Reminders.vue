@@ -233,10 +233,21 @@ async function addReminder() {
     showAddModal.value = false
     await reminderStore.loadReminders()
     await reminderStore.updateActiveReminders()
+    await reminderStore.checkReminders()
     triggerSuccess('Reminder added succesfully')
   } catch (error) {
     console.log(error)
-    triggerError('Cannot add a reminder for task')
+
+    const msg =
+      error?.response?.data?.data?.message ||
+      error?.response?.data.data ||
+      'Cannot add a reminder for task'
+
+    triggerError(msg)
+
+    showAddModal.value = false
+    tsk_id.value = ''
+    rem_minutes_before.value = ''
   }
 }
 
@@ -245,6 +256,9 @@ onMounted(() => {
   getTasks()
   getCategories()
   getStatuses()
+
+  reminderStore.updateActiveReminders()
+
   reminderStore.startAutoDelete()
 })
 

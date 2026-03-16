@@ -32,8 +32,8 @@
     </div>
   </div>
 
-  <div v-if="taskModal.showModal" class="modal-overlay">
-    <div class="modal">
+  <div v-if="taskModal.showModal" class="modal-overlayy">
+    <div class="modall">
       <div class="modal-header" :style="{ background: taskModal.selectedTask?.color || '#2563eb' }">
         <h2>{{ taskModal.selectedTask.category }}</h2>
       </div>
@@ -49,7 +49,7 @@
         </div>
 
         <div v-else>
-          <p>- No document for this task!</p>
+          <p style="opacity: 0.5">- No document for this task!</p>
         </div>
 
         <div class="div-select">
@@ -66,7 +66,7 @@
           <p>Do you want to delete it or keep it?</p>
         </div>
 
-        <div class="modal-actions">
+        <div class="modal-actionss">
           <button class="cancel" @click="taskModal.closeTaskModal()">Cancel</button>
           <button v-if="taskModal.newStatus != 5" class="save" @click="updateStatus">Save</button>
           <button v-if="taskModal.newStatus == 5" class="save" @click="updateStatus">Keep</button>
@@ -80,6 +80,57 @@
 
   <div v-if="popup.show" :class="['popup', popup.type]">
     {{ popup.message }}
+  </div>
+
+  <div v-if="showModal" class="modal-overlay">
+    <div class="modal">
+      <div class="input-with-icon">
+        <h2 style="color: white; margin-left: 40px">✚ Create task</h2>
+      </div>
+
+      <div class="input-with-icon">
+        <img src="/src/components/icons/title.png" alt="Description Icon" class="input-icon" />
+        <input v-model="title" placeholder="Title" class="modal-input" />
+      </div>
+
+      <div class="input-with-icon">
+        <img src="/src/components/icons/desc.png" alt="Description Icon" class="input-icon" />
+        <textarea v-model="description" placeholder="Description" class="modal-textarea"></textarea>
+      </div>
+
+      <div class="input-with-icon">
+        <img src="/src/components/icons/calendar.png" alt="Description Icon" class="input-icon" />
+        <input type="date" v-model="date" class="modal-input modern-date" />
+      </div>
+
+      <div class="input-with-icon">
+        <img src="/src/components/icons/time.png" alt="Description Icon" class="input-icon" />
+        <input type="time" v-model="time" class="modal-input modern-time" />
+      </div>
+
+      <div class="input-with-icon">
+        <img src="/src/components/icons/select.png" alt="Description Icon" class="input-icon" />
+        <select v-model="cat_id" class="modal-input modal-select">
+          <option disabled value="">Select category</option>
+          <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
+            {{ cat.cat_name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="input-with-icon">
+        <img src="/src/components/icons/addfile.png" alt="Description Icon" class="input-icon" />
+        <label class="file-upload">
+          Attach file
+          <input type="file" @change="onFileChange" hidden />
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="cancel" @click="closeModal">Cancel</button>
+        <button class="save" @click="saveTask">Save</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -97,9 +148,100 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 const taskModal = useTaskModalStore()
 const session = useSessionStore()
 const reminderStore = useReminderStore()
-const tasks = ref([])
 
+const tasks = ref([])
+const categories = ref([])
+const overdueTasks = ref([])
 const statuses = ref([])
+
+const title = ref('')
+const description = ref('')
+const date = ref()
+const time = ref()
+const cat_id = ref()
+const file = ref(null)
+
+const showModal = ref(false)
+
+function openAddModal() {
+  resetForm()
+  showModal.value = true
+}
+
+function closeModal() {
+  showModal.value = false
+  resetForm()
+}
+
+function onFileChange(e) {
+  file.value = e.target.files[0]
+}
+
+// ADD TASK
+async function saveTask() {
+  try {
+    const fd = new FormData()
+    fd.append('title', title.value)
+    fd.append('description', description.value)
+    fd.append('date', date.value)
+    fd.append('time', time.value)
+    fd.append('cat_id', Number(cat_id.value))
+    fd.append('sid', session.sid)
+    if (file.value) {
+      fd.append('file', file.value)
+      fd.append('file_name', file.value.name)
+    }
+    await api.postTask(fd)
+    showModal.value = false
+    file.value = null
+    getTasks()
+    await reminderStore.loadLateTasks()
+    getOverdueTasks()
+    await reminderStore.loadReminders()
+    triggerSuccess('New task created successfully')
+  } catch (error) {
+    console.log(error)
+    triggerError('Cannot create new task')
+  }
+}
+
+async function getOverdueTasks() {
+  try {
+    const res = await api.tasksLate(session.sid)
+    overdueTasks.value = res.data.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function gettTasks() {
+  const res = await api.userAllTasks(session.sid)
+  tasks.value = res.data.data
+}
+async function getCategories() {
+  const res = await api.getCategories()
+  categories.value = res.data.data
+}
+async function gettStatuses() {
+  const res = await api.getStatuses()
+  statuses.value = res.data.data
+}
+
+onMounted(() => {
+  gettTasks()
+  getCategories()
+  gettStatuses()
+  getOverdueTasks()
+})
+
+function resetForm() {
+  title.value = ''
+  description.value = ''
+  date.value = ''
+  time.value = ''
+  cat_id.value = ''
+  file.value = null
+}
 
 function downloadFile() {
   if (!taskModal.selectedTask) return
@@ -138,6 +280,21 @@ const calendarOptions = ref({
 
   dayMaxEvents: 2,
   moreLinkClick: 'popover',
+
+  headerToolbar: {
+    left: 'prev,next',
+    center: 'title',
+    right: 'createTask',
+  },
+
+  customButtons: {
+    createTask: {
+      text: '✚ Create',
+      click() {
+        openAddModal()
+      },
+    },
+  },
 
   events: [],
   eventClick: (info) => {
@@ -349,7 +506,7 @@ onMounted(() => {
   max-width: 1000px;
   margin: 0 auto;
 
-  border-radius: 20px;
+  border-radius: 18px;
   padding: 22px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
@@ -455,7 +612,7 @@ onMounted(() => {
   padding: 4px 6px 8px 6px;
 }
 
-.modal-overlay {
+.modal-overlayy {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
@@ -465,7 +622,7 @@ onMounted(() => {
   z-index: 999;
 }
 
-.modal {
+.modall {
   width: 480px;
   max-width: 90%;
   border-radius: 20px;
@@ -567,7 +724,7 @@ onMounted(() => {
   background: rgba(239, 68, 68, 0.1);
 }
 
-.modal-actions {
+.modal-actionss {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -758,5 +915,269 @@ onMounted(() => {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+.calendar-header {
+  max-width: 1000px;
+  margin: 0 auto 5px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-header h2 {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+:deep(.fc-createTask-button) {
+  background: linear-gradient(135deg, #227cc5, #165fa3) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 18px !important;
+  padding: 6px 16px !important;
+  box-shadow: 0 6px 18px rgba(34, 78, 197, 0.5);
+}
+
+:deep(.fc-createTask-button:hover) {
+  box-shadow: 0 10px 25px rgba(34, 118, 197, 0.7);
+  background: #4182be;
+  transition: 0.3s;
+}
+
+:deep(.fc-prev-button) {
+  background: linear-gradient(135deg, #227cc5, #165fa3) !important;
+  border: none !important;
+  color: white !important;
+  border-radius: 18px;
+  margin-right: 3px;
+}
+
+:deep(.fc-next-button) {
+  background: linear-gradient(135deg, #227cc5, #165fa3) !important;
+  border: none !important;
+  color: white !important;
+  border-radius: 18px;
+}
+
+:deep(.fc-prev-button:hover),
+:deep(.fc-next-button:hover) {
+  box-shadow: 0 10px 25px rgba(34, 118, 197, 0.7);
+  background: linear-gradient(135deg, #227cc5, #4182be) !important;
+  transition: 0.3s;
+}
+
+:deep(.fc-toolbar-chunk) {
+  display: flex;
+  gap: 8px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal container */
+.modal {
+  background: rgba(31, 41, 55, 0.95);
+  padding: 30px;
+  border-radius: 24px;
+  width: 520px;
+  max-width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+.modal-select option {
+  background: #1f2937; /* tamnija pozadina */
+  color: white;
+  border-radius: 20px;
+}
+
+/* Common input styles */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-input,
+.modal-textarea,
+.modal-select {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+}
+
+/* Placeholder */
+.modal-input::placeholder,
+.modal-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Focus effect */
+.modal-input:focus,
+.modal-textarea:focus,
+.modal-select:focus,
+.file-upload:focus {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+  transform: scale(1.02);
+}
+
+/* Textarea */
+.modal-textarea {
+  height: 100px;
+  resize: none;
+  padding: 12px 18px;
+}
+
+/* Select */
+.modal-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-left: 12px;
+}
+
+.modal-select2 option {
+  background: #1f2937; /* tamnija pozadina */
+  color: white;
+  border-radius: 20px;
+}
+
+.modal-select2 {
+  border-radius: 14px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.modal-select2:focus {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+  transform: scale(1.02);
+}
+
+/* Date i time input: ukloni default ikonice */
+.modern-date,
+.modern-time {
+  -webkit-appearance: none; /* Chrome/Safari */
+  -moz-appearance: none; /* Firefox */
+  appearance: none; /* standard */
+  position: relative;
+}
+
+/* Uklanja kalendar i sat ikone u Chrome/Safari */
+.modern-date::-webkit-inner-spin-button,
+.modern-date::-webkit-calendar-picker-indicator,
+.modern-time::-webkit-inner-spin-button,
+.modern-time::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* Za Firefox: ukloni default spinner za time */
+.modern-time::-moz-inner-spin-button,
+.modern-time::-moz-calendar-picker-indicator {
+  display: none;
+}
+
+/* File upload */
+.file-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59, 130, 246, 0.3);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 18px;
+  border-radius: 14px;
+  height: 44px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.file-upload:hover {
+  background: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.9);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Buttons */
+.cancel {
+  background: #6b7280;
+}
+
+.save {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+.cancel,
+.save {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.cancel:hover {
+  background: #4b5563;
+  transform: scale(1.05);
+}
+
+.save:hover {
+  background: rgba(59, 130, 246, 0.3);
+  transform: scale(1.05);
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* razmak između ikone i inputa */
+  margin-bottom: 15px;
+}
+
+.input-icon {
+  height: 22px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 </style>

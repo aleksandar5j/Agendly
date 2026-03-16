@@ -122,7 +122,11 @@ onMounted(async () => {
   if (session.isLoggedIn) {
     await reminderStore.loadReminders()
     await reminderStore.loadLateTasks()
-    reminderStore.updateActiveReminders() // odmah postavi badge
+
+    // odmah prikaz badge i popup ako ima aktivnih
+    reminderStore.updateActiveReminders()
+
+    // start interval za real-time update popupa
     reminderStore.startAutoDelete()
   }
 })
