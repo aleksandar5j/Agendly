@@ -38,6 +38,11 @@
         <h2>{{ taskModal.selectedTask.category }}</h2>
       </div>
 
+      <div v-if="isTaskLate" class="late-notice">
+        <img src="/src/components/icons/overdue.png" />
+        Task late!
+      </div>
+
       <div class="modal-content">
         <h2 style="font-weight: bold">{{ taskModal.selectedTask.title }}</h2>
         <p>{{ taskModal.selectedTask.description }}</p>
@@ -119,11 +124,28 @@
       </div>
 
       <div class="input-with-icon">
+        <img
+          src="/src/components/icons/setreminder.png"
+          alt="Description Icon"
+          class="input-icon"
+        />
+        <input
+          type="number"
+          v-model="rem_minutes_before"
+          class="modal-input modern-date"
+          placeholder="Set reminder (minutes before)"
+        />
+      </div>
+
+      <div class="input-with-icon">
         <img src="/src/components/icons/addfile.png" alt="Description Icon" class="input-icon" />
         <label class="file-upload">
           Attach file
           <input type="file" @change="onFileChange" hidden />
         </label>
+        <span v-if="file" style="margin-left: 12px; color: #fff; font-weight: 500">
+          {{ file.name }}
+        </span>
       </div>
 
       <div class="modal-actions">
@@ -135,7 +157,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import api from '@/api'
 
 import { useSessionStore } from '@/stores/sessionUser'
@@ -160,6 +182,7 @@ const date = ref()
 const time = ref()
 const cat_id = ref()
 const file = ref(null)
+const rem_minutes_before = ref()
 
 const showModal = ref(false)
 
@@ -187,6 +210,11 @@ async function saveTask() {
     fd.append('time', time.value)
     fd.append('cat_id', Number(cat_id.value))
     fd.append('sid', session.sid)
+
+    if (rem_minutes_before.value) {
+      fd.append('rem_minutes_before', rem_minutes_before.value)
+    }
+
     if (file.value) {
       fd.append('file', file.value)
       fd.append('file_name', file.value.name)
@@ -198,6 +226,8 @@ async function saveTask() {
     await reminderStore.loadLateTasks()
     getOverdueTasks()
     await reminderStore.loadReminders()
+    await reminderStore.updateActiveReminders()
+    await reminderStore.checkReminders()
     triggerSuccess('New task created successfully')
   } catch (error) {
     console.log(error)
@@ -390,6 +420,15 @@ async function deleteTask() {
   }
 }
 
+const isTaskLate = computed(() => {
+  if (!taskModal.selectedTask) return false
+
+  const taskDateTime = new Date(`${taskModal.selectedTask.date}T${taskModal.selectedTask.time}`)
+  const now = new Date()
+
+  return taskDateTime < now
+})
+
 const popup = ref({
   show: false,
   type: 'success',
@@ -431,7 +470,7 @@ onMounted(() => {
   padding: 40px 80px;
   min-height: 100vh;
 
-  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
+  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
 }
 
 .info {
@@ -518,9 +557,10 @@ onMounted(() => {
   color: white;
 }
 
-.fc-toolbar-title {
-  font-size: 22px;
-  color: rgb(255, 255, 255);
+:deep(.fc-toolbar-title) {
+  color: #ffffff !important;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0, 0.6);
 }
 
 .fc-theme-standard td,
@@ -931,24 +971,28 @@ onMounted(() => {
   font-weight: 600;
 }
 
+.fc-toolbar-title {
+  color: white;
+}
+
 :deep(.fc-createTask-button) {
-  background: linear-gradient(135deg, #227cc5, #165fa3) !important;
+  background: #5387d4 !important;
   border: none !important;
   color: white !important;
   font-weight: 600 !important;
   border-radius: 18px !important;
   padding: 6px 16px !important;
-  box-shadow: 0 6px 18px rgba(34, 78, 197, 0.5);
+  transition: 0.6s;
 }
 
 :deep(.fc-createTask-button:hover) {
   box-shadow: 0 10px 25px rgba(34, 118, 197, 0.7);
-  background: #4182be;
+  background: #4a79be !important;
   transition: 0.3s;
 }
 
 :deep(.fc-prev-button) {
-  background: linear-gradient(135deg, #227cc5, #165fa3) !important;
+  background: #5387d4 !important;
   border: none !important;
   color: white !important;
   border-radius: 18px;
@@ -956,7 +1000,7 @@ onMounted(() => {
 }
 
 :deep(.fc-next-button) {
-  background: linear-gradient(135deg, #227cc5, #165fa3) !important;
+  background: #5387d4 !important;
   border: none !important;
   color: white !important;
   border-radius: 18px;
@@ -965,7 +1009,7 @@ onMounted(() => {
 :deep(.fc-prev-button:hover),
 :deep(.fc-next-button:hover) {
   box-shadow: 0 10px 25px rgba(34, 118, 197, 0.7);
-  background: linear-gradient(135deg, #227cc5, #4182be) !important;
+  background: #4a79be !important;
   transition: 0.3s;
 }
 
@@ -1179,5 +1223,22 @@ onMounted(() => {
   height: 22px;
   filter: brightness(0) invert(1);
   opacity: 0.9;
+}
+
+.late-notice {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  font-weight: bold;
+  padding: 10px;
+  font-size: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.late-notice img {
+  height: 35px;
 }
 </style>

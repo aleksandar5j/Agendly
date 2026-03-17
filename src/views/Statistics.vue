@@ -220,7 +220,7 @@ onMounted(() => {
 .statistics {
   padding: 40px 80px;
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
+  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
 }
 
 hr {

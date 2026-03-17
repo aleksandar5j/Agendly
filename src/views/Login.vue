@@ -1,26 +1,45 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="login-page">
+    <!-- VIDEO POZADINA -->
+    <video autoplay muted loop class="bg-video">
+      <source src="/public/videos/login.mp4" type="video/mp4" />
+    </video>
+
+    <!-- POLUPROZIRNI OVERLAY -->
+    <div class="overlay"></div>
+
+    <!-- LOGIN FORMA -->
     <form class="login-card" @submit.prevent="userLogin">
-      <h1>Welcome back</h1>
+      <h1 style="font-weight: bold">Welcome back</h1>
       <p class="subtitle">Login to your agenda</p>
 
       <div class="form-group">
         <div class="input-wrap">
           <span><img src="/src/components/icons/userforlogin.png" /></span>
-          <input type="text" v-model="username" required />
+          <input type="text" v-model="username" placeholder="Username" required />
         </div>
       </div>
 
       <div class="form-group">
         <div class="input-wrap">
           <span><img src="/src/components/icons/padlock.png" /></span>
-          <input :type="showPass ? 'text' : 'password'" v-model="password" required />
+          <input
+            :type="showPass ? 'text' : 'password'"
+            v-model="password"
+            placeholder="Password"
+            required
+          />
           <button type="button" class="show" @click="showPass = !showPass">👁</button>
         </div>
       </div>
 
       <button type="submit" class="login-btn">Login</button>
+
+      <div class="not-reg">
+        <p>You dont have account yet?</p>
+        <button class="register-btn" @click="backToRegister">Register</button>
+      </div>
 
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       <p v-if="successMsg" class="success">{{ successMsg }}</p>
@@ -43,6 +62,10 @@ const showPass = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
 
+function backToRegister() {
+  router.push('register')
+}
+
 const userLogin = async () => {
   errorMsg.value = ''
   successMsg.value = ''
@@ -59,16 +82,35 @@ const userLogin = async () => {
 
 <style scoped>
 .login-page {
+  position: relative;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 
-/* CARD */
+/* VIDEO */
+.bg-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
 
+/* OVERLAY */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 32, 39, 0.6); /* tamniji overlay za bolju čitljivost */
+  backdrop-filter: blur(2px);
+  z-index: -1;
+}
+
+/* LOGIN CARD */
 .login-card {
   width: 380px;
   padding: 40px;
@@ -80,6 +122,7 @@ const userLogin = async () => {
   flex-direction: column;
   gap: 16px;
   color: white;
+  z-index: 1; /* iznad videa i overlay-a */
 }
 
 .login-card h1 {
@@ -120,7 +163,7 @@ const userLogin = async () => {
 
 .input-wrap span {
   margin: 0;
-  margin-top: 5px;
+  margin-top: 7px;
 }
 
 .input-wrap span img {
@@ -187,33 +230,6 @@ const userLogin = async () => {
   background: white;
 }
 
-/* GOOGLE BUTTON */
-
-.google-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: white;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.google-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
-}
-
-.google-btn img {
-  width: 20px;
-}
-
-/* ERROR / SUCCESS */
-
 .error {
   background: rgba(255, 0, 0, 0.15);
   padding: 10px;
@@ -230,5 +246,27 @@ const userLogin = async () => {
   color: #8affc1;
   text-align: center;
   font-size: 13px;
+}
+
+.register-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #ffffff, #ffffff);
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.not-reg {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>

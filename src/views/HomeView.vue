@@ -1,72 +1,78 @@
 <template>
+  <!-- HERO SECTION -->
   <main class="landing-page">
-    <!-- VIDEO BACKGROUND -->
     <video autoplay muted loop class="bg-video">
-      <source src="/src/components/calendar.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
+      <source src="/public/videos/homee.mp4" type="video/mp4" />
     </video>
 
-    <!-- DARK OVERLAY -->
     <div class="overlay"></div>
 
     <div class="content-wrapper">
-      <!-- LOGO -->
-      <div class="left-panel">
-        <img src="/src/components/logo.png" alt="Logo" class="logo" />
-      </div>
+      <img src="/public/favicon.ico" alt="Logo" class="logo" />
 
-      <!-- TEXT CONTENT -->
-      <div class="right-panel">
-        <h2>Welcome to Your Personal Agenda</h2>
+      <h2>
+        Welcome to
+        <strong style="color: rgb(0, 123, 255); font-weight: bold">Agend</strong>ly
+      </h2>
 
-        <p class="subtitle">
-          Manage your tasks, events, and daily plans all in one place. Login or sign up to get
-          started and never miss a deadline again!
-        </p>
+      <p class="subtitle">Manage your tasks, events, and daily plans all in one place.</p>
 
-        <div class="actions">
-          <RouterLink to="/login" class="btn">Login</RouterLink>
-          <RouterLink to="/register" class="btn btn-secondary">Register</RouterLink>
-        </div>
+      <div class="actions">
+        <RouterLink to="/login" class="btn">Login</RouterLink>
+        <RouterLink to="/register" class="btn btn-secondary">Register</RouterLink>
       </div>
     </div>
   </main>
 
-  <div class="tips-grid">
-    <div class="tips-card">
-      <img src="/public/images/calendar.jpg" alt="Calendar" class="tips-img" />
-      <div class="tips-content">
-        <h3>Calendar Management</h3>
-        <p>Add and organize your events with our simple calendar view.</p>
+  <!-- SECOND VIDEO -->
+  <section class="video-section">
+    <video autoplay muted loop class="second-video">
+      <source src="/public/videos/calendarstatus.mp4" type="video/mp4" />
+    </video>
+
+    <div class="video-overlay"></div>
+
+    <!-- FEATURE: Calendar -->
+    <div class="video-text glass-card">
+      <div class="text-row">
+        <img src="/src/components/icons/calendar.png" class="video-icon" />
+        <h2>Calendar Management</h2>
       </div>
+      <p>Add and organize your events with our simple calendar view.</p>
     </div>
 
-    <div class="tips-card">
-      <img src="/public/images/task.jpg" alt="Tasks" class="tips-img" />
-      <div class="tips-content">
-        <h3>Task Tracking</h3>
-        <p>Keep track of tasks and deadlines efficiently.</p>
+    <!-- FEATURE: Tasks -->
+    <div class="video-text glass-card">
+      <div class="text-row">
+        <img src="/src/components/icons/task.png" class="video-icon" />
+        <h2>Task Tracking</h2>
       </div>
+      <p>Keep track of your tasks and deadlines efficiently.</p>
     </div>
 
-    <div class="tips-card">
-      <img src="/public/images/reminder.jpg" alt="Reminder" class="tips-img" />
-      <div class="tips-content">
-        <h3>Reminders</h3>
-        <p>Set reminders so you never forget important appointments.</p>
+    <!-- FEATURE: Reminders -->
+    <div class="video-text glass-card">
+      <div class="text-row">
+        <img src="/src/components/icons/bell.png" class="video-icon" />
+        <h2>Manage Reminders</h2>
       </div>
+      <p>Set reminders so you never forget important appointments.</p>
     </div>
-    <div class="tips-card">
-      <img src="/public/images/statistics.jpg" alt="Visuak Stats" class="tips-img" />
-      <div class="tips-content">
-        <h3>Visual Stats</h3>
-        <p>Visualize your schedule with easy-to-read stats and summaries.</p>
-      </div>
-    </div>
-  </div>
+  </section>
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  const cards = document.querySelectorAll('.video-text')
+  cards.forEach((card, i) => {
+    setTimeout(() => {
+      card.classList.add('animate')
+    }, i * 300)
+  })
+})
+</script>
 
 <style scoped>
 .landing-page {
@@ -75,7 +81,6 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
   color: #fff;
   overflow: hidden;
 }
@@ -89,15 +94,15 @@
   height: 100%;
   object-fit: cover;
   z-index: -2;
-  filter: blur(10px) brightness(0.6);
-  transform: scale(1.1);
+  filter: blur(1px);
+  transform: scale(1);
 }
 
 /* DARK OVERLAY FOR READABILITY */
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(10, 15, 25, 0.65), rgba(10, 15, 25, 0.85));
+  background: rgba(15, 32, 39, 0.6); /* tamniji overlay za bolju čitljivost */
   z-index: -1;
 }
 
@@ -107,16 +112,35 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 850px;
-  gap: 30px;
+  max-width: 500px;
+  gap: 20px;
   width: 100%;
   text-align: center;
+  transform: translateX(-90px); /* pomera ulevo za 50px */
+
+  padding: 40px;
+  border-radius: 20px;
+
+  /* glass effect */
+  background: rgba(46, 110, 230, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(15px);
+
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+
+  border: 2px solid rgba(59, 138, 241, 0.7);
+}
+
+.content-wrapper h2 {
+  font-size: 40px;
+  font-weight: bold;
 }
 
 /* LOGO */
 .logo {
-  height: 200px;
+  height: 150px;
   width: auto;
+  margin-bottom: 20px;
 }
 
 /* TEXT BLOCK */
@@ -240,5 +264,108 @@
 .btn-secondary:hover {
   background-color: rgb(0, 123, 255);
   color: #fff;
+}
+
+.video-text {
+  transform: translateX(-150vw); /* startuje skroz levo van ekrana */
+  opacity: 0;
+  transition:
+    transform 1s ease-out,
+    opacity 1s ease-out;
+}
+
+.video-text.animate {
+  transform: translateX(0); /* finalna pozicija */
+  opacity: 1;
+}
+
+/* VIDEO SECTION */
+.video-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 40px 0;
+  gap: 30px;
+  flex-direction: column;
+}
+
+/* VIDEO */
+.second-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(4px) brightness(0.5);
+  transform: scale(1.1);
+  z-index: -2;
+}
+
+/* DARK OVERLAY */
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(10, 15, 25, 0.6), rgba(10, 15, 25, 0.85));
+  z-index: -1;
+}
+
+/* WRAPPER ZA FEATURE CARDS */
+.features-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 750px;
+}
+
+/* GLASS CARD EFFECT */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 25px 35px;
+  border: 2px solid rgba(194, 194, 194, 0.7);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+
+  /* UNIFORM HEIGHT & WIDTH */
+  width: 35%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* ICON + TITLE */
+.text-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.video-icon {
+  height: 50px;
+  filter: brightness(0) invert(1);
+}
+
+.video-text h2 {
+  font-size: 2rem;
+  margin: 0;
+  color: white;
+}
+
+.video-text p {
+  font-size: 1.2rem;
+  color: rgba(216, 216, 216, 0.9);
+  margin: 0;
 }
 </style>

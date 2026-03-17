@@ -152,7 +152,8 @@ watch(
 
 .sidebar {
   width: 300px;
-  background: linear-gradient(to bottom, rgb(134, 163, 209), rgb(35, 57, 117));
+  /* background: linear-gradient(to bottom, rgb(134, 163, 209), rgb(35, 57, 117)); */
+  background: linear-gradient(to bottom, rgb(114, 145, 211), rgb(32, 72, 136));
   color: #fff;
   padding: 10px;
   display: flex;

@@ -33,14 +33,12 @@
             {{ sts.sts_name }}
           </option>
         </select>
-
-        <button v-if="overdueTasks.length > 0" class="late-btn" @click="seeAllLateTasks">
-          Overdue tasks ({{ overdueTasks.length }})
-        </button>
       </div>
 
       <div class="under-head">
-        <button class="add-btn" @click="openAddModal">+ Add Task</button>
+        <button v-if="overdueTasks.length > 0" class="late-btn" @click="seeAllLateTasks">
+          Overdue tasks ({{ overdueTasks.length }})
+        </button>
       </div>
 
       <!-- Right: Filters -->
@@ -85,17 +83,29 @@
       <div class="modal">
         <h2>Add New Task</h2>
 
-        <!-- Title -->
-        <input v-model="title" placeholder="Title" class="modal-input" />
+        <div class="input-with-icon">
+          <img src="/src/components/icons/title.png" alt="Description Icon" class="input-icon" />
+          <input v-model="title" placeholder="Title" class="modal-input" />
+        </div>
 
-        <!-- Description -->
-        <textarea v-model="description" placeholder="Description" class="modal-textarea"></textarea>
+        <div class="input-with-icon">
+          <img src="/src/components/icons/desc.png" alt="Description Icon" class="input-icon" />
+          <textarea
+            v-model="description"
+            placeholder="Description"
+            class="modal-textarea"
+          ></textarea>
+        </div>
 
-        <!-- Modern Date -->
-        <input type="date" v-model="date" class="modal-input modern-date" />
+        <div class="input-with-icon">
+          <img src="/src/components/icons/calendar.png" alt="Description Icon" class="input-icon" />
+          <input type="date" v-model="date" class="modal-input modern-date" />
+        </div>
 
-        <!-- Modern Time -->
-        <input type="time" v-model="time" class="modal-input modern-time" />
+        <div class="input-with-icon">
+          <img src="/src/components/icons/time.png" alt="Description Icon" class="input-icon" />
+          <input type="time" v-model="time" class="modal-input modern-time" />
+        </div>
 
         <!-- Category select -->
         <select v-model="cat_id" class="modal-input modal-select">
@@ -134,27 +144,46 @@
       <div class="modal">
         <h2>Edit Task</h2>
 
-        <!-- Title -->
-        <input v-model="title" placeholder="Title" class="modal-input" />
+        <div class="input-with-icon">
+          <img src="/src/components/icons/title.png" alt="Description Icon" class="input-icon" />
+          <input v-model="title" placeholder="Title" class="modal-input" />
+        </div>
 
-        <!-- Description -->
-        <textarea v-model="description" placeholder="Description" class="modal-textarea"></textarea>
+        <div class="input-with-icon">
+          <img src="/src/components/icons/desc.png" alt="Description Icon" class="input-icon" />
+          <textarea
+            v-model="description"
+            placeholder="Description"
+            class="modal-textarea"
+          ></textarea>
+        </div>
 
-        <!-- Date / Time -->
-        <input type="date" v-model="date" class="modal-input modern-date" />
-        <input type="time" v-model="time" class="modal-input modern-time" />
+        <div class="input-with-icon">
+          <img src="/src/components/icons/calendar.png" alt="Description Icon" class="input-icon" />
+          <input type="date" v-model="date" class="modal-input modern-date" />
+        </div>
 
-        <!-- Category -->
-        <select v-model="cat_id" class="modal-input modal-select">
-          <option disabled value="">Select category</option>
-          <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
-            {{ cat.cat_name }}
-          </option>
-        </select>
+        <div class="input-with-icon">
+          <img src="/src/components/icons/time.png" alt="Description Icon" class="input-icon" />
+          <input type="time" v-model="time" class="modal-input modern-time" />
+        </div>
 
-        <!-- Status -->
-        <div class="div-select">
-          <p>Mark task</p>
+        <div class="input-with-icon">
+          <img src="/src/components/icons/select.png" alt="Description Icon" class="input-icon" />
+          <select v-model="cat_id" class="modal-input modal-select">
+            <option disabled value="">Select category</option>
+            <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
+              {{ cat.cat_name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="input-with-icon">
+          <img
+            src="/src/components/icons/donenotdone.png"
+            alt="Description Icon"
+            class="input-icon"
+          />
           <select v-model="newStatus" class="modal-select">
             <option v-for="status in statuses" :key="status.sts_id" :value="status.sts_id">
               {{ status.sts_name }}
@@ -163,10 +192,13 @@
         </div>
 
         <!-- File -->
-        <label class="file-upload">
-          Add or Replace file
-          <input type="file" @change="onFileChange" hidden />
-        </label>
+        <div class="input-with-icon">
+          <img src="/src/components/icons/addfile.png" alt="Description Icon" class="input-icon" />
+          <label class="file-upload">
+            Attach file
+            <input type="file" @change="onFileChange" hidden />
+          </label>
+        </div>
 
         <!-- Actions -->
         <div class="modal-actions">
@@ -280,11 +312,6 @@ async function filterByCategory() {
   } catch (error) {
     console.log(error)
   }
-}
-
-function openAddModal() {
-  resetForm()
-  showModal.value = true
 }
 
 function closeModal() {
@@ -456,7 +483,7 @@ function triggerError(message) {
 .tasks-page {
   padding: 40px 80px;
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
+  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
   color: white;
 }
 
@@ -490,7 +517,7 @@ function triggerError(message) {
 }
 
 .task-card {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.12);
   padding: 20px;
   border-radius: 16px;
   backdrop-filter: blur(12px);
@@ -773,8 +800,9 @@ function triggerError(message) {
 
 .modal-actions {
   display: flex;
-  flex-direction: row;
-  gap: 20px;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .head {
@@ -819,7 +847,7 @@ function triggerError(message) {
   padding: 10px 14px;
   border-radius: 12px;
   border: none;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.09);
   color: white;
   font-size: 14px;
   outline: none;
@@ -893,5 +921,18 @@ function triggerError(message) {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* razmak između ikone i inputa */
+  margin-bottom: 15px;
+}
+
+.input-icon {
+  height: 22px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 </style>

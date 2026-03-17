@@ -45,19 +45,29 @@
       <div class="modal">
         <h2>Add Reminder</h2>
 
-        <select v-model="tsk_id" class="modal-select">
-          <option value="">Select Task</option>
-          <option v-for="task in tasks" :key="task.tsk_id" :value="task.tsk_id">
-            {{ task.tsk_title }}
-          </option>
-        </select>
+        <div class="input-with-icon">
+          <img src="/src/components/icons/title.png" alt="Description Icon" class="input-icon" />
+          <select v-model="tsk_id" class="modal-select">
+            <option value="">Select Task</option>
+            <option v-for="task in tasks" :key="task.tsk_id" :value="task.tsk_id">
+              {{ task.tsk_title }}
+            </option>
+          </select>
+        </div>
 
-        <input
-          type="number"
-          v-model="rem_minutes_before"
-          placeholder="Minutes before"
-          class="modal-input"
-        />
+        <div class="input-with-icon">
+          <img
+            src="/src/components/icons/setreminder.png"
+            alt="Description Icon"
+            class="input-icon"
+          />
+          <input
+            type="number"
+            v-model="rem_minutes_before"
+            placeholder="Minutes before"
+            class="modal-input"
+          />
+        </div>
 
         <div class="modal-actions">
           <button class="cancel" @click="closeModal">Cancel</button>
@@ -71,12 +81,19 @@
         <h2>Edit Reminder</h2>
 
         <label>Change minutes before</label>
-        <input
-          type="number"
-          v-model="rem_minutes_before"
-          placeholder="Minutes before"
-          class="modal-input"
-        />
+        <div class="input-with-icon">
+          <img
+            src="/src/components/icons/setreminder.png"
+            alt="Description Icon"
+            class="input-icon"
+          />
+          <input
+            type="number"
+            v-model="rem_minutes_before"
+            placeholder="Minutes before"
+            class="modal-input"
+          />
+        </div>
 
         <div class="modal-actions">
           <button class="cancel" @click="closeModal">Cancel</button>
@@ -307,7 +324,7 @@ function triggerError(message) {
 <style scoped>
 .reminders-page {
   padding: 40px 80px;
-  background: linear-gradient(to bottom, rgb(35, 57, 117), rgb(53, 93, 156));
+  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
   color: white;
   min-height: 100vh;
 }
@@ -505,8 +522,8 @@ function triggerError(message) {
 }
 
 .edit-btn {
-  background: rgba(59, 130, 246, 0.25);
-  color: #60a5fa;
+  background: rgba(59, 130, 246, 2);
+  color: #ffffff;
   border: none;
   width: 32px;
   height: 32px;
@@ -734,5 +751,18 @@ function triggerError(message) {
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* razmak između ikone i inputa */
+  margin-bottom: 15px;
+}
+
+.input-icon {
+  height: 22px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 </style>
