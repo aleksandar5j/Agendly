@@ -8,9 +8,11 @@ export const useReminderStore = defineStore('reminders', {
     reminders: [],
     activeReminders: [],
     activeCount: 0,
-    showPopup: false, // za reminder-e
-    showLatePopup: false, // za kasne taskove
-    lateTasksPopup: [], // lista kasnih taskova za popup
+    showPopup: false,
+    showLatePopup: false,
+    lateTasksPopup: [],
+    reminderNotificationsEnabled: JSON.parse(localStorage.getItem('reminderNot') ?? 'true'),
+    overdueNotificationsEnabled: JSON.parse(localStorage.getItem('overdueNot') ?? 'true'),
   }),
 
   actions: {
@@ -31,6 +33,8 @@ export const useReminderStore = defineStore('reminders', {
     },
 
     showPopupManually() {
+      if (!this.reminderNotificationsEnabled) return
+
       const now = Date.now()
       const active = []
 
@@ -58,6 +62,8 @@ export const useReminderStore = defineStore('reminders', {
     },
 
     async showLateTasksPopup() {
+      if (!this.overdueNotificationsEnabled) return
+
       const now = Date.now()
       const lateTasks = this.tasksLate.filter((task) => {
         const taskTime = new Date(task.tsk_date + ' ' + task.tsk_time).getTime()
@@ -75,6 +81,11 @@ export const useReminderStore = defineStore('reminders', {
     },
 
     updateActiveReminders() {
+      if (!this.reminderNotificationsEnabled) {
+        this.showPopup = false
+        return
+      }
+
       const now = Date.now()
       const active = []
 

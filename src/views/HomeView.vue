@@ -26,13 +26,24 @@
 
   <!-- SECOND VIDEO -->
   <section class="video-section">
-    <video autoplay muted loop class="second-video">
-      <source src="/public/videos/calendarstatus.mp4" type="video/mp4" />
-    </video>
+    <div class="aboutus">
+      <h1>Organize Your Time. Focus on What Matters.</h1>
+      <p>
+        In today’s fast-paced world, staying organized is more important than ever. Agenda is a
+        simple yet powerful task management platform designed to help you stay in control of your
+        daily responsibilities, deadlines, and long-term goals. Whether you are managing work tasks,
+        personal projects, or daily routines, Agenda gives you a clear and structured way to keep
+        everything organized in one place. With an intuitive interface and powerful features, you
+        can focus less on remembering what needs to be done and more on actually getting things
+        done. Agenda is built for people who want a smarter way to plan their day, manage
+        priorities, and stay productive without unnecessary complexity. more on actually getting
+        things done. Agenda is built for people who want a smarter way to plan their day, manage
+        priorities, and stay productive without unnecessary complexity.
+      </p>
+    </div>
 
-    <div class="video-overlay"></div>
+    <hr />
 
-    <!-- FEATURE: Calendar -->
     <div class="video-text glass-card">
       <div class="text-row">
         <img src="/src/components/icons/calendar.png" class="video-icon" />
@@ -293,6 +304,12 @@ onMounted(() => {
   flex-direction: column;
 }
 
+.video-section hr {
+  border: 1px solid #2570ff;
+  width: 70%;
+  margin-bottom: 50px;
+}
+
 /* VIDEO */
 .second-video {
   position: absolute;
@@ -325,13 +342,13 @@ onMounted(() => {
 
 /* GLASS CARD EFFECT */
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(90, 154, 252, 0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(15px);
   border-radius: 20px;
   padding: 25px 35px;
-  border: 2px solid rgba(194, 194, 194, 0.7);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(112, 151, 209, 0.7);
+  box-shadow: 0 20px 40px rgba(112, 151, 209, 0.35);
 
   /* UNIFORM HEIGHT & WIDTH */
   width: 35%;
@@ -354,18 +371,44 @@ onMounted(() => {
 
 .video-icon {
   height: 50px;
-  filter: brightness(0) invert(1);
+  opacity: 0.7;
 }
 
 .video-text h2 {
   font-size: 2rem;
   margin: 0;
-  color: white;
+  opacity: 0.8;
+  color: #525252;
 }
 
 .video-text p {
   font-size: 1.2rem;
-  color: rgba(216, 216, 216, 0.9);
+  color: rgba(92, 92, 92, 0.9);
   margin: 0;
+}
+
+.aboutus {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 62%;
+  margin: auto;
+  color: black;
+  gap: 10px;
+  padding: 50px;
+}
+
+.aboutus h1 {
+  font-weight: bold;
+  opacity: 0.8;
+  color: #2570ff;
+  font-weight: bold;
+}
+
+.aboutus p {
+  font-size: 20px;
+  opacity: 0.7;
+  color: #525252;
 }
 </style>

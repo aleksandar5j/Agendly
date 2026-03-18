@@ -5,7 +5,9 @@
         <img alt="Logo" class="logo" src="/src/components/logo.png" />
         <div class="user-box">
           <div class="user-info">
-            <img src="/src/components/icons/user.png" class="user" />
+            <div class="avatar">
+              {{ session.user.usr_username.charAt(0).toUpperCase() }}
+            </div>
             <h1 class="user-outline">{{ session.user.usr_username }}</h1>
           </div>
           <button class="logout-btn" @click="logout" alt="logout">
@@ -309,6 +311,19 @@ watch(
   z-index: 10000;
   animation: fadeInOut 5s forwards;
   font-weight: bold;
+}
+
+.avatar {
+  width: 32px;
+  height: 33px;
+  border-radius: 50%;
+  background: #d6d6d6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(21, 44, 66);
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .reminder-popup {
