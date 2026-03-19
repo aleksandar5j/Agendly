@@ -324,8 +324,8 @@ function triggerError(message) {
 <style scoped>
 .reminders-page {
   padding: 40px 80px;
-  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
-  color: white;
+  background: var(--bg-main);
+  color: var(--text-color);
   min-height: 100vh;
 }
 .head {
@@ -337,12 +337,12 @@ function triggerError(message) {
 }
 .head img {
   height: 40px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 .head h1 {
   font-weight: bold;
   font-size: 33px;
-  color: white;
+  color: var(--text-color);
   margin: 0;
 }
 
@@ -372,7 +372,8 @@ function triggerError(message) {
   align-items: center;
 }
 .modal {
-  background: #1f2937;
+  background: var(--addreminder-popup);
+  color: var(--text-color);
   padding: 20px;
   border-radius: 14px;
   width: 400px;
@@ -382,7 +383,8 @@ function triggerError(message) {
 }
 
 .delete-modal {
-  background: #111827;
+  background: var(--card-bg);
+  color: var(--text-color);
   padding: 40px;
   border-radius: 14px;
   text-align: center;
@@ -457,7 +459,7 @@ function triggerError(message) {
 .reminder-card {
   padding: 20px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--reminder-card);
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
   transition: all 0.25s ease;
@@ -484,7 +486,7 @@ function triggerError(message) {
 
 .reminder-bell {
   height: 70px;
-  filter: invert(1);
+  filter: var(--icon-filter);
 }
 @keyframes bell-shake {
   0% {
@@ -517,7 +519,7 @@ function triggerError(message) {
 .reminder-title {
   font-size: 16px;
   font-weight: bold;
-  color: white;
+  color: var(--text-color);
   text-align: center;
 }
 
@@ -625,7 +627,7 @@ function triggerError(message) {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(59, 130, 246, 0.3);
+  background: var(--hover-bg);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -636,7 +638,7 @@ function triggerError(message) {
 }
 
 .add-card .reminder-title {
-  color: white;
+  color: var(--text-color);
   font-weight: bold;
   text-align: center;
 }
@@ -672,9 +674,9 @@ function triggerError(message) {
   height: 42px;
   box-sizing: border-box;
   border-radius: 10px;
-  border: 1px solid #374151;
-  background: #111827;
-  color: white;
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   font-size: 14px;
   outline: none;
   transition: all 0.2s ease;
@@ -682,7 +684,7 @@ function triggerError(message) {
 
 /* placeholder */
 .modal-input::placeholder {
-  color: #9ca3af;
+  color: var(--text-color);
 }
 
 /* hover */
@@ -700,8 +702,8 @@ function triggerError(message) {
 
 /* select dropdown */
 .modal-select option {
-  background: #111827;
-  color: white;
+  background: var(--card-bg);
+  color: var(--text-color);
 }
 
 /* uklanja spinner za number */
@@ -756,13 +758,12 @@ function triggerError(message) {
 .input-with-icon {
   display: flex;
   align-items: center;
-  gap: 20px; /* razmak između ikone i inputa */
+  gap: 20px;
   margin-bottom: 15px;
 }
 
 .input-icon {
   height: 22px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
+  filter: var(--icon-filter);
 }
 </style>

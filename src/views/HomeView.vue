@@ -2,7 +2,7 @@
   <!-- HERO SECTION -->
   <main class="landing-page">
     <video autoplay muted loop class="bg-video">
-      <source src="/public/videos/homee.mp4" type="video/mp4" />
+      <source src="/public/videos/home.mp4" type="video/mp4" />
     </video>
 
     <div class="overlay"></div>
@@ -26,23 +26,9 @@
 
   <!-- SECOND VIDEO -->
   <section class="video-section">
-    <div class="aboutus">
-      <h1>Organize Your Time. Focus on What Matters.</h1>
-      <p>
-        In today’s fast-paced world, staying organized is more important than ever. Agenda is a
-        simple yet powerful task management platform designed to help you stay in control of your
-        daily responsibilities, deadlines, and long-term goals. Whether you are managing work tasks,
-        personal projects, or daily routines, Agenda gives you a clear and structured way to keep
-        everything organized in one place. With an intuitive interface and powerful features, you
-        can focus less on remembering what needs to be done and more on actually getting things
-        done. Agenda is built for people who want a smarter way to plan their day, manage
-        priorities, and stay productive without unnecessary complexity. more on actually getting
-        things done. Agenda is built for people who want a smarter way to plan their day, manage
-        priorities, and stay productive without unnecessary complexity.
-      </p>
-    </div>
-
-    <hr />
+    <video autoplay muted loop class="bg-video">
+      <source src="/public/videos/home2.mp4" type="video/mp4" />
+    </video>
 
     <div class="video-text glass-card">
       <div class="text-row">
@@ -105,7 +91,7 @@ onMounted(() => {
   height: 100%;
   object-fit: cover;
   z-index: -2;
-  filter: blur(1px);
+  filter: blur(4px);
   transform: scale(1);
 }
 
@@ -127,7 +113,6 @@ onMounted(() => {
   gap: 20px;
   width: 100%;
   text-align: center;
-  transform: translateX(-90px); /* pomera ulevo za 50px */
 
   padding: 40px;
   border-radius: 20px;
@@ -254,7 +239,7 @@ onMounted(() => {
 .btn {
   background-color: rgb(0, 123, 255);
   padding: 0.85rem 1.6rem;
-  border-radius: 8px;
+  border-radius: 20px;
   color: #fff;
   font-weight: 600;
   text-decoration: none;
@@ -343,11 +328,11 @@ onMounted(() => {
 /* GLASS CARD EFFECT */
 .glass-card {
   background: rgba(90, 154, 252, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(17px);
+  -webkit-backdrop-filter: blur(17px);
   border-radius: 20px;
   padding: 25px 35px;
-  border: 2px solid rgba(112, 151, 209, 0.7);
+  border: 2px solid rgba(62, 200, 235, 0.7);
   box-shadow: 0 20px 40px rgba(112, 151, 209, 0.35);
 
   /* UNIFORM HEIGHT & WIDTH */
@@ -388,15 +373,22 @@ onMounted(() => {
 }
 
 .aboutus {
+  background: rgba(90, 154, 252, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 25px 35px;
+  border: 2px solid rgba(112, 151, 209, 0.7);
+  box-shadow: 0 20px 40px rgba(112, 151, 209, 0.35);
+
+  /* UNIFORM HEIGHT & WIDTH */
+  width: 55%;
+  min-height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 62%;
-  margin: auto;
-  color: black;
-  gap: 10px;
-  padding: 50px;
+  text-align: center;
 }
 
 .aboutus h1 {
@@ -408,7 +400,7 @@ onMounted(() => {
 
 .aboutus p {
   font-size: 20px;
-  opacity: 0.7;
-  color: #525252;
+  opacity: 0.8;
+  color: black;
 }
 </style>

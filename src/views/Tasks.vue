@@ -53,7 +53,7 @@
         :style="{ borderLeft: '6px solid ' + task.cat_color }"
       >
         <div class="task-header">
-          <h3>{{ task.tsk_title }}</h3>
+          <h3 style="color: var(--text-color)">{{ task.tsk_title }}</h3>
           <div class="task-actions">
             <button class="edit-btn" @click="openEditModal(task)">✎</button>
             <button class="delete-btn" @click="openDeleteModal(task.tsk_id)">✕</button>
@@ -67,7 +67,7 @@
         </p>
 
         <div class="task-footer">
-          <span>{{ task.tsk_date }} • {{ task.tsk_time }}</span>
+          <span style="color: var(--text-color)">{{ task.tsk_date }} • {{ task.tsk_time }}</span>
           <span class="category" :style="{ backgroundColor: task.cat_color }">
             {{ task.cat_name }}
           </span>
@@ -78,56 +78,6 @@
       <img src="/src/components/icons/noresult.png" />
     </div>
 
-    <!-- Modal -->
-    <div v-if="showModal" class="modal-overlay">
-      <div class="modal">
-        <h2>Add New Task</h2>
-
-        <div class="input-with-icon">
-          <img src="/src/components/icons/title.png" alt="Description Icon" class="input-icon" />
-          <input v-model="title" placeholder="Title" class="modal-input" />
-        </div>
-
-        <div class="input-with-icon">
-          <img src="/src/components/icons/desc.png" alt="Description Icon" class="input-icon" />
-          <textarea
-            v-model="description"
-            placeholder="Description"
-            class="modal-textarea"
-          ></textarea>
-        </div>
-
-        <div class="input-with-icon">
-          <img src="/src/components/icons/calendar.png" alt="Description Icon" class="input-icon" />
-          <input type="date" v-model="date" class="modal-input modern-date" />
-        </div>
-
-        <div class="input-with-icon">
-          <img src="/src/components/icons/time.png" alt="Description Icon" class="input-icon" />
-          <input type="time" v-model="time" class="modal-input modern-time" />
-        </div>
-
-        <!-- Category select -->
-        <select v-model="cat_id" class="modal-input modal-select">
-          <option disabled value="">Select category</option>
-          <option v-for="cat in categories" :key="cat.cat_id" :value="cat.cat_id">
-            {{ cat.cat_name }}
-          </option>
-        </select>
-
-        <!-- File upload -->
-        <label class="file-upload">
-          Attach file
-          <input type="file" @change="onFileChange" hidden />
-        </label>
-
-        <!-- Actions -->
-        <div class="modal-actions">
-          <button class="cancel" @click="closeModal">Cancel</button>
-          <button class="save" @click="saveTask">Save</button>
-        </div>
-      </div>
-    </div>
     <div v-if="showDeleteModal" class="modal-overlay" @click.self="showDeleteModal = false">
       <div class="delete-modal">
         <h3>Delete Task</h3>
@@ -142,7 +92,7 @@
 
     <div v-if="showEditModal" class="modal-overlay">
       <div class="modal">
-        <h2>Edit Task</h2>
+        <h2 style="color: var(--text-color)">Edit Task</h2>
 
         <div class="input-with-icon">
           <img src="/src/components/icons/title.png" alt="Description Icon" class="input-icon" />
@@ -483,7 +433,7 @@ function triggerError(message) {
 .tasks-page {
   padding: 40px 80px;
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
+  background: var(--bg-main);
   color: white;
 }
 
@@ -517,7 +467,7 @@ function triggerError(message) {
 }
 
 .task-card {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--task-card);
   padding: 20px;
   border-radius: 16px;
   backdrop-filter: blur(12px);
@@ -532,6 +482,7 @@ function triggerError(message) {
 .desc {
   opacity: 0.8;
   margin: 10px 0;
+  color: var(--text-color);
 }
 
 .task-footer {
@@ -562,7 +513,7 @@ function triggerError(message) {
 
 /* Modal container */
 .modal {
-  background: rgba(31, 41, 55, 0.95);
+  background: var(--edit-task-popup);
   padding: 30px;
   border-radius: 24px;
   width: 520px;
@@ -576,8 +527,8 @@ function triggerError(message) {
 }
 
 .modal-select option {
-  background: #1f2937; /* tamnija pozadina */
-  color: white;
+  background: var(--tasks-input);
+  color: var(--text-color);
   border-radius: 20px;
 }
 
@@ -589,8 +540,8 @@ function triggerError(message) {
   padding: 14px 18px;
   border-radius: 14px;
   border: none;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: var(--tasks-input);
+  color: var(--text-color);
   font-size: 15px;
   font-weight: 500;
   outline: none;
@@ -602,7 +553,7 @@ function triggerError(message) {
 /* Placeholder */
 .modal-input::placeholder,
 .modal-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 /* Focus effect */
@@ -632,15 +583,15 @@ function triggerError(message) {
 }
 
 .modal-select2 option {
-  background: #1f2937; /* tamnija pozadina */
-  color: white;
+  background: var(--tasks-select);
+  color: var(--text-color);
   border-radius: 20px;
 }
 
 .modal-select2 {
   border-radius: 14px;
   border: none;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--tasks-input);
   color: white;
   font-size: 15px;
   font-weight: 500;
@@ -669,7 +620,7 @@ function triggerError(message) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.8);
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -681,8 +632,7 @@ function triggerError(message) {
 }
 
 .file-upload:hover {
-  background: rgba(59, 130, 246, 0.5);
-  box-shadow: 0 0 18px rgba(59, 130, 246, 0.9);
+  background: rgba(59, 130, 246, 0.6);
   transform: translateY(-2px) scale(1.02);
 }
 
@@ -692,7 +642,7 @@ function triggerError(message) {
 }
 
 .save {
-  background: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.8);
 }
 
 .cancel,
@@ -712,7 +662,7 @@ function triggerError(message) {
 }
 
 .save:hover {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.6);
   transform: scale(1.05);
 }
 
@@ -738,8 +688,9 @@ function triggerError(message) {
 
 .edit-btn {
   background: transparent;
+
   border: none;
-  color: #c7bd2c;
+  color: #95c3ff;
   font-size: 18px;
   cursor: pointer;
   transition: 0.2s;
@@ -747,11 +698,12 @@ function triggerError(message) {
 
 .edit-btn:hover {
   transform: scale(1.3);
-  color: #c7bd2c;
+  color: #174077;
 }
 
 .delete-modal {
-  background: #1f2937;
+  background: var(--edit-task-popup);
+  color: var(--text-color);
   padding: 30px;
   border-radius: 20px;
   width: 350px;
@@ -815,12 +767,12 @@ function triggerError(message) {
 
 .head img {
   height: 40px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 .head h1 {
   font-weight: bold;
   font-size: 33px;
-  color: white;
+  color: var(--text-color);
   margin: 0;
 }
 
@@ -847,15 +799,15 @@ function triggerError(message) {
   padding: 10px 14px;
   border-radius: 12px;
   border: none;
-  background: rgba(255, 255, 255, 0.09);
-  color: white;
+  background: var(--tasks-input);
+  color: var(--text-color);
   font-size: 14px;
   outline: none;
   min-width: 150px;
 }
 
 .filter-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-color);
 }
 
 .filter-input:focus,
@@ -932,7 +884,7 @@ function triggerError(message) {
 
 .input-icon {
   height: 22px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
   opacity: 0.9;
 }
 </style>

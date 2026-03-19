@@ -12,7 +12,7 @@
     <!-- LOGIN FORMA -->
     <form class="login-card" @submit.prevent="userLogin">
       <h1 style="font-weight: bold">Welcome back</h1>
-      <p class="subtitle">Login to your agenda</p>
+      <p class="subtitle">Login to your agendly</p>
 
       <div class="form-group">
         <div class="input-wrap">
@@ -200,7 +200,7 @@ const userLogin = async () => {
   padding: 12px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(135deg, #4facfe, #0083fe);
   color: white;
   font-weight: bold;
   cursor: pointer;

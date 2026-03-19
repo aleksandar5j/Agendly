@@ -1,7 +1,81 @@
 @import './base.css';
 
-@media (hover: hover) {
+/* =========================
+   DEFAULT THEME (PLAVI)
+========================= */
+:root {
+  --bg-main: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
+
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --text-color: white;
+  --text-muted: rgba(255, 255, 255, 0.7);
+
+  --input-bg: rgb(7, 22, 51);
+  --btn-bg: rgba(255, 255, 255, 0.2);
+
+  --toggle-bg: rgba(255, 255, 255, 0.2);
+  --toggle-circle: white;
+  --toggle-active: linear-gradient(135deg, #4facfe, #00f2fe);
+  --toggle-glow: rgba(79, 172, 254, 0.6);
+
+  --sidebar-bg: linear-gradient(to bottom, rgb(114, 145, 211), rgb(32, 72, 136));
+  --hover-bg: rgba(255, 255, 255, 0.15);
+  --border-color: rgba(255, 255, 255, 0.2);
+  --icon-filter: invert(1); /* DARK (tvoj default plavi) */
+
+  --reminder-card: #5b8dc5;
+
+  --addreminder-popup: #0c1d30;
+  --reminder-icon: #ffffff;
+
+  --tasks-input: rgb(84, 112, 190);
+  --tasks-select: rgb(29, 40, 70);
+  --task-card: rgba(255, 255, 255, 0.09);
+  --edit-task-popup: #0c1d30;
+
+  --statistics-btns: rgb(44, 60, 102);
 }
 
-@media (min-width: 1024px) {
+/* =========================
+   LIGHT MODE
+========================= */
+[data-theme='light'] {
+  --bg-main: #ffffff;
+
+  --card-bg: rgb(255, 255, 255);
+  --text-color: #000000;
+  --text-muted: #64748b;
+
+  --input-bg: #b3b3b3;
+  --btn-bg: #e2e8f0;
+
+  --toggle-bg: #e2e8f0;
+  --toggle-circle: white;
+  --toggle-active: linear-gradient(135deg, #2563eb, #3b82f6);
+  --toggle-glow: rgba(59, 130, 246, 0.5);
+
+  --sidebar-bg: linear-gradient(to bottom, rgb(255, 255, 255), rgb(155, 155, 155));
+  --hover-bg: #f1f5f9;
+  --border-color: #e2e8f0;
+
+  --icon-filter: invert(0); /* LIGHT mode */
+
+  --addreminder-popup: #dfdfdf;
+  --reminder-card: #e4e4e4;
+
+  --tasks-input: #ececec;
+  --tasks-select: #ececec;
+  --task-card: #eeeeee;
+  --edit-task-popup: #dfdfdf;
+
+  --statistics-btns: #ececec;
+}
+
+/* =========================
+   GLOBAL TRANSITION
+========================= */
+* {
+  transition:
+    background 0.3s,
+    color 0.3s;
 }

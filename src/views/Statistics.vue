@@ -7,7 +7,17 @@
     </div>
 
     <div class="bar-section">
-      <p style="color: white; text-align: center; margin-bottom: 10px">Productivity</p>
+      <p
+        style="
+          color: var(--text-color);
+          text-align: center;
+          margin-bottom: 20px;
+          font-size: 20px;
+          font-weight: bold;
+        "
+      >
+        Productivity
+      </p>
 
       <div class="month-buttons">
         <button
@@ -29,7 +39,17 @@
 
     <div class="charts-row">
       <div class="chart-container">
-        <p style="color: white; text-align: center; margin-bottom: 10px">All Progress</p>
+        <p
+          style="
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+          "
+        >
+          All Progress
+        </p>
         <Doughnut :data="chartData" :options="chartOptions" />
       </div>
     </div>
@@ -92,11 +112,21 @@ const barOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: { display: false },
+    legend: { display: false }, // ako ne želiš legendu
   },
   scales: {
-    x: { ticks: { color: 'white' } },
-    y: { ticks: { color: 'white' } },
+    x: {
+      ticks: {
+        color: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
+        font: { weight: 'bold' },
+      },
+    },
+    y: {
+      ticks: {
+        color: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
+        font: { weight: 'bold' },
+      },
+    },
   },
 }
 
@@ -120,11 +150,18 @@ const monthlyChartData = ref({
   ],
 })
 
-// Shared chart options
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  plugins: { legend: { position: 'bottom', labels: { color: 'white' } } },
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: {
+        color: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
+        font: { weight: 'bold' },
+      },
+    },
+  },
 }
 
 // Fetch stats for both charts
@@ -154,7 +191,6 @@ async function getStats() {
 
     const resMonthly = await api.getMonthlyProgress(session.sid)
 
-    // Pravimo novi niz brojeva
     const monthlyTotals = [0, 0, 0]
     resMonthly.data.data.forEach((item) => {
       if (item.sts_name === 'ToDo') monthlyTotals[0] = item.total
@@ -162,7 +198,6 @@ async function getStats() {
       if (item.sts_name === 'Done') monthlyTotals[2] = item.total
     })
 
-    // **Postavljamo novi datasets objekat** – ovo Vue chartjs detektuje
     monthlyChartData.value = {
       labels: ['ToDo', 'Pending', 'Done'],
       datasets: [
@@ -220,7 +255,7 @@ onMounted(() => {
 .statistics {
   padding: 40px 80px;
   min-height: 100vh;
-  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
+  background: var(--bg-main);
 }
 
 hr {
@@ -237,34 +272,15 @@ hr {
 
 .head img {
   height: 40px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 .head h1 {
   font-weight: bold;
   font-size: 33px;
-  color: white;
+  color: var(--text-color);
   margin: 0;
 }
 
-.cards {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 50px;
-}
-
-.card {
-  flex: 1;
-  padding: 20px;
-  border-radius: 14px;
-  color: white;
-  text-align: center;
-  font-size: 1.2rem;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  transition: 0.2s;
-}
-.card:hover {
-  transform: translateY(-3px);
-}
 .todo {
   background: #f39c12;
 }
@@ -313,8 +329,8 @@ hr {
   padding: 6px 12px;
   border-radius: 6px;
   border: none;
-  background: #3b4f7a;
-  color: white;
+  background: var(--statistics-btns);
+  color: var(--text-color);
   cursor: pointer;
   font-size: 13px;
   transition: 0.2s;

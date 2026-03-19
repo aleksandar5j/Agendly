@@ -310,7 +310,7 @@ async function userRegister() {
   padding: 12px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(135deg, #4facfe, #0083fe);
   color: white;
   font-weight: bold;
   cursor: pointer;

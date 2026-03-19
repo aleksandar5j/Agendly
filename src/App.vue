@@ -95,7 +95,7 @@
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useSessionStore } from './stores/sessionUser'
 import { useReminderStore } from '@/stores/reminders'
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, ref } from 'vue'
 
 const router = useRouter()
 const session = useSessionStore()
@@ -144,6 +144,29 @@ watch(
     }
   },
 )
+
+const theme = ref(localStorage.getItem('theme') || 'default')
+
+const applyTheme = (val) => {
+  document.documentElement.setAttribute('data-theme', val)
+}
+
+onMounted(() => {
+  applyTheme(theme.value)
+})
+
+watch(theme, (val) => {
+  applyTheme(val)
+  localStorage.setItem('theme', val)
+})
+
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
+
+onMounted(() => {
+  themeStore.setTheme(themeStore.theme)
+})
 </script>
 
 <style scoped>
@@ -155,7 +178,7 @@ watch(
 .sidebar {
   width: 300px;
   /* background: linear-gradient(to bottom, rgb(134, 163, 209), rgb(35, 57, 117)); */
-  background: linear-gradient(to bottom, rgb(114, 145, 211), rgb(32, 72, 136));
+  background: var(--sidebar-bg);
   color: #fff;
   padding: 10px;
   display: flex;
@@ -193,7 +216,7 @@ watch(
 .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 
 .logout-btn {
@@ -228,7 +251,7 @@ watch(
 }
 
 .user-box h1 {
-  color: rgb(255, 255, 255);
+  color: var(--text-color);
 }
 
 .menu {
@@ -244,7 +267,7 @@ watch(
   padding: 0.6rem 1rem;
   border-radius: 0.5rem;
   font-size: 18px;
-  color: #ffffff;
+  color: var(--text-color);
   text-decoration: none;
   font-weight: bold;
   transition: all 0.3s ease;
@@ -264,7 +287,7 @@ watch(
 
 .menu-item img {
   height: 25px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 
 .menu-item:hover {

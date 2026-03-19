@@ -23,15 +23,16 @@
 
       <div class="section">
         <h3>Notifications</h3>
-
-        <label>
+        <label class="toggle">
+          <span>Task reminders</span>
           <input type="checkbox" v-model="reminderStore.reminderNotificationsEnabled" />
-          Task reminders
+          <span class="slider"></span>
         </label>
 
-        <label>
+        <label class="toggle">
+          <span>Overdue task alerts</span>
           <input type="checkbox" v-model="reminderStore.overdueNotificationsEnabled" />
-          Overdue task alerts
+          <span class="slider"></span>
         </label>
       </div>
 
@@ -39,9 +40,9 @@
       <div class="section">
         <h3>Appearance</h3>
 
-        <select v-model="theme">
+        <select v-model="themeStore.theme" @change="themeStore.setTheme(themeStore.theme)">
+          <option value="default">Default mode</option>
           <option value="light">Light mode</option>
-          <option value="dark">Dark mode</option>
         </select>
       </div>
     </div>
@@ -70,6 +71,9 @@ watch(
     localStorage.setItem('overdueNot', JSON.stringify(val))
   },
 )
+
+import { useThemeStore } from '@/stores/theme'
+const themeStore = useThemeStore()
 </script>
 
 <style scoped>
@@ -78,7 +82,7 @@ watch(
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
+  background: var(--bg-main);
   padding: 20px;
 }
 
@@ -86,7 +90,7 @@ watch(
 .settings-card {
   width: 100%;
   max-width: 460px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
   padding: 35px;
   border-radius: 20px;
@@ -99,7 +103,8 @@ watch(
 .avatar {
   width: 100px;
   height: 100px;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--input-bg);
+  color: var(--text-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -107,7 +112,6 @@ watch(
   margin: 0 auto 15px;
   font-size: 40px;
   font-weight: bold;
-  color: white;
 }
 
 h2 {
@@ -116,7 +120,7 @@ h2 {
 }
 
 .email {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-muted);
   margin-bottom: 30px;
 }
 
@@ -127,7 +131,7 @@ h2 {
 }
 
 .section h3 {
-  color: white;
+  color: var(--text-color);
   margin-bottom: 12px;
   font-size: 16px;
 }
@@ -142,8 +146,8 @@ select {
   border-radius: 10px;
   border: none;
   outline: none;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  background: var(--input-bg);
+  color: var(--text-color);
   font-size: 14px;
   box-sizing: border-box; /* da ne “šire” */
 }
@@ -159,8 +163,8 @@ input::placeholder {
   height: 42px;
   border: none;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--btn-bg);
+  color: var(--text-color);
   cursor: pointer;
   transition: 0.2s;
   font-weight: 500;
@@ -192,5 +196,65 @@ label {
 input[type='checkbox'] {
   width: 16px;
   height: 16px;
+}
+
+.toggle {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-color);
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* sakrij default checkbox */
+.toggle input {
+  display: none;
+}
+
+/* slider pozadina */
+.slider {
+  position: relative;
+  width: 46px;
+  height: 24px;
+  background: var(--toggle-bg);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* krug */
+.slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+/* KAD JE UKLJUČEN */
+.toggle input:checked + .slider {
+  background: var(--toggle-active);
+  box-shadow: 0 0 10px var(--toggle-glow);
+}
+
+/* pomeranje kruga */
+.toggle input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+/* hover efekat */
+.slider:hover {
+  opacity: 0.85;
+}
+
+/* malo glow efekta kad je aktivno */
+.toggle input:checked + .slider {
+  box-shadow: 0 0 10px rgba(79, 172, 254, 0.6);
 }
 </style>
