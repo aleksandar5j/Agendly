@@ -40,4 +40,6 @@ export default {
   autoDeleteReminders(sid) {
     return axios.post('reminders/autoDelete', { sid })
   },
+
+  userUpdatePassword: (data) => axios.put('settings/updatePassword', data),
 }

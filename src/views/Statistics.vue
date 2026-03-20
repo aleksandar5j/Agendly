@@ -7,50 +7,34 @@
     </div>
 
     <div class="bar-section">
-      <p
-        style="
-          color: var(--text-color);
-          text-align: center;
-          margin-bottom: 20px;
-          font-size: 20px;
-          font-weight: bold;
-        "
-      >
-        Productivity
-      </p>
+      <div class="glass-card big">
+        <p class="title">Productivity</p>
 
-      <div class="month-buttons">
-        <button
-          v-for="(m, i) in months"
-          :key="i"
-          :class="{ active: selectedMonth === i + 1 }"
-          @click="selectMonth(i + 1)"
-        >
-          {{ m }}
-        </button>
-      </div>
+        <div class="month-buttons">
+          <button
+            v-for="(m, i) in months"
+            :key="i"
+            :class="{ active: selectedMonth === i + 1 }"
+            @click="selectMonth(i + 1)"
+          >
+            {{ m }}
+          </button>
+        </div>
 
-      <div class="bar-chart">
-        <Bar :data="barChartData" :options="barOptions" />
+        <div class="bar-chart">
+          <Bar :data="barChartData" :options="barOptions" />
+        </div>
       </div>
     </div>
 
     <hr />
 
     <div class="charts-row">
-      <div class="chart-container">
-        <p
-          style="
-            color: var(--text-color);
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-weight: bold;
-          "
-        >
-          All Progress
-        </p>
-        <Doughnut :data="chartData" :options="chartOptions" />
+      <div class="glass-card small">
+        <div class="chart-container">
+          <p class="title">All Progress</p>
+          <Doughnut :data="chartData" :options="chartOptions" />
+        </div>
       </div>
     </div>
   </div>
@@ -294,27 +278,32 @@ hr {
 .charts-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 120px;
   justify-content: center;
-  margin-top: 80px;
-  margin-bottom: 100px;
+  margin-top: 60px;
+  margin-bottom: 80px;
 }
 
 .chart-container {
   width: 100%;
-  max-width: 420px;
-  height: 320px;
+  max-width: 360px; /* SMANJENO da stane lepo */
+  height: 280px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* centriranje */
 }
 
 .bar-section {
-  margin-top: 60px;
+  margin-top: 40px; /* bilo 60px */
 }
 
 .bar-chart {
   width: 100%;
-  max-width: 885px;
-  height: 350px;
-  margin: auto;
+  max-width: 820px; /* malo smanjeno da ima luft */
+  height: 320px; /* malo manja visina */
+  margin: 0 auto;
+  margin-top: 10px; /* mali razmak od dugmića */
 }
 
 .month-buttons {
@@ -322,7 +311,7 @@ hr {
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .month-buttons button {
@@ -343,5 +332,57 @@ hr {
 .month-buttons button.active {
   background: #3498db;
   color: white;
+}
+
+.title {
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border-radius: 20px;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  transition: 0.3s ease;
+
+  display: flex;
+  justify-content: center;
+  align-items: center; /* KLJUČNO za centar */
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.glass-card.big {
+  max-width: 900px;
+  width: 100%;
+
+  margin: 0 auto;
+
+  padding: 25px 25px 15px 25px; /* gore manje, dole još manje */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.glass-card.small {
+  max-width: 420px;
+  width: 100%;
+
+  padding: 70px 10px;
+
+  margin: auto; /* KLJUČNO */
 }
 </style>

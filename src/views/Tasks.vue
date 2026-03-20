@@ -76,6 +76,7 @@
     </div>
     <div class="noresult" v-else>
       <img src="/src/components/icons/noresult.png" />
+      <h1>No tasks found</h1>
     </div>
 
     <div v-if="showDeleteModal" class="modal-overlay" @click.self="showDeleteModal = false">
@@ -527,7 +528,7 @@ function triggerError(message) {
 }
 
 .modal-select option {
-  background: var(--tasks-input);
+  background: var(--input-bg);
   color: var(--text-color);
   border-radius: 20px;
 }
@@ -550,10 +551,9 @@ function triggerError(message) {
   box-sizing: border-box;
 }
 
-/* Placeholder */
 .modal-input::placeholder,
 .modal-textarea::placeholder {
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--text-color);
 }
 
 /* Focus effect */
@@ -561,7 +561,7 @@ function triggerError(message) {
 .modal-textarea:focus,
 .modal-select:focus,
 .file-upload:focus {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgb(216, 94, 94);
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
   transform: scale(1.02);
 }
@@ -583,7 +583,7 @@ function triggerError(message) {
 }
 
 .modal-select2 option {
-  background: var(--tasks-select);
+  background: var(--filter-color);
   color: var(--text-color);
   border-radius: 20px;
 }
@@ -591,7 +591,7 @@ function triggerError(message) {
 .modal-select2 {
   border-radius: 14px;
   border: none;
-  background: var(--tasks-input);
+  background: var(--filter-color);
   color: white;
   font-size: 15px;
   font-weight: 500;
@@ -799,7 +799,7 @@ function triggerError(message) {
   padding: 10px 14px;
   border-radius: 12px;
   border: none;
-  background: var(--tasks-input);
+  background: var(--filter-color);
   color: var(--text-color);
   font-size: 14px;
   outline: none;
@@ -808,6 +808,7 @@ function triggerError(message) {
 
 .filter-input::placeholder {
   color: var(--text-color);
+  opacity: 0.5;
 }
 
 .filter-input:focus,
@@ -818,13 +819,21 @@ function triggerError(message) {
 
 .noresult {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 100px;
+}
+
+.noresult h1 {
+  font-weight: bold;
+  font-size: 37px;
+  color: var(--text-color);
 }
 
 .noresult img {
-  height: 500px;
+  height: 350px;
+  filter: var(--icon-color);
 }
 
 .late-btn {
@@ -878,7 +887,7 @@ function triggerError(message) {
 .input-with-icon {
   display: flex;
   align-items: center;
-  gap: 20px; /* razmak između ikone i inputa */
+  gap: 20px;
   margin-bottom: 15px;
 }
 

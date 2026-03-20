@@ -6,11 +6,11 @@
 :root {
   --bg-main: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
 
-  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-bg: #4078b8;
   --text-color: white;
   --text-muted: rgba(255, 255, 255, 0.7);
 
-  --input-bg: rgb(7, 22, 51);
+  --input-bg: rgb(17, 23, 36);
   --btn-bg: rgba(255, 255, 255, 0.2);
 
   --toggle-bg: rgba(255, 255, 255, 0.2);
@@ -21,54 +21,78 @@
   --sidebar-bg: linear-gradient(to bottom, rgb(114, 145, 211), rgb(32, 72, 136));
   --hover-bg: rgba(255, 255, 255, 0.15);
   --border-color: rgba(255, 255, 255, 0.2);
-  --icon-filter: invert(1); /* DARK (tvoj default plavi) */
+
+  --icon-filter: invert(1);
+  --icon-color: invert(0);
 
   --reminder-card: #5b8dc5;
 
   --addreminder-popup: #0c1d30;
   --reminder-icon: #ffffff;
 
-  --tasks-input: rgb(84, 112, 190);
+  --tasks-input: rgb(36, 43, 65);
   --tasks-select: rgb(29, 40, 70);
   --task-card: rgba(255, 255, 255, 0.09);
   --edit-task-popup: #0c1d30;
 
   --statistics-btns: rgb(44, 60, 102);
+
+  --settingpage-input: rgb(66, 91, 158);
+
+  --settings-input: rgb(0, 0, 0);
+  --filter-color: #568dcc;
+
+  --infocard-color: linear-gradient(rgb(81, 121, 207));
+
+  --dashboard-inputs: rgb(36, 43, 65);
+  --dashboard-add-popup: #0c1d30;
 }
 
 /* =========================
    LIGHT MODE
 ========================= */
 [data-theme='light'] {
-  --bg-main: #ffffff;
+  --bg-main: linear-gradient(to bottom, #f8fafc, #e2e8f0);
 
-  --card-bg: rgb(255, 255, 255);
-  --text-color: #000000;
+  --card-bg: #ffffff;
+  --text-color: #0f172a;
   --text-muted: #64748b;
 
-  --input-bg: #b3b3b3;
+  --input-bg: #f1f5f9;
   --btn-bg: #e2e8f0;
 
   --toggle-bg: #e2e8f0;
-  --toggle-circle: white;
+  --toggle-circle: #ffffff;
   --toggle-active: linear-gradient(135deg, #2563eb, #3b82f6);
-  --toggle-glow: rgba(59, 130, 246, 0.5);
+  --toggle-glow: rgba(37, 99, 235, 0.4);
 
-  --sidebar-bg: linear-gradient(to bottom, rgb(255, 255, 255), rgb(155, 155, 155));
+  --sidebar-bg: linear-gradient(to bottom, #ffffff, #e2e8f0);
   --hover-bg: #f1f5f9;
   --border-color: #e2e8f0;
 
-  --icon-filter: invert(0); /* LIGHT mode */
+  --addreminder-popup: #ffffff;
+  --reminder-card: #f8fafc;
+  --reminder-card-hover: #e2e8f0;
 
-  --addreminder-popup: #dfdfdf;
-  --reminder-card: #e4e4e4;
+  --icon-filter: invert(0);
+  --icon-color: invert(1);
 
-  --tasks-input: #ececec;
-  --tasks-select: #ececec;
-  --task-card: #eeeeee;
-  --edit-task-popup: #dfdfdf;
+  --tasks-input: #f1f5f9;
+  --tasks-select: #f1f5f9;
+  --task-card: #ffffff;
+  --edit-task-popup: #ffffff;
 
-  --statistics-btns: #ececec;
+  --statistics-btns: #e2e8f0;
+
+  --settingpage-input: #e9e9e9;
+
+  --settings-input: #f1f5f9;
+  --filter-color: #ffffff;
+
+  --infocard-color: linear-gradient(135deg, #f8fafc, #e2e8f0);
+
+  --dashboard-inputs: #b4b4b42d;
+  --dashboard-add-popup: #ffffff;
 }
 
 /* =========================

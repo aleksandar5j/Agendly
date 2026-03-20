@@ -371,6 +371,7 @@ function triggerError(message) {
   justify-content: center;
   align-items: center;
 }
+
 .modal {
   background: var(--addreminder-popup);
   color: var(--text-color);
@@ -598,12 +599,13 @@ function triggerError(message) {
   justify-content: center;
   text-align: center;
   height: 70vh;
-  margin-top: 50px;
+  margin-top: 80px;
   gap: 20px;
 }
 
 .noresult img {
   height: 400px;
+  filter: var(--icon-color);
 }
 
 .noresult button {
@@ -633,7 +635,7 @@ function triggerError(message) {
 }
 
 .add-card:hover {
-  background: rgba(59, 130, 246, 0.6);
+  background: var(--reminder-card-hover);
   transform: translateY(-4px);
 }
 

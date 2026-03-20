@@ -2,23 +2,21 @@
 <template>
   <div class="settings-page">
     <div class="settings-card">
-      <!-- AVATAR -->
       <div class="avatar">
         {{ session.user.usr_username.charAt(0).toUpperCase() }}
       </div>
 
-      <!-- USER INFO -->
       <h2>{{ session.user.usr_username }}</h2>
       <p class="email">{{ session.user.usr_email }}</p>
 
-      <!-- PASSWORD -->
       <div class="section">
         <h3>Change Password</h3>
 
-        <input type="password" placeholder="New password" />
-        <input type="password" placeholder="Confirm password" />
+        <input v-model="oldPassword" type="password" placeholder="Old password" />
+        <input v-model="newPassword" type="password" placeholder="New password" />
+        <input v-model="confirmPassword" type="password" placeholder="Confirm password" />
 
-        <button class="btn">Update Password</button>
+        <button class="btn" @click="changePassword">Update Password</button>
       </div>
 
       <div class="section">
@@ -36,27 +34,86 @@
         </label>
       </div>
 
-      <!-- APPEARANCE -->
       <div class="section">
         <h3>Appearance</h3>
 
-        <select v-model="themeStore.theme" @change="themeStore.setTheme(themeStore.theme)">
-          <option value="default">Default mode</option>
-          <option value="light">Light mode</option>
-        </select>
+        <div class="theme-options">
+          <div
+            class="theme-card"
+            :class="{ active: themeStore.theme === 'default' }"
+            @click="setTheme('default')"
+          >
+            <div class="preview default"></div>
+            <span>Default</span>
+          </div>
+
+          <div
+            class="theme-card"
+            :class="{ active: themeStore.theme === 'light' }"
+            @click="setTheme('light')"
+          >
+            <div class="preview light"></div>
+            <span>Light</span>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+
+  <div v-if="popup.show" :class="['popup', popup.type]">
+    {{ popup.message }}
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import api from '@/api'
+import { useThemeStore } from '@/stores/theme'
 import { watch } from 'vue'
 
 import { useSessionStore } from '@/stores/sessionUser'
 import { useReminderStore } from '@/stores/reminders'
 
+const themeStore = useThemeStore()
 const reminderStore = useReminderStore()
 const session = useSessionStore()
+
+const oldPassword = ref('')
+const newPassword = ref('')
+const confirmPassword = ref('')
+
+const changePassword = async () => {
+  if (!oldPassword.value || !newPassword.value || !confirmPassword.value) {
+    triggerError('All fields are required!')
+    return
+  }
+
+  if (newPassword.value !== confirmPassword.value) {
+    triggerError('Passwords do not match!')
+    return
+  }
+
+  if (newPassword.value.length < 6) {
+    triggerError('Password must be at least 6 characters!')
+    return
+  }
+
+  try {
+    await api.userUpdatePassword({
+      sid: session.sid,
+      old_password: oldPassword.value,
+      new_password: newPassword.value,
+    })
+
+    triggerSuccess('Password updated successfully!')
+
+    oldPassword.value = ''
+    newPassword.value = ''
+    confirmPassword.value = ''
+  } catch (err) {
+    triggerError(err.response?.data.data || 'Error updating password')
+  }
+}
 
 watch(
   () => reminderStore.reminderNotificationsEnabled,
@@ -72,8 +129,39 @@ watch(
   },
 )
 
-import { useThemeStore } from '@/stores/theme'
-const themeStore = useThemeStore()
+const setTheme = (theme) => {
+  themeStore.setTheme(theme)
+}
+
+const popup = ref({
+  show: false,
+  type: 'success',
+  message: '',
+})
+
+function triggerSuccess(message) {
+  popup.value = {
+    show: true,
+    type: 'success',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
+}
+
+function triggerError(message) {
+  popup.value = {
+    show: true,
+    type: 'error',
+    message,
+  }
+
+  setTimeout(() => {
+    popup.value.show = false
+  }, 3000)
+}
 </script>
 
 <style scoped>
@@ -86,7 +174,6 @@ const themeStore = useThemeStore()
   padding: 20px;
 }
 
-/* KARTICA */
 .settings-card {
   width: 100%;
   max-width: 460px;
@@ -99,11 +186,10 @@ const themeStore = useThemeStore()
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* AVATAR */
 .avatar {
   width: 100px;
   height: 100px;
-  background: var(--input-bg);
+  background: var(--settingpage-input);
   color: var(--text-color);
   border-radius: 50%;
   display: flex;
@@ -115,7 +201,7 @@ const themeStore = useThemeStore()
 }
 
 h2 {
-  color: white;
+  color: var(--text-color);
   margin-bottom: 5px;
 }
 
@@ -124,7 +210,6 @@ h2 {
   margin-bottom: 30px;
 }
 
-/* SEKCIJE */
 .section {
   text-align: left;
   margin-bottom: 28px;
@@ -136,28 +221,25 @@ h2 {
   font-size: 16px;
 }
 
-/* INPUTI - KLJUČNO (SVE ISTO!) */
 input,
 select {
   width: 100%;
-  height: 42px; /* fiksna visina */
+  height: 42px;
   padding: 0 12px;
   margin-bottom: 12px;
   border-radius: 10px;
   border: none;
   outline: none;
-  background: var(--input-bg);
+  background: var(--settingpage-input);
   color: var(--text-color);
   font-size: 14px;
-  box-sizing: border-box; /* da ne “šire” */
+  box-sizing: border-box;
 }
 
-/* placeholder */
 input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-color);
 }
 
-/* dugmad */
 .btn {
   width: 100%;
   height: 42px;
@@ -183,7 +265,6 @@ input::placeholder {
   background: #e2e8f0;
 }
 
-/* checkbox */
 label {
   display: flex;
   align-items: center;
@@ -208,12 +289,10 @@ input[type='checkbox'] {
   font-size: 14px;
 }
 
-/* sakrij default checkbox */
 .toggle input {
   display: none;
 }
 
-/* slider pozadina */
 .slider {
   position: relative;
   width: 46px;
@@ -224,7 +303,6 @@ input[type='checkbox'] {
   transition: 0.3s;
 }
 
-/* krug */
 .slider::before {
   content: '';
   position: absolute;
@@ -237,24 +315,99 @@ input[type='checkbox'] {
   transition: 0.3s;
 }
 
-/* KAD JE UKLJUČEN */
 .toggle input:checked + .slider {
   background: var(--toggle-active);
   box-shadow: 0 0 10px var(--toggle-glow);
 }
 
-/* pomeranje kruga */
 .toggle input:checked + .slider::before {
   transform: translateX(22px);
 }
 
-/* hover efekat */
 .slider:hover {
   opacity: 0.85;
 }
 
-/* malo glow efekta kad je aktivno */
 .toggle input:checked + .slider {
   box-shadow: 0 0 10px rgba(79, 172, 254, 0.6);
+}
+
+.popup {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  padding: 14px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease;
+  z-index: 9999;
+}
+
+.popup.success {
+  background: #27703a;
+}
+
+.popup.error {
+  background: #e74c3c;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.theme-options {
+  display: flex;
+  gap: 12px;
+}
+
+.theme-card {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--settingpage-input);
+  cursor: pointer;
+  transition: 0.25s;
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.theme-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.theme-card.active {
+  border: 2px solid var(--toggle-active);
+  box-shadow: 0 0 12px var(--toggle-glow);
+}
+
+.theme-card span {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+.preview {
+  width: 100%;
+  height: 50px;
+  border-radius: 8px;
+}
+
+.preview.default {
+  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
+}
+
+.preview.light {
+  background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
 }
 </style>

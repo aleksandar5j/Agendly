@@ -226,7 +226,7 @@ onMounted(() => {
   padding: 9px;
   border-radius: 50%;
   border: none;
-  background: rgb(255, 255, 255);
+  background: rgb(221, 221, 221);
   cursor: pointer;
   transition: 0.3s;
 }

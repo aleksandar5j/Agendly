@@ -59,7 +59,7 @@
 
         <div class="div-select">
           <p>Mark task</p>
-          <select v-model="taskModal.newStatus" class="modal-select">
+          <select v-model="taskModal.newStatus" class="modal-select" style="color: white">
             <option v-for="status in statuses" :key="status.sts_id" :value="status.sts_id">
               {{ status.sts_name }}
             </option>
@@ -90,7 +90,7 @@
   <div v-if="showModal" class="modal-overlay">
     <div class="modal">
       <div class="input-with-icon">
-        <h2 style="color: white; margin-left: 40px">✚ Create task</h2>
+        <h2 style="color: var(--text-color); margin-left: 40px">✚ Create task</h2>
       </div>
 
       <div class="input-with-icon">
@@ -143,7 +143,7 @@
           Attach file
           <input type="file" @change="onFileChange" hidden />
         </label>
-        <span v-if="file" style="margin-left: 12px; color: #fff; font-weight: 500">
+        <span v-if="file" style="margin-left: 12px; color: var(--text-color); font-weight: 500">
           {{ file.name }}
         </span>
       </div>
@@ -470,7 +470,7 @@ onMounted(() => {
   padding: 40px 80px;
   min-height: 100vh;
 
-  background: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
+  background: var(--bg-main);
 }
 
 .info {
@@ -484,19 +484,19 @@ onMounted(() => {
 
 .info-card {
   backdrop-filter: blur(14px);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--infocard-color);
   border-radius: 18px;
   padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.15);
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   transition: 0.3s ease;
-  color: white;
+  color: var(--text-color);
   text-align: center;
 }
 
 .info-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 20px 60px rgba(37, 99, 235, 0.6);
 }
 
@@ -505,7 +505,7 @@ onMounted(() => {
   font-weight: bold;
   opacity: 0.9;
   letter-spacing: 0.5px;
-  color: white;
+  color: var(--text-color);
 }
 
 .info-card.task-left {
@@ -527,11 +527,6 @@ onMounted(() => {
   opacity: 0.7;
 }
 
-.today-title {
-  font-size: 40px;
-  font-weight: bold;
-}
-
 .info-card.late {
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
@@ -544,7 +539,7 @@ onMounted(() => {
 .calendar-container {
   max-width: 1000px;
   margin: 0 auto;
-
+  background-color: var(--infocard-color);
   border-radius: 18px;
   padding: 22px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -558,7 +553,7 @@ onMounted(() => {
 }
 
 :deep(.fc-toolbar-title) {
-  color: #ffffff !important;
+  color: var(--text-color) !important;
   font-weight: 600;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0, 0.6);
 }
@@ -740,6 +735,7 @@ onMounted(() => {
   -webkit-appearance: none;
   -moz-appearance: none;
   padding-left: 12px;
+  background: var(--dashboard-inputs);
 }
 
 .modal-select:hover {
@@ -750,10 +746,6 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 0 20px rgba(133, 133, 133, 0.7);
   transform: scale(1.02);
-}
-.modal-select option {
-  background: #1f2937;
-  color: white;
 }
 
 .done-warning {
@@ -836,12 +828,12 @@ onMounted(() => {
 
 .head img {
   height: 40px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 .head h1 {
   font-weight: bold;
   font-size: 33px;
-  color: white;
+  color: var(--text-color);
   margin: 0;
 }
 
@@ -874,7 +866,7 @@ onMounted(() => {
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(14px);
-  background: rgba(30, 41, 59, 0.95);
+  background: var(--infocard-color);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   color: white;
   overflow: hidden;
@@ -1030,7 +1022,8 @@ onMounted(() => {
 
 /* Modal container */
 .modal {
-  background: rgba(31, 41, 55, 0.95);
+  background: var(--dashboard-add-popup);
+  color: var(--text-color);
   padding: 30px;
   border-radius: 24px;
   width: 520px;
@@ -1038,14 +1031,14 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(20px);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
   transition: all 0.3s ease;
 }
 
 .modal-select option {
-  background: #1f2937; /* tamnija pozadina */
-  color: white;
+  background: var(--dashboard-inputs);
+  color: var(--text-color);
   border-radius: 20px;
 }
 
@@ -1065,8 +1058,8 @@ onMounted(() => {
   padding: 14px 18px;
   border-radius: 14px;
   border: none;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: var(--dashboard-inputs);
+  color: var(--text-color);
   font-size: 15px;
   font-weight: 500;
   outline: none;
@@ -1078,7 +1071,7 @@ onMounted(() => {
 /* Placeholder */
 .modal-input::placeholder,
 .modal-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-color);
 }
 
 /* Focus effect */
@@ -1105,38 +1098,9 @@ onMounted(() => {
   -webkit-appearance: none;
   -moz-appearance: none;
   padding-left: 12px;
+  background: var(--dashboard-inputs);
 }
 
-.modal-select2 option {
-  background: #1f2937; /* tamnija pozadina */
-  color: white;
-  border-radius: 20px;
-}
-
-.modal-select2 {
-  border-radius: 14px;
-  border: none;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  font-size: 15px;
-  font-weight: 500;
-  outline: none;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  box-sizing: border-box;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.modal-select2:focus {
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-  transform: scale(1.02);
-}
-
-/* Date i time input: ukloni default ikonice */
 .modern-date,
 .modern-time {
   -webkit-appearance: none; /* Chrome/Safari */
@@ -1145,7 +1109,6 @@ onMounted(() => {
   position: relative;
 }
 
-/* Uklanja kalendar i sat ikone u Chrome/Safari */
 .modern-date::-webkit-inner-spin-button,
 .modern-date::-webkit-calendar-picker-indicator,
 .modern-time::-webkit-inner-spin-button,
@@ -1165,7 +1128,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.8);
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -1177,9 +1140,8 @@ onMounted(() => {
 }
 
 .file-upload:hover {
-  background: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.7);
   box-shadow: 0 0 18px rgba(59, 130, 246, 0.9);
-  transform: translateY(-2px) scale(1.02);
 }
 
 /* Buttons */
@@ -1188,7 +1150,7 @@ onMounted(() => {
 }
 
 .save {
-  background: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.8);
 }
 
 .cancel,
@@ -1204,12 +1166,10 @@ onMounted(() => {
 
 .cancel:hover {
   background: #4b5563;
-  transform: scale(1.05);
 }
 
 .save:hover {
-  background: rgba(59, 130, 246, 0.3);
-  transform: scale(1.05);
+  background: rgba(59, 130, 246, 0.7);
 }
 
 .input-with-icon {
@@ -1221,7 +1181,7 @@ onMounted(() => {
 
 .input-icon {
   height: 22px;
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
   opacity: 0.9;
 }
 
