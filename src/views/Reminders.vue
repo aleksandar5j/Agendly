@@ -323,25 +323,31 @@ function triggerError(message) {
 
 <style scoped>
 .reminders-page {
-  padding: 40px 80px;
+  padding: 20px 20px; /* manja padding za mobile */
   background: var(--bg-main);
   color: var(--text-color);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
+
 .head {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 10px;
 }
+
 .head img {
-  height: 40px;
+  height: 32px;
   filter: var(--icon-filter);
 }
+
 .head h1 {
   font-weight: bold;
-  font-size: 33px;
+  font-size: 24px;
   color: var(--text-color);
   margin: 0;
 }
@@ -349,126 +355,41 @@ function triggerError(message) {
 .filters {
   display: flex;
   justify-content: center;
-  gap: 60px;
-  margin: 50px;
+  gap: 20px;
+  margin: 20px 0;
 }
 
-.filters h1 {
+.filters h1,
+.filters h2 {
   font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+}
+
+.filters h1 strong {
+  color: green;
+}
+
+.filters h2 span {
+  color: #3b82f6;
 }
 
 .reminders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 40px;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: var(--addreminder-popup);
-  color: var(--text-color);
-  padding: 20px;
-  border-radius: 14px;
-  width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.delete-modal {
-  background: var(--card-bg);
-  color: var(--text-color);
-  padding: 40px;
-  border-radius: 14px;
-  text-align: center;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.modal-actions button {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* CANCEL */
-.cancel {
-  background: #6b7280;
-  color: white;
-}
-
-.cancel:hover {
-  background: #4b5563;
-  transform: translateY(-1px);
-}
-
-/* SAVE / ADD */
-.save {
-  background: #3b82f6;
-  color: white;
-}
-
-.save:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-/* DELETE MODAL */
-.delete-actions {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 15px;
-}
-
-.delete-actions button {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.delete-confirm {
-  background: #ef4444;
-  color: white;
-}
-
-.delete-confirm:hover {
-  background: #dc2626;
-  transform: translateY(-1px);
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .reminder-card {
-  padding: 20px;
+  padding: 16px;
   border-radius: 16px;
   background: var(--reminder-card);
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
   transition: all 0.25s ease;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
   cursor: pointer;
 }
@@ -476,12 +397,13 @@ function triggerError(message) {
 .reminder-card:hover {
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.5);
   background: rgba(241, 27, 27, 0.1);
+  transform: translateY(-2px);
 }
 
 .reminder-content {
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
 }
 
@@ -489,6 +411,7 @@ function triggerError(message) {
   height: 70px;
   filter: var(--icon-filter);
 }
+
 @keyframes bell-shake {
   0% {
     transform: rotate(0deg);
@@ -524,36 +447,10 @@ function triggerError(message) {
   text-align: center;
 }
 
-.edit-btn {
-  background: rgba(59, 130, 246, 2);
-  color: #ffffff;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.edit-btn:hover {
-  background: #3b82f6;
-  color: white;
-  transform: scale(1.1);
-}
-
-.reminder-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.reminder-header h3 {
-  font-size: 18px;
-  font-weight: bold;
+.reminder-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  opacity: 0.9;
 }
 
 .reminder-actions {
@@ -561,6 +458,7 @@ function triggerError(message) {
   gap: 8px;
 }
 
+.edit-btn,
 .delete-btn {
   border: none;
   width: 32px;
@@ -575,6 +473,16 @@ function triggerError(message) {
   transition: all 0.2s ease;
 }
 
+.edit-btn {
+  background: rgba(59, 130, 246, 0.9);
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background: #3b82f6;
+  transform: scale(1.1);
+}
+
 .delete-btn {
   background: rgba(239, 68, 68, 0.25);
   color: #f87171;
@@ -586,10 +494,30 @@ function triggerError(message) {
   transform: scale(1.1);
 }
 
-.reminder-card p {
-  margin: 4px 0;
-  font-size: 14px;
-  opacity: 0.9;
+.add-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--hover-bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-card:hover {
+  background: var(--reminder-card-hover);
+  transform: translateY(-4px);
+}
+
+.add-card .reminder-title {
+  color: var(--text-color);
+  font-weight: bold;
+  text-align: center;
+}
+
+.add-card img {
+  height: 40px;
 }
 
 .noresult {
@@ -599,7 +527,7 @@ function triggerError(message) {
   justify-content: center;
   text-align: center;
   height: 70vh;
-  margin-top: 80px;
+  margin-top: 40px;
   gap: 20px;
 }
 
@@ -625,48 +553,113 @@ function triggerError(message) {
   transform: translateY(-2px);
 }
 
-.add-card {
+/* MODALS */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--hover-bg);
+  padding: 10px;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--addreminder-popup);
+  color: var(--text-color);
+  padding: 20px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.modal-actions button {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.add-card:hover {
-  background: var(--reminder-card-hover);
-  transform: translateY(-4px);
+.cancel {
+  background: #6b7280;
+  color: white;
 }
 
-.add-card .reminder-title {
+.cancel:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+}
+
+.save {
+  background: #3b82f6;
+  color: white;
+}
+
+.save:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+/* DELETE MODAL */
+.delete-modal {
+  background: var(--card-bg);
   color: var(--text-color);
-  font-weight: bold;
+  padding: 40px;
+  border-radius: 14px;
   text-align: center;
 }
 
-.add-card img {
-  height: 40px;
+.delete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 15px;
 }
 
-.delete-btn {
-  background: #ef4444;
-  color: #ffffff;
+.delete-actions button {
+  padding: 10px 18px;
+  border-radius: 10px;
   border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: all 0.2s ease;
 }
 
-.delete-btn:hover {
-  transform: scale(1.1);
-  background: #dc2626;
+.delete-confirm {
+  background: #ef4444;
   color: white;
+}
+
+.delete-confirm:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* INPUTS */
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.input-icon {
+  height: 22px;
+  filter: var(--icon-filter);
 }
 
 .modal-input,
@@ -684,31 +677,26 @@ function triggerError(message) {
   transition: all 0.2s ease;
 }
 
-/* placeholder */
 .modal-input::placeholder {
   color: var(--text-color);
 }
 
-/* hover */
 .modal-input:hover,
 .modal-select:hover {
   border-color: #4b5563;
 }
 
-/* focus */
 .modal-input:focus,
 .modal-select:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 1px #3b82f6;
 }
 
-/* select dropdown */
 .modal-select option {
   background: var(--card-bg);
   color: var(--text-color);
 }
 
-/* uklanja spinner za number */
 .modal-input::-webkit-outer-spin-button,
 .modal-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -725,6 +713,7 @@ function triggerError(message) {
   -moz-appearance: none;
 }
 
+/* POPUPS */
 .popup {
   position: fixed;
   top: 25px;
@@ -733,7 +722,7 @@ function triggerError(message) {
   border-radius: 8px;
   color: white;
   font-weight: 500;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0, 0.25);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
   animation: slideIn 0.3s ease;
   z-index: 9999;
 }
@@ -767,5 +756,97 @@ function triggerError(message) {
 .input-icon {
   height: 22px;
   filter: var(--icon-filter);
+}
+
+@media (max-width: 500px) {
+  .reminders-page {
+    padding: 10px;
+    -webkit-overflow-scrolling: touch;
+    backdrop-filter: blur(20px);
+  }
+
+  .head img {
+    height: 28px;
+  }
+
+  .head h1 {
+    font-size: 20px;
+  }
+
+  .filters h1 {
+    font-size: 15px;
+  }
+
+  .reminders-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .reminder-card {
+    padding: 10px;
+    border-radius: 10px;
+    gap: 6px;
+  }
+
+  .reminder-bell {
+    height: 55px;
+  }
+
+  .reminder-title {
+    font-size: 14px;
+  }
+
+  .reminder-card p {
+    font-size: 12px;
+  }
+
+  .reminder-actions {
+    gap: 5px;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .add-card img {
+    height: 32px;
+  }
+
+  .noresult img {
+    height: 230px;
+  }
+
+  .noresult button {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  .modal {
+    max-width: 320px;
+    padding: 14px;
+    margin: 10px;
+  }
+
+  .modal-input,
+  .modal-select {
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .popup {
+    top: 12px;
+    right: 12px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .delete-modal {
+    padding: 24px;
+    max-width: 300px;
+    margin: 10px;
+  }
 }
 </style>

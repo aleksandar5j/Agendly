@@ -410,4 +410,116 @@ input[type='checkbox'] {
 .preview.light {
   background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
 }
+
+@media (max-width: 600px) {
+  .settings-page {
+    align-items: flex-start;
+    padding: 10px;
+    -webkit-overflow-scrolling: touch;
+    backdrop-filter: blur(20px);
+  }
+
+  .settings-card {
+    max-width: 100%;
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .email {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .section {
+    margin-bottom: 24px;
+  }
+
+  .section h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  input {
+    height: 45px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  input:focus {
+    box-shadow: 0 0 0 2px var(--toggle-active);
+  }
+
+  .btn {
+    height: 48px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  /* 👉 Sticky dugme (mnogo bolji UX na telefonu) */
+  .btn {
+    position: sticky;
+    bottom: 10px;
+  }
+
+  /* TOGGLE */
+  .toggle {
+    font-size: 15px;
+  }
+
+  .slider {
+    width: 50px;
+    height: 26px;
+  }
+
+  .slider::before {
+    width: 20px;
+    height: 20px;
+  }
+
+  .toggle input:checked + .slider::before {
+    transform: translateX(24px);
+  }
+
+  /* THEME CARDS */
+  .theme-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .theme-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .theme-card span {
+    font-size: 14px;
+  }
+
+  .preview {
+    width: 70px;
+    height: 40px;
+  }
+
+  .popup {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    top: 15px;
+    width: 90%;
+    text-align: center;
+  }
+}
 </style>

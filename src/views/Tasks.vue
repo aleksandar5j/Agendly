@@ -896,4 +896,134 @@ function triggerError(message) {
   filter: var(--icon-filter);
   opacity: 0.9;
 }
+
+@media (max-width: 500px) {
+  .tasks-page {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .head img {
+    height: 28px;
+  }
+
+  .head h1 {
+    font-size: 20px;
+  }
+
+  .filters {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filter-input,
+  .filter-select {
+    width: 100%;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .under-head {
+    margin-top: 8px;
+  }
+
+  .late-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .tasks-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .task-card {
+    padding: 10px;
+    border-radius: 10px;
+    gap: 6px;
+  }
+
+  .task-header h3 {
+    font-size: 14px;
+  }
+
+  .task-actions button {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .desc {
+    font-size: 12px;
+  }
+
+  .task-footer span {
+    font-size: 11px;
+  }
+
+  .category {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  .noresult img {
+    height: 180px;
+  }
+
+  .noresult h1 {
+    font-size: 16px;
+  }
+
+  /* Modals */
+  .modal {
+    max-width: 250px;
+    padding: 14px;
+    margin: 15px;
+  }
+
+  .modal h2 {
+    font-size: 18px;
+  }
+
+  .modal-input,
+  .modal-select,
+  .modal-textarea,
+  .modern-date,
+  .modern-time {
+    font-size: 13px;
+    padding: 8px 10px;
+    height: 34px;
+  }
+
+  .modal-textarea {
+    height: 70px;
+  }
+
+  .input-with-icon {
+    gap: 10px;
+  }
+
+  .input-icon {
+    height: 20px;
+  }
+
+  .modal-actions button {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .delete-modal {
+    padding: 24px;
+    max-width: 220px;
+    margin: 15px;
+  }
+
+  .popup {
+    top: 12px;
+    right: 12px;
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+}
 </style>

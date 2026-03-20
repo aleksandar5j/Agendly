@@ -21,7 +21,6 @@
         <RouterLink
           to="/dashboard"
           class="menu-item outline-text"
-          exact
           @click.prevent="handleDashboardClick"
         >
           <img src="/src/components/icons/dashboard.png" />
@@ -70,6 +69,34 @@
       <RouterView />
     </main>
 
+    <div v-if="session.isLoggedIn" class="mobile-nav">
+      <RouterLink to="/dashboard" @click="handleDashboardClick">
+        <img src="/src/components/icons/dashboard.png" />
+        <span v-if="reminderStore.tasksLate.length" class="badge">
+          {{ reminderStore.tasksLate.length }}
+        </span>
+      </RouterLink>
+
+      <RouterLink to="/statistics">
+        <img src="/src/components/icons/trend.png" />
+      </RouterLink>
+
+      <RouterLink to="/tasks">
+        <img src="/src/components/icons/task.png" />
+      </RouterLink>
+
+      <RouterLink to="/reminders" @click="handleReminderClick">
+        <img src="/src/components/icons/bell.png" />
+        <span v-if="reminderStore.activeCount" class="badge">
+          {{ reminderStore.activeCount }}
+        </span>
+      </RouterLink>
+
+      <RouterLink to="/settings">
+        <img src="/src/components/icons/settings.png" />
+      </RouterLink>
+    </div>
+
     <div v-if="reminderStore.showPopup" class="reminder-popup">
       <strong>Tasks reminder:</strong>
       <ul>
@@ -101,17 +128,13 @@ const router = useRouter()
 const session = useSessionStore()
 const reminderStore = useReminderStore()
 
-// Klik na Reminders
 const handleReminderClick = () => {
   reminderStore.showPopupManually()
-  router.push('/reminders')
 }
 
-// Klik na Dashboard
 const handleDashboardClick = async () => {
-  await reminderStore.loadLateTasks() // učitaj kasne taskove
-  reminderStore.showLateTasksPopup() // prikaži overdue popup
-  router.push('/dashboard')
+  await reminderStore.loadLateTasks()
+  reminderStore.showLateTasksPopup()
 }
 
 // Logout
@@ -169,7 +192,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -322,20 +345,6 @@ onMounted(() => {
   font-weight: bold;
 }
 
-.taskslate-popup {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #ef4444;
-  color: white;
-  padding: 15px 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-  z-index: 10000;
-  animation: fadeInOut 5s forwards;
-  font-weight: bold;
-}
-
 .avatar {
   width: 32px;
   height: 33px;
@@ -349,18 +358,22 @@ onMounted(() => {
   font-size: 18px;
 }
 
-.reminder-popup {
+.reminder-popup,
+.taskslate-popup {
   position: fixed;
   top: 20px;
   right: 20px;
+  max-width: 400px;
+  width: 90%;
   background: #ef4444;
   color: white;
   padding: 15px 20px;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   z-index: 10000;
-  animation: fadeInOut 5s forwards;
   font-weight: bold;
+  text-align: center;
+  animation: fadeInOut 5s forwards;
 }
 
 @keyframes fadeInOut {
@@ -379,6 +392,103 @@ onMounted(() => {
   100% {
     opacity: 0;
     transform: translateY(-10px);
+  }
+}
+
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .content.with-sidebar {
+    margin-left: 0 !important;
+  }
+
+  .content {
+    padding-bottom: 90px;
+  }
+
+  .mobile-nav {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    height: 65px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-nav a {
+    position: relative;
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+    transition: 0.2s;
+    text-decoration: none;
+  }
+
+  .mobile-nav img {
+    height: 26px;
+    width: 26px;
+    object-fit: contain;
+
+    filter: var(--icon-filter);
+    opacity: 0.7;
+    transition: 0.2s;
+  }
+
+  .mobile-nav a.router-link-exact-active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .mobile-nav a.router-link-exact-active img {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  .mobile-nav a:active {
+    transform: scale(0.9);
+  }
+
+  .mobile-nav .badge {
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+  }
+
+  .reminder-popup,
+  .taskslate-popup {
+    width: 70%;
+    top: 15px;
+    padding: 12px 15px;
+    font-size: 13px;
   }
 }
 </style>

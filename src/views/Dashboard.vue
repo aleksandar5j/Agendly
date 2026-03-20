@@ -556,6 +556,8 @@ onMounted(() => {
   color: var(--text-color) !important;
   font-weight: 600;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0, 0.6);
+  font-size: 20px;
+  margin: 5px;
 }
 
 .fc-theme-standard td,
@@ -1200,5 +1202,136 @@ onMounted(() => {
 
 .late-notice img {
   height: 35px;
+}
+
+@media (max-width: 500px) {
+  .dashboard {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .head img {
+    height: 28px;
+  }
+
+  .head h1 {
+    font-size: 20px;
+  }
+
+  .info {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .info-card {
+    padding: 10px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .info-card h1,
+  .info-card h2 {
+    font-size: 16px;
+  }
+
+  .info-card span,
+  .info-card p {
+    font-size: 12px;
+  }
+
+  .calendar-container {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Modal za Task */
+  .modall {
+    max-width: 320px;
+    padding: 12px;
+  }
+
+  .modal-header h2 {
+    font-size: 16px;
+  }
+
+  .late-notice {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .modal-content h2 {
+    font-size: 16px;
+  }
+
+  .modal-content h3,
+  .modal-content p {
+    font-size: 13px;
+  }
+
+  .attachment p,
+  .div-select p,
+  .done-warning p {
+    font-size: 12px;
+  }
+
+  .modal-select {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+
+  .modal-actionss button {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+
+  /* Create task modal */
+  .modal {
+    max-width: 320px;
+    padding: 12px;
+  }
+
+  .modal h2 {
+    font-size: 16px;
+  }
+
+  .modal-input,
+  .modal-textarea,
+  .modern-date,
+  .modern-time,
+  .modal-select {
+    font-size: 13px;
+    padding: 8px 10px;
+    height: 34px;
+  }
+
+  .modal-textarea {
+    height: 70px;
+  }
+
+  .input-with-icon {
+    gap: 10px;
+  }
+
+  .input-icon {
+    height: 20px;
+  }
+
+  .file-upload {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .modal-actions button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .popup {
+    top: 12px;
+    right: 12px;
+    font-size: 12px;
+    padding: 10px 14px;
+  }
 }
 </style>

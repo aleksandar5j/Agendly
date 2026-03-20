@@ -385,4 +385,72 @@ hr {
 
   margin: auto; /* KLJUČNO */
 }
+
+@media (max-width: 768px) {
+  .statistics {
+    padding: 10px 20px; /* manje sa strane */
+    overflow-x: hidden; /* sprečava horizontalni scroll */
+  }
+
+  .head {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .head h1 {
+    font-size: 22px;
+  }
+
+  .bar-section {
+    margin-top: 20px;
+  }
+
+  .bar-chart {
+    width: 100% !important; /* zauzima 100% širine kontejnera */
+    max-width: 100% !important; /* ne prelazi ekran */
+    height: 220px !important; /* proporcionalno smanjena visina */
+    margin: 0 auto;
+  }
+
+  .month-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+
+  .month-buttons button {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .charts-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
+    margin-bottom: 30px;
+  }
+
+  .glass-card.big,
+  .glass-card.small {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20px 10px !important;
+    box-sizing: border-box;
+  }
+
+  .chart-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 200px !important;
+  }
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+}
 </style>
