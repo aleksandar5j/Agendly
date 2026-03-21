@@ -327,4 +327,50 @@ async function userRegister() {
   flex-direction: row;
   justify-content: space-between;
 }
+
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .login-page {
+    padding: 15px; /* mali razmak oko forme */
+  }
+
+  .login-card {
+    width: 100%; /* koristi skoro ceo ekran */
+    max-width: 400px; /* ali ne širi previše */
+    padding: 25px 20px; /* smanjen padding za mobilne ekrane */
+    border-radius: 15px; /* malo manja za mobilne */
+  }
+
+  .login-card h1 {
+    font-size: 24px; /* manja naslovna font veličina */
+  }
+
+  .subtitle {
+    font-size: 12px; /* manja za mobilni */
+  }
+
+  .input-wrap input {
+    font-size: 13px; /* prilagodjeno mobilnom */
+    padding: 10px;
+  }
+
+  .login-btn,
+  .register-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .not-log {
+    flex-direction: column;
+    flex-direction: column; /* dugmad jedan ispod drugog */
+    gap: 10px;
+    text-align: center;
+  }
+}
 </style>

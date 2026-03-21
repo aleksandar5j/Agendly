@@ -466,6 +466,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
 .dashboard {
   padding: 40px 80px;
   min-height: 100vh;
@@ -1044,8 +1051,6 @@ onMounted(() => {
   border-radius: 20px;
 }
 
-/* Common input styles */
-
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -1208,6 +1213,7 @@ onMounted(() => {
   .dashboard {
     padding: 12px;
     gap: 12px;
+    background: var(--bg-main);
   }
 
   .head img {
@@ -1285,10 +1291,12 @@ onMounted(() => {
     border-radius: 8px;
   }
 
-  /* Create task modal */
   .modal {
-    max-width: 320px;
-    padding: 12px;
+    max-width: 250px;
+    max-height: 70vh; /* ograničava visinu na 80% visine ekrana */
+    padding: 14px;
+    margin: 15px;
+    overflow-y: auto; /* omogućava scroll kad je sadržaj veći od max-height */
   }
 
   .modal h2 {
@@ -1319,12 +1327,12 @@ onMounted(() => {
 
   .file-upload {
     font-size: 12px;
-    padding: 6px 10px;
+    padding: 0 10px;
   }
 
   .modal-actions button {
     font-size: 12px;
-    padding: 6px 12px;
+    padding: 10px 15px;
   }
 
   .popup {

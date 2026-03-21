@@ -758,11 +758,19 @@ function triggerError(message) {
   filter: var(--icon-filter);
 }
 
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
 @media (max-width: 500px) {
   .reminders-page {
     padding: 10px;
     -webkit-overflow-scrolling: touch;
     backdrop-filter: blur(20px);
+    background: var(--bg-main);
   }
 
   .head img {

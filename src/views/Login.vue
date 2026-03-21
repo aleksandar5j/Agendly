@@ -269,4 +269,62 @@ const userLogin = async () => {
   flex-direction: row;
   justify-content: space-between;
 }
+
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .login-card {
+    width: 90% !important; /* zauzima skoro ceo ekran */
+    padding: 25px 15px !important;
+    border-radius: 15px;
+    gap: 12px;
+    margin: 20px;
+  }
+
+  .login-card h1 {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .form-group {
+    gap: 4px;
+  }
+
+  .input-wrap {
+    padding: 0 8px;
+  }
+
+  .input-wrap input {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .login-btn {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .not-reg {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .register-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .bg-video {
+    object-fit: cover;
+  }
+}
 </style>

@@ -386,10 +386,18 @@ hr {
   margin: auto; /* KLJUČNO */
 }
 
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
 @media (max-width: 768px) {
   .statistics {
     padding: 10px 20px; /* manje sa strane */
     overflow-x: hidden; /* sprečava horizontalni scroll */
+    background: var(--bg-main);
   }
 
   .head {

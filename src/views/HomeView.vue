@@ -403,4 +403,90 @@ onMounted(() => {
   opacity: 0.8;
   color: black;
 }
+
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  /* Hero section */
+  .content-wrapper {
+    width: 100%;
+    max-width: 95%;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px;
+  }
+
+  .content-wrapper h2 {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .logo {
+    height: 100px;
+    margin-bottom: 15px;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .btn,
+  .btn-secondary {
+    width: 60%;
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+
+  /* Video section / feature cards */
+  .video-text {
+    width: 75%; /* stane unutar ekrana */
+    margin: 20px;
+  }
+
+  .video-text h2 {
+    font-size: 1.5rem;
+  }
+
+  .video-text p {
+    font-size: 1rem;
+  }
+
+  .glass-card {
+    padding: 15px 20px;
+    margin: 15px;
+  }
+
+  .text-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .video-icon {
+    height: 40px;
+  }
+
+  /* About us section */
+  .aboutus {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .aboutus h1 {
+    font-size: 1.8rem;
+  }
+
+  .aboutus p {
+    font-size: 16px;
+  }
+}
 </style>

@@ -57,6 +57,10 @@
           </div>
         </div>
       </div>
+
+      <div class="mobile-only mobile-logout-wrapper">
+        <button class="logout-btn" @click="logout">Logout</button>
+      </div>
     </div>
   </div>
 
@@ -66,10 +70,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import api from '@/api'
 import { useThemeStore } from '@/stores/theme'
-import { watch } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 import { useSessionStore } from '@/stores/sessionUser'
 import { useReminderStore } from '@/stores/reminders'
@@ -128,6 +134,11 @@ watch(
     localStorage.setItem('overdueNot', JSON.stringify(val))
   },
 )
+
+const logout = () => {
+  session.logout()
+  router.push('/')
+}
 
 const setTheme = (theme) => {
   themeStore.setTheme(theme)
@@ -411,12 +422,24 @@ input[type='checkbox'] {
   background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
 }
 
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
+.mobile-only {
+  display: none;
+}
+
 @media (max-width: 600px) {
   .settings-page {
     align-items: flex-start;
     padding: 10px;
     -webkit-overflow-scrolling: touch;
     backdrop-filter: blur(20px);
+    background: var(--bg-main);
   }
 
   .settings-card {
@@ -520,6 +543,56 @@ input[type='checkbox'] {
     top: 15px;
     width: 90%;
     text-align: center;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-logout-wrapper {
+    z-index: 1000;
+  }
+
+  .logout-btn {
+    background: #832e24;
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .logout-btn:hover {
+    background: #c0392b;
+  }
+}
+
+@media (max-width: 780px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-logout-wrapper {
+    z-index: 1000;
+  }
+
+  .logout-btn {
+    background: #832e24;
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .logout-btn:hover {
+    background: #c0392b;
   }
 }
 </style>

@@ -327,34 +327,6 @@ function onFileChange(e) {
   file.value = e.target.files[0]
 }
 
-// ADD TASK
-async function saveTask() {
-  try {
-    const fd = new FormData()
-    fd.append('title', title.value)
-    fd.append('description', description.value)
-    fd.append('date', date.value)
-    fd.append('time', time.value)
-    fd.append('cat_id', Number(cat_id.value))
-    fd.append('sid', session.sid)
-    if (file.value) {
-      fd.append('file', file.value)
-      fd.append('file_name', file.value.name)
-    }
-    await api.postTask(fd)
-    showModal.value = false
-    file.value = null
-    getTasks()
-    await reminderStore.loadLateTasks()
-    getOverdueTasks()
-    await reminderStore.loadReminders()
-    triggerSuccess('New task created successfully')
-  } catch (error) {
-    console.log(error)
-    triggerError('Cannot create new task')
-  }
-}
-
 // EDIT TASK
 function openEditModal(task) {
   editTask.value = { ...task }
@@ -431,6 +403,13 @@ function triggerError(message) {
 </script>
 
 <style scoped>
+html,
+body {
+  background: var(--bg-main);
+  margin: 0;
+  padding: 0;
+}
+
 .tasks-page {
   padding: 40px 80px;
   min-height: 100vh;
@@ -901,6 +880,7 @@ function triggerError(message) {
   .tasks-page {
     padding: 12px;
     gap: 12px;
+    background: var(--bg-main);
   }
 
   .head img {
@@ -949,8 +929,8 @@ function triggerError(message) {
   }
 
   .task-actions button {
-    width: 26px;
-    height: 26px;
+    width: 46px;
+    height: 46px;
     font-size: 13px;
   }
 
@@ -975,11 +955,12 @@ function triggerError(message) {
     font-size: 16px;
   }
 
-  /* Modals */
   .modal {
     max-width: 250px;
+    max-height: 70vh; /* ograničava visinu na 80% visine ekrana */
     padding: 14px;
     margin: 15px;
+    overflow-y: auto; /* omogućava scroll kad je sadržaj veći od max-height */
   }
 
   .modal h2 {
