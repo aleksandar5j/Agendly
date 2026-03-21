@@ -258,6 +258,7 @@ hr {
   height: 40px;
   filter: var(--icon-filter);
 }
+
 .head h1 {
   font-weight: bold;
   font-size: 33px;
@@ -393,6 +394,12 @@ body {
   padding: 0;
 }
 
+@media (max-width: 500px) {
+  .head h1 {
+    font-size: 22px;
+  }
+}
+
 @media (max-width: 768px) {
   .statistics {
     padding: 10px 20px; /* manje sa strane */
@@ -401,10 +408,14 @@ body {
   }
 
   .head {
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
     text-align: center;
     margin-top: 15px;
+  }
+
+  .head img {
+    height: 28px;
   }
 
   .head h1 {

@@ -239,7 +239,7 @@ onMounted(() => {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .logout-btn {
@@ -255,7 +255,7 @@ onMounted(() => {
 }
 
 .logout-btn img {
-  height: 23px;
+  height: 20px;
   filter: invert(0);
   transition: 0.3s;
 }
@@ -346,8 +346,8 @@ onMounted(() => {
 }
 
 .avatar {
-  width: 32px;
-  height: 33px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background: #d6d6d6;
   display: flex;
@@ -355,7 +355,7 @@ onMounted(() => {
   justify-content: center;
   color: rgb(21, 44, 66);
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .reminder-popup,

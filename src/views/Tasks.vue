@@ -190,7 +190,6 @@ const cat_id = ref()
 const newStatus = ref(null)
 const file = ref(null)
 
-const showModal = ref(false)
 const showEditModal = ref(false)
 const showDeleteModal = ref(false)
 const taskToDelete = ref(null)
@@ -263,23 +262,6 @@ async function filterByCategory() {
   } catch (error) {
     console.log(error)
   }
-}
-
-function closeModal() {
-  showModal.value = false
-  showEditModal.value = false
-  resetForm()
-}
-
-function resetForm() {
-  title.value = ''
-  description.value = ''
-  date.value = ''
-  time.value = ''
-  cat_id.value = ''
-  newStatus.value = null
-  file.value = null
-  editTask.value = null
 }
 
 // GET TASKS / CATEGORIES / STATUSES
@@ -540,7 +522,7 @@ body {
 .modal-textarea:focus,
 .modal-select:focus,
 .file-upload:focus {
-  background: rgb(216, 94, 94);
+  background: rgb(197, 197, 197);
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
   transform: scale(1.02);
 }
@@ -748,6 +730,7 @@ body {
   height: 40px;
   filter: var(--icon-filter);
 }
+
 .head h1 {
   font-weight: bold;
   font-size: 33px;
@@ -757,9 +740,9 @@ body {
 
 .header {
   display: flex;
-  justify-content: space-between; /* dugme levo, filteri desno */
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* da filteri idu ispod na manjim ekranima */
+  flex-wrap: wrap;
   margin: 20px 0px;
 }
 
@@ -883,28 +866,45 @@ body {
     background: var(--bg-main);
   }
 
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .under-head {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* ili flex-start ako hoćeš levo */
+    margin-top: 10px;
+  }
+
+  .late-btn {
+    width: 100%; /* opcionalno da bude full width */
+  }
+
+  .head {
+    margin-top: 15px;
+  }
+
   .head img {
     height: 28px;
   }
 
   .head h1 {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .filters {
     flex-direction: column;
     gap: 8px;
+    width: 100%;
   }
 
   .filter-input,
   .filter-select {
-    width: 100%;
     font-size: 13px;
     padding: 8px 10px;
-  }
-
-  .under-head {
-    margin-top: 8px;
+    min-width: 0; /* 🔥 OVO JE KLJUČNO */
   }
 
   .late-btn {
@@ -929,9 +929,7 @@ body {
   }
 
   .task-actions button {
-    width: 46px;
-    height: 46px;
-    font-size: 13px;
+    font-size: 20px;
   }
 
   .desc {

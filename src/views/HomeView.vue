@@ -287,12 +287,17 @@ onMounted(() => {
   padding: 40px 0;
   gap: 30px;
   flex-direction: column;
+  z-index: 0;
 }
 
 .video-section hr {
   border: 1px solid #2570ff;
   width: 70%;
   margin-bottom: 50px;
+}
+
+.video-section .bg-video {
+  z-index: -1; /* NE -2 */
 }
 
 /* VIDEO */
@@ -402,13 +407,6 @@ onMounted(() => {
   font-size: 20px;
   opacity: 0.8;
   color: black;
-}
-
-html,
-body {
-  background: var(--bg-main);
-  margin: 0;
-  padding: 0;
 }
 
 @media (max-width: 768px) {

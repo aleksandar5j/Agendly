@@ -323,7 +323,7 @@ function triggerError(message) {
 
 <style scoped>
 .reminders-page {
-  padding: 20px 20px; /* manja padding za mobile */
+  padding: 40px 80px;
   background: var(--bg-main);
   color: var(--text-color);
   min-height: 100vh;
@@ -337,17 +337,17 @@ function triggerError(message) {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .head img {
-  height: 32px;
+  height: 40px;
   filter: var(--icon-filter);
 }
 
 .head h1 {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 33px;
   color: var(--text-color);
   margin: 0;
 }
@@ -362,7 +362,7 @@ function triggerError(message) {
 .filters h1,
 .filters h2 {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 40px;
   text-align: center;
 }
 
@@ -773,12 +773,16 @@ body {
     background: var(--bg-main);
   }
 
+  .head {
+    margin-top: 15px;
+  }
+
   .head img {
     height: 28px;
   }
 
   .head h1 {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .filters h1 {

@@ -839,6 +839,7 @@ body {
   height: 40px;
   filter: var(--icon-filter);
 }
+
 .head h1 {
   font-weight: bold;
   font-size: 33px;
@@ -1216,12 +1217,16 @@ body {
     background: var(--bg-main);
   }
 
+  .head {
+    margin-top: 15px;
+  }
+
   .head img {
     height: 28px;
   }
 
   .head h1 {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .info {
