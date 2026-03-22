@@ -1117,20 +1117,6 @@ body {
   position: relative;
 }
 
-.modern-date::-webkit-inner-spin-button,
-.modern-date::-webkit-calendar-picker-indicator,
-.modern-time::-webkit-inner-spin-button,
-.modern-time::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
-}
-
-/* Za Firefox: ukloni default spinner za time */
-.modern-time::-moz-inner-spin-button,
-.modern-time::-moz-calendar-picker-indicator {
-  display: none;
-}
-
 /* File upload */
 .file-upload {
   display: flex;

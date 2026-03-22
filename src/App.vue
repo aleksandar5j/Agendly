@@ -10,56 +10,68 @@
             </div>
             <h1 class="user-outline">{{ session.user.usr_username }}</h1>
           </div>
-          <button class="logout-btn" @click="logout" alt="logout">
+          <button class="logout-btn" @click="logout" alt="Logout">
             <img src="/src/components/icons/logout.png" />
           </button>
         </div>
       </div>
 
       <nav class="menu">
-        <!-- Dashboard -->
+        <div class="menu-top">
+          <!-- Dashboard -->
+          <RouterLink
+            to="/dashboard"
+            class="menu-item outline-text"
+            @click.prevent="handleDashboardClick"
+          >
+            <img src="/src/components/icons/dashboard.png" />
+            Dashboard
+            <span v-if="reminderStore.tasksLate.length > 0" class="reminder-badge">
+              {{ reminderStore.tasksLate.length }}
+            </span>
+          </RouterLink>
+
+          <!-- Statistics -->
+          <RouterLink to="/statistics" class="menu-item outline-text" exact>
+            <img src="/src/components/icons/trend.png" />
+            Statistics
+          </RouterLink>
+
+          <!-- Tasks -->
+          <RouterLink to="/tasks" class="menu-item outline-text" exact>
+            <img src="/src/components/icons/task.png" />
+            Tasks
+          </RouterLink>
+
+          <!-- Reminders -->
+          <RouterLink
+            to="/reminders"
+            class="menu-item outline-text"
+            exact
+            @click.prevent="handleReminderClick"
+          >
+            <img src="/src/components/icons/bell.png" />
+            Reminders
+            <span v-if="reminderStore.activeCount > 0" class="reminder-badge">
+              {{ reminderStore.activeCount }}
+            </span>
+          </RouterLink>
+
+          <!-- Settings -->
+          <RouterLink to="/settings" class="menu-item outline-text" exact>
+            <img src="/src/components/icons/settings.png" />
+            Settings
+          </RouterLink>
+        </div>
+
+        <!-- 🔥 ADMIN NA DNU -->
         <RouterLink
-          to="/dashboard"
-          class="menu-item outline-text"
-          @click.prevent="handleDashboardClick"
+          v-if="session.isAdmin"
+          to="/adminpanel"
+          class="menu-item outline-text admin-item"
         >
-          <img src="/src/components/icons/dashboard.png" />
-          Dashboard
-          <span v-if="reminderStore.tasksLate.length > 0" class="reminder-badge">
-            {{ reminderStore.tasksLate.length }}
-          </span>
-        </RouterLink>
-
-        <!-- Statistics -->
-        <RouterLink to="/statistics" class="menu-item outline-text" exact>
-          <img src="/src/components/icons/trend.png" />
-          Statistics
-        </RouterLink>
-
-        <!-- Tasks -->
-        <RouterLink to="/tasks" class="menu-item outline-text" exact>
-          <img src="/src/components/icons/task.png" />
-          Tasks
-        </RouterLink>
-
-        <!-- Reminders -->
-        <RouterLink
-          to="/reminders"
-          class="menu-item outline-text"
-          exact
-          @click.prevent="handleReminderClick"
-        >
-          <img src="/src/components/icons/bell.png" />
-          Reminders
-          <span v-if="reminderStore.activeCount > 0" class="reminder-badge">
-            {{ reminderStore.activeCount }}
-          </span>
-        </RouterLink>
-
-        <!-- Settings -->
-        <RouterLink to="/settings" class="menu-item outline-text" exact>
-          <img src="/src/components/icons/settings.png" />
-          Settings
+          <img src="/src/components/icons/admin.png" />
+          Admin Panel
         </RouterLink>
       </nav>
     </aside>
@@ -232,7 +244,7 @@ onMounted(() => {
   justify-content: space-between;
   width: 100%;
   padding: 0.6rem 1rem;
-  margin-bottom: 40px;
+  margin-bottom: 70px;
   box-sizing: border-box;
 }
 
@@ -249,19 +261,19 @@ onMounted(() => {
   padding: 9px;
   border-radius: 50%;
   border: none;
-  background: rgb(221, 221, 221);
+  background: rgb(165, 29, 29);
   cursor: pointer;
   transition: 0.3s;
 }
 
 .logout-btn img {
-  height: 20px;
-  filter: invert(0);
+  height: 22px;
+  filter: invert(1);
   transition: 0.3s;
 }
 
 .logout-btn:hover {
-  background: rgb(150, 42, 42);
+  background: rgb(124, 34, 34);
 }
 
 .logout-btn:hover img {
@@ -280,7 +292,18 @@ onMounted(() => {
 .menu {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+
+.menu-top {
+  display: flex;
+  flex-direction: column;
   gap: 0.8rem;
+}
+
+.admin-item {
+  margin-top: auto;
+  margin-bottom: 30px;
 }
 
 .menu-item {
@@ -290,7 +313,7 @@ onMounted(() => {
   padding: 0.6rem 1rem;
   border-radius: 0.5rem;
   font-size: 18px;
-  color: var(--text-color);
+  color: var(--nav-links);
   text-decoration: none;
   font-weight: bold;
   transition: all 0.3s ease;
@@ -314,12 +337,12 @@ onMounted(() => {
 }
 
 .menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-3px);
 }
 
 .menu-item.router-link-exact-active {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(153, 153, 153, 0.2);
 }
 
 .logout-wrap {
@@ -346,8 +369,8 @@ onMounted(() => {
 }
 
 .avatar {
-  width: 35px;
-  height: 35px;
+  width: 37px;
+  height: 37px;
   border-radius: 50%;
   background: #d6d6d6;
   display: flex;

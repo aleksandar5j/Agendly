@@ -58,6 +58,10 @@
         </div>
       </div>
 
+      <div class="mobile-only mobile-adminpanel-wrapper" v-if="session.isAdmin">
+        <button class="admin-btn" @click="router.push('/adminpanel')">Admin Panel</button>
+      </div>
+
       <div class="mobile-only mobile-logout-wrapper">
         <button class="logout-btn" @click="logout">Logout</button>
       </div>
@@ -553,29 +557,7 @@ body {
     z-index: 1000;
   }
 
-  .logout-btn {
-    background: #832e24;
-    color: white;
-    font-weight: bold;
-    border-radius: 12px;
-    border: none;
-    width: 100%;
-    height: 50px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-
-  .logout-btn:hover {
-    background: #c0392b;
-  }
-}
-
-@media (max-width: 780px) {
-  .mobile-only {
-    display: block;
-  }
-
-  .mobile-logout-wrapper {
+  .mobile-adminpanel-wrapper {
     z-index: 1000;
   }
 
@@ -593,6 +575,70 @@ body {
 
   .logout-btn:hover {
     background: #c0392b;
+  }
+
+  .admin-btn {
+    background: #001e4b;
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 15px;
+  }
+
+  .admin-btn:hover {
+    background: #002a69;
+  }
+}
+
+@media (max-width: 780px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-logout-wrapper {
+    z-index: 1000;
+  }
+
+  .mobile-adminpanel-wrapper {
+    z-index: 1000;
+  }
+
+  .logout-btn {
+    background: #832e24;
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .logout-btn:hover {
+    background: #c0392b;
+  }
+
+  .admin-btn {
+    background: #001e4b;
+    color: white;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-bottom: 15px;
+  }
+
+  .admin-btn:hover {
+    background: #002a69;
   }
 }
 </style>

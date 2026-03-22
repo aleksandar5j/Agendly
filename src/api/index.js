@@ -42,4 +42,10 @@ export default {
   },
 
   userUpdatePassword: (data) => axios.put('settings/updatePassword', data),
+
+  showAdminUsers: (data) => axios.get('admin/users', data),
+  showAdminAttachments: (data) => axios.get('admin/attachments', data),
+
+  adminDeleteUser: (usr_id) => axios.delete('admin/users', { params: { usr_id } }),
+  adminDeleteAttachment: (atc_id) => axios.delete('admin/attachments', { params: { atc_id } }),
 }

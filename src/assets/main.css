@@ -6,12 +6,16 @@
 :root {
   --bg-main: linear-gradient(to bottom, rgb(93, 128, 202), rgb(32, 72, 136));
 
+  --tasks-color: #5387d4;
+
   --card-bg: #4078b8;
   --text-color: white;
   --text-muted: rgba(255, 255, 255, 0.7);
 
   --input-bg: rgb(17, 23, 36);
   --btn-bg: rgba(255, 255, 255, 0.2);
+
+  --nav-links: white;
 
   --toggle-bg: rgba(255, 255, 255, 0.2);
   --toggle-circle: white;
@@ -54,12 +58,16 @@
 [data-theme='light'] {
   --bg-main: linear-gradient(to bottom, #f8fafc, #e2e8f0);
 
+  --tasks-color: #d6d6d6;
+
   --card-bg: #ffffff;
   --text-color: #0f172a;
   --text-muted: #64748b;
 
   --input-bg: #f1f5f9;
   --btn-bg: #e2e8f0;
+
+  --nav-links: #3b3b3b;
 
   --toggle-bg: #e2e8f0;
   --toggle-circle: #ffffff;

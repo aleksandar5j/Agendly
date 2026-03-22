@@ -9,6 +9,7 @@ import Reminders from '@/views/Reminders.vue'
 import Settings from '@/views/Settings.vue'
 
 import { useSessionStore } from '@/stores/sessionUser'
+import AdminPanel from '@/views/AdminPanel.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +59,12 @@ const router = createRouter({
       component: Settings,
       meta: { requiresAuth: true },
     },
+    {
+      path: '/adminpanel',
+      name: 'adminpanel',
+      component: AdminPanel,
+      meta: { requiresAdmin: true },
+    },
   ],
 })
 
@@ -73,6 +80,10 @@ router.beforeEach((to, from, next) => {
   }
 
   if (session.isLoggedIn && to.path === '/') {
+    return next('/dashboard')
+  }
+
+  if (!session.isAdmin && to.path === '/adminpanel') {
     return next('/dashboard')
   }
 

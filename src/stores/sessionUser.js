@@ -17,7 +17,7 @@ export const useSessionStore = defineStore('session', {
         const { sessionUser, sid, message } = payload
 
         if (!sessionUser || !sid) {
-          throw new Error('Neispravan login response')
+          throw new Error('Error')
         }
 
         this.user = sessionUser
@@ -44,5 +44,6 @@ export const useSessionStore = defineStore('session', {
 
   getters: {
     isLoggedIn: (state) => !!state.user,
+    isAdmin: (state) => !!state.user?.usr_isadmin,
   },
 })

@@ -1,10 +1,11 @@
 <template>
   <!-- HERO SECTION -->
-  <main class="landing-page">
-    <video autoplay muted loop class="bg-video">
-      <source src="/public/videos/home.mp4" type="video/mp4" />
-    </video>
 
+  <video autoplay muted loop playsinline class="bg-video">
+    <source src="/videos/home2.mp4" type="video/mp4" />
+  </video>
+
+  <main class="landing-page">
     <div class="overlay"></div>
 
     <div class="content-wrapper">
@@ -26,10 +27,6 @@
 
   <!-- SECOND VIDEO -->
   <section class="video-section">
-    <video autoplay muted loop class="bg-video">
-      <source src="/public/videos/home2.mp4" type="video/mp4" />
-    </video>
-
     <div class="video-text glass-card">
       <div class="text-row">
         <img src="/src/components/icons/calendar.png" class="video-icon" />
@@ -77,12 +74,11 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 75vh;
   color: #fff;
   overflow: hidden;
 }
 
-/* VIDEO BACKGROUND */
 .bg-video {
   position: absolute;
   top: 0;
@@ -91,15 +87,14 @@ onMounted(() => {
   height: 100%;
   object-fit: cover;
   z-index: -2;
-  filter: blur(4px);
-  transform: scale(1);
+  transform: translateZ(0);
 }
 
 /* DARK OVERLAY FOR READABILITY */
 .overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(15, 32, 39, 0.6); /* tamniji overlay za bolju čitljivost */
+  background: rgba(10, 20, 40, 0.6); /* tamnije = bolji kontrast */
   z-index: -1;
 }
 
@@ -112,6 +107,7 @@ onMounted(() => {
   max-width: 500px;
   gap: 20px;
   width: 100%;
+  max-width: 545px;
   text-align: center;
 
   padding: 40px;
@@ -284,20 +280,17 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  padding: 40px 0;
+  padding: 10px 0;
   gap: 30px;
   flex-direction: column;
   z-index: 0;
+  background: transparent;
 }
 
 .video-section hr {
   border: 1px solid #2570ff;
   width: 70%;
   margin-bottom: 50px;
-}
-
-.video-section .bg-video {
-  z-index: -1; /* NE -2 */
 }
 
 /* VIDEO */
@@ -332,15 +325,14 @@ onMounted(() => {
 
 /* GLASS CARD EFFECT */
 .glass-card {
-  background: rgba(90, 154, 252, 0.1);
-  backdrop-filter: blur(17px);
   -webkit-backdrop-filter: blur(17px);
   border-radius: 20px;
   padding: 25px 35px;
   border: 2px solid rgba(62, 200, 235, 0.7);
   box-shadow: 0 20px 40px rgba(112, 151, 209, 0.35);
 
-  /* UNIFORM HEIGHT & WIDTH */
+  background: rgba(46, 110, 230, 0.07);
+  backdrop-filter: blur(20px);
   width: 35%;
   min-height: 100px;
   display: flex;
@@ -361,6 +353,7 @@ onMounted(() => {
 
 .video-icon {
   height: 50px;
+  filter: invert(1);
   opacity: 0.7;
 }
 
@@ -368,12 +361,12 @@ onMounted(() => {
   font-size: 2rem;
   margin: 0;
   opacity: 0.8;
-  color: #525252;
+  color: white;
 }
 
 .video-text p {
   font-size: 1.2rem;
-  color: rgba(92, 92, 92, 0.9);
+  color: rgba(255, 255, 255, 0.8);
   margin: 0;
 }
 
@@ -386,7 +379,6 @@ onMounted(() => {
   border: 2px solid rgba(112, 151, 209, 0.7);
   box-shadow: 0 20px 40px rgba(112, 151, 209, 0.35);
 
-  /* UNIFORM HEIGHT & WIDTH */
   width: 55%;
   min-height: 100px;
   display: flex;
@@ -416,7 +408,7 @@ onMounted(() => {
     max-width: 95%;
     padding: 20px;
     border-radius: 15px;
-    margin: 20px;
+    margin: 15px;
   }
 
   .content-wrapper h2 {
