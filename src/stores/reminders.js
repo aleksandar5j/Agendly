@@ -81,11 +81,6 @@ export const useReminderStore = defineStore('reminders', {
     },
 
     updateActiveReminders() {
-      if (!this.reminderNotificationsEnabled) {
-        this.showPopup = false
-        return
-      }
-
       const now = Date.now()
       const active = []
 
@@ -100,14 +95,18 @@ export const useReminderStore = defineStore('reminders', {
         }
       })
 
+      // Badge se računa uvek
       this.activeReminders = active
       this.activeCount = active.length
-      this.showPopup = active.length > 0
 
-      if (this.showPopup) {
+      // Popup samo ako su reminder notifikacije uključene
+      if (this.reminderNotificationsEnabled && active.length > 0) {
+        this.showPopup = true
         setTimeout(() => {
           this.showPopup = false
         }, 5000)
+      } else {
+        this.showPopup = false
       }
     },
 

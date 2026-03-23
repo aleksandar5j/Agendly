@@ -497,18 +497,23 @@ h2 {
     font-size: 15px;
     padding: 10px 0;
   }
+
+  .modal {
+    margin-right: 20px;
+  }
 }
 
 .modal {
   background: var(--card-bg);
   padding: 30px 25px; /* više paddinga */
   border-radius: 20px;
-  width: 90%;
-  max-width: 400px;
+  width: 100%;
+  max-width: 300px;
   color: var(--text-color);
   text-align: center;
   backdrop-filter: blur(15px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0, 0.25);
+  margin-right: 20px;
 }
 
 .btn {
@@ -532,6 +537,10 @@ h2 {
     flex-direction: row;
     font-size: 15px;
     padding: 14px 16px;
+  }
+
+  .modal {
+    margin-right: 20px;
   }
 
   .item-left span {

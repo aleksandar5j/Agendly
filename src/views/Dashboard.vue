@@ -57,7 +57,17 @@
           <p style="opacity: 0.5">- No document for this task!</p>
         </div>
 
-        <div class="div-select">
+        <div>
+          <input
+            type="number"
+            placeholder="Set reminder (minutes before)"
+            v-model="rem_minutes_beforee"
+            class="modal-input"
+            style="margin-top: 20px"
+          />
+        </div>
+
+        <div>
           <p>Mark task</p>
           <select v-model="taskModal.newStatus" class="modal-select" style="color: white">
             <option v-for="status in statuses" :key="status.sts_id" :value="status.sts_id">
@@ -184,6 +194,8 @@ const cat_id = ref()
 const file = ref(null)
 const rem_minutes_before = ref()
 
+const rem_minutes_beforee = ref()
+
 const showModal = ref(false)
 
 function openAddModal() {
@@ -200,7 +212,6 @@ function onFileChange(e) {
   file.value = e.target.files[0]
 }
 
-// ADD TASK
 async function saveTask() {
   try {
     const fd = new FormData()
@@ -228,6 +239,7 @@ async function saveTask() {
     await reminderStore.loadReminders()
     await reminderStore.updateActiveReminders()
     await reminderStore.checkReminders()
+    resetForm()
     triggerSuccess('New task created successfully')
   } catch (error) {
     console.log(error)
@@ -271,6 +283,7 @@ function resetForm() {
   time.value = ''
   cat_id.value = ''
   file.value = null
+  rem_minutes_before.value = ''
 }
 
 function downloadFile() {
@@ -392,12 +405,22 @@ async function updateStatus() {
 
     await api.updateTaskStatus(session.sid, taskModal.selectedTask.id, taskModal.newStatus)
 
+    if (rem_minutes_beforee.value) {
+      const res = await api.addReminder({
+        tsk_id: taskModal.selectedTask.id,
+        rem_minutes_before: rem_minutes_beforee.value,
+      })
+      console.log(res.data)
+    }
+
     triggerSuccess(`Task status successfully updated`)
 
     taskModal.closeTaskModal()
     getTasks()
-    reminderStore.loadLateTasks()
-    reminderStore.loadReminders()
+    await reminderStore.loadLateTasks()
+    await reminderStore.loadReminders()
+    await reminderStore.updateActiveReminders()
+    await reminderStore.checkReminders()
   } catch (err) {
     console.log(err)
     triggerError('Failed to update task')
@@ -687,7 +710,7 @@ body {
 
 .modal-content {
   background: rgba(255, 255, 255, 0.1);
-  padding: 30px 24px;
+  padding: 40px 24px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1283,11 +1306,11 @@ body {
   }
 
   .modal {
-    max-width: 250px;
-    max-height: 70vh; /* ograničava visinu na 80% visine ekrana */
-    padding: 14px;
+    max-width: 280px;
+    max-height: 50vh;
+    padding: 20px;
     margin: 15px;
-    overflow-y: auto; /* omogućava scroll kad je sadržaj veći od max-height */
+    overflow-y: auto;
   }
 
   .modal h2 {

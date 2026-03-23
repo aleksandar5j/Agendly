@@ -376,8 +376,9 @@ function triggerError(message) {
 
 .reminders-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fill, 200px);
   gap: 16px;
+  justify-content: start; /* Kartice idu levo na desktopu */
 }
 
 .reminder-card {

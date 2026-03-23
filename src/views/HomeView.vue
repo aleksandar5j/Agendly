@@ -1,6 +1,4 @@
 <template>
-  <!-- HERO SECTION -->
-
   <video autoplay muted loop playsinline class="bg-video">
     <source src="/videos/home2.mp4" type="video/mp4" />
   </video>
@@ -25,7 +23,6 @@
     </div>
   </main>
 
-  <!-- SECOND VIDEO -->
   <section class="video-section">
     <div class="video-text glass-card">
       <div class="text-row">
@@ -35,7 +32,6 @@
       <p>Add and organize your events with our simple calendar view.</p>
     </div>
 
-    <!-- FEATURE: Tasks -->
     <div class="video-text glass-card">
       <div class="text-row">
         <img src="/src/components/icons/task.png" class="video-icon" />
@@ -44,7 +40,6 @@
       <p>Keep track of your tasks and deadlines efficiently.</p>
     </div>
 
-    <!-- FEATURE: Reminders -->
     <div class="video-text glass-card">
       <div class="text-row">
         <img src="/src/components/icons/bell.png" class="video-icon" />
@@ -70,57 +65,57 @@ onMounted(() => {
 
 <style scoped>
 .landing-page {
-  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  min-height: 75vh;
-  color: #fff;
-  overflow: hidden;
+  width: 100%;
+  padding-top: 120px;
+  z-index: 1;
 }
 
 .bg-video {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -2;
-  transform: translateZ(0);
-}
-
-/* DARK OVERLAY FOR READABILITY */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10, 20, 40, 0.6); /* tamnije = bolji kontrast */
   z-index: -1;
 }
 
-/* MAIN CONTENT */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 20, 40, 0.6);
+  z-index: 0;
+}
+
+/* Hero section content */
 .content-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  max-width: 500px;
-  gap: 20px;
-  width: 100%;
-  max-width: 545px;
   text-align: center;
-
+  max-width: 545px;
+  width: 100%;
   padding: 40px;
   border-radius: 20px;
-
-  /* glass effect */
-  background: rgba(46, 110, 230, 0.07);
-  backdrop-filter: blur(12px);
+  background: rgba(46, 110, 230, 0.1);
+  backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-
   border: 2px solid rgba(59, 138, 241, 0.7);
+  color: #fff;
+  z-index: 1;
+}
+
+.logo {
+  height: 150px;
+  margin-bottom: 20px;
 }
 
 .content-wrapper h2 {
@@ -128,115 +123,25 @@ onMounted(() => {
   font-weight: bold;
 }
 
-/* LOGO */
-.logo {
-  height: 150px;
-  width: auto;
-  margin-bottom: 20px;
-}
-
-/* TEXT BLOCK */
-.right-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  margin-top: -30px;
-}
-
-.right-panel h2 {
-  font-size: 2.2rem;
-  margin: 0;
-  font-weight: 700;
-}
-
 .subtitle {
   font-size: 1.1rem;
   color: rgba(210, 220, 255, 0.9);
-  max-width: 600px;
 }
 
-.tips-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 5rem;
-  padding: 2rem;
-  max-width: 1000px;
-  margin: 100px auto;
-}
-
-/* Kartica kao column: slika gore, tekst dole */
-.tips-card {
-  display: flex;
-  flex-direction: column; /* vertikalno */
-  align-items: center;
-  background: rgba(206, 206, 206, 0.35);
-  backdrop-filter: blur(10px);
-  border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(224, 224, 224, 0.3);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  overflow: hidden;
-}
-
-.tips-img {
-  width: 100%;
-  height: 300px; /* ili auto, ili fixed */
-  object-fit: cover;
-  flex-shrink: 0;
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
-}
-
-/* Sadržaj ispod slike */
-.tips-content {
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.tips-content h3 {
-  margin-bottom: 0.6rem;
-  color: #2570ff;
-  font-size: 1.2rem;
-}
-
-.tips-content p {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: rgba(0, 0, 0, 0.9);
-}
-
-/* Hover efekat */
-.tips-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .tips-card {
-    width: 100%;
-  }
-
-  .tips-content {
-    padding: 1rem;
-  }
-}
-
-/* BUTTONS */
+/* Buttons */
 .actions {
   display: flex;
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+  margin: 20px;
 }
 
 .btn {
   background-color: rgb(0, 123, 255);
+  color: #fff;
   padding: 0.85rem 1.6rem;
   border-radius: 20px;
-  color: #fff;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -258,8 +163,38 @@ onMounted(() => {
   color: #fff;
 }
 
+/* Video section */
+.video-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  padding: 80px 10px;
+}
+
+/* Glass card / feature card */
+.glass-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 545px;
+  text-align: center;
+  padding: 40px;
+  border-radius: 20px;
+
+  background: rgba(46, 110, 230, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(59, 138, 241, 0.7);
+  color: #fff;
+}
+
+/* Animacija ulaska */
 .video-text {
-  transform: translateX(-150vw); /* startuje skroz levo van ekrana */
+  transform: translateX(-150vw);
   opacity: 0;
   transition:
     transform 1s ease-out,
@@ -267,82 +202,11 @@ onMounted(() => {
 }
 
 .video-text.animate {
-  transform: translateX(0); /* finalna pozicija */
+  transform: translateX(0);
   opacity: 1;
 }
 
-/* VIDEO SECTION */
-.video-section {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  padding: 10px 0;
-  gap: 30px;
-  flex-direction: column;
-  z-index: 0;
-  background: transparent;
-}
-
-.video-section hr {
-  border: 1px solid #2570ff;
-  width: 70%;
-  margin-bottom: 50px;
-}
-
-/* VIDEO */
-.second-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: blur(4px) brightness(0.5);
-  transform: scale(1.1);
-  z-index: -2;
-}
-
-/* DARK OVERLAY */
-.video-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(rgba(10, 15, 25, 0.6), rgba(10, 15, 25, 0.85));
-  z-index: -1;
-}
-
-/* WRAPPER ZA FEATURE CARDS */
-.features-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 750px;
-}
-
-/* GLASS CARD EFFECT */
-.glass-card {
-  -webkit-backdrop-filter: blur(17px);
-  border-radius: 20px;
-  padding: 25px 35px;
-  border: 2px solid rgba(62, 200, 235, 0.7);
-  box-shadow: 0 20px 40px rgba(112, 151, 209, 0.35);
-
-  background: rgba(46, 110, 230, 0.07);
-  backdrop-filter: blur(20px);
-  width: 35%;
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-/* ICON + TITLE */
+/* Icon + title */
 .text-row {
   display: flex;
   align-items: center;
@@ -354,65 +218,36 @@ onMounted(() => {
 .video-icon {
   height: 50px;
   filter: invert(1);
-  opacity: 0.7;
 }
 
 .video-text h2 {
   font-size: 2rem;
+  color: #fff;
   margin: 0;
-  opacity: 0.8;
-  color: white;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .video-text p {
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #fff;
   margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-.aboutus {
-  background: rgba(90, 154, 252, 0.1);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 25px 35px;
-  border: 2px solid rgba(112, 151, 209, 0.7);
-  box-shadow: 0 20px 40px rgba(112, 151, 209, 0.35);
-
-  width: 55%;
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.aboutus h1 {
-  font-weight: bold;
-  opacity: 0.8;
-  color: #2570ff;
-  font-weight: bold;
-}
-
-.aboutus p {
-  font-size: 20px;
-  opacity: 0.8;
-  color: black;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  /* Hero section */
   .content-wrapper {
-    width: 100%;
-    max-width: 95%;
     padding: 20px;
-    border-radius: 15px;
-    margin: 15px;
+    max-width: 80%;
   }
 
   .content-wrapper h2 {
     font-size: 28px;
+  }
+
+  .glass-card {
+    padding: 20px;
+    max-width: 80%;
   }
 
   .subtitle {
@@ -421,26 +256,21 @@ onMounted(() => {
 
   .logo {
     height: 100px;
-    margin-bottom: 15px;
-  }
-
-  .actions {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
   }
 
   .btn,
   .btn-secondary {
     width: 60%;
-    padding: 12px 10px;
     font-size: 14px;
+    padding: 12px 10px;
   }
 
-  /* Video section / feature cards */
-  .video-text {
-    width: 75%; /* stane unutar ekrana */
-    margin: 20px;
+  .video-section {
+    padding: 50px 10px;
+  }
+
+  .glass-card {
+    padding: 20px;
   }
 
   .video-text h2 {
@@ -451,32 +281,8 @@ onMounted(() => {
     font-size: 1rem;
   }
 
-  .glass-card {
-    padding: 15px 20px;
-    margin: 15px;
-  }
-
-  .text-row {
-    flex-direction: column;
-    gap: 10px;
-  }
-
   .video-icon {
     height: 40px;
-  }
-
-  /* About us section */
-  .aboutus {
-    width: 90%;
-    padding: 20px;
-  }
-
-  .aboutus h1 {
-    font-size: 1.8rem;
-  }
-
-  .aboutus p {
-    font-size: 16px;
   }
 }
 </style>

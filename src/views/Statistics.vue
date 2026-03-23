@@ -465,6 +465,7 @@ body {
     width: 100% !important;
     max-width: 100% !important;
     height: 200px !important;
+    padding: 30px 0px;
   }
 
   .title {

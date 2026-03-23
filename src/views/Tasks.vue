@@ -149,6 +149,9 @@
             Attach file
             <input type="file" @change="onFileChange" hidden />
           </label>
+          <span v-if="file" style="margin-left: 12px; color: var(--text-color); font-weight: 500">
+            {{ file.name }}
+          </span>
         </div>
 
         <!-- Actions -->
@@ -955,10 +958,9 @@ body {
 
   .modal {
     max-width: 250px;
-    max-height: 70vh; /* ograničava visinu na 80% visine ekrana */
-    padding: 14px;
-    margin: 15px;
-    overflow-y: auto; /* omogućava scroll kad je sadržaj veći od max-height */
+    max-height: 50vh;
+    padding: 20px;
+    overflow-y: auto;
   }
 
   .modal h2 {

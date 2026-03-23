@@ -129,6 +129,7 @@ watch(
   () => reminderStore.reminderNotificationsEnabled,
   (val) => {
     localStorage.setItem('reminderNot', JSON.stringify(val))
+    reminderStore.updateActiveReminders() // osvežava popup ali badge ostaje
   },
 )
 
