@@ -73,7 +73,7 @@
         </div>
         <div class="detail-row">
           <span class="label">Created At:</span>
-          <span class="value">{{ detailsPopup.data.usr_createdat }}</span>
+          <span class="value">{{ formatDate(detailsPopup.data.usr_createdat) }}</span>
         </div>
       </div>
 
@@ -84,7 +84,7 @@
         </div>
         <div class="detail-row">
           <span class="label">Uploaded At:</span>
-          <span class="value">{{ detailsPopup.data.atc_uploadedat }}</span>
+          <span class="value">{{ formatDate(detailsPopup.data.atc_uploadedat) }}</span>
         </div>
         <div class="detail-row">
           <span class="label">Task ID:</span>
@@ -227,6 +227,14 @@ const openDetails = (item, type) => {
     title: 'Details',
     data: item,
   }
+}
+
+function formatDate(date) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  }).format(new Date(date))
 }
 
 const loading = ref(false)

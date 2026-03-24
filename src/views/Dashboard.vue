@@ -46,7 +46,10 @@
       <div class="modal-content">
         <h2 style="font-weight: bold">{{ taskModal.selectedTask.title }}</h2>
         <p>{{ taskModal.selectedTask.description }}</p>
-        <h3>ToDo until {{ taskModal.selectedTask.date }} • {{ taskModal.selectedTask.time }}</h3>
+        <h3>
+          ToDo until {{ formatDate(taskModal.selectedTask.date) }} •
+          {{ taskModal.selectedTask.time }}
+        </h3>
 
         <div v-if="taskModal.selectedTask.fileName" class="attachment">
           <p>Document {{ taskModal.selectedTask.fileName }}</p>
@@ -59,10 +62,10 @@
 
         <div>
           <input
+            class="modal-inputt"
             type="number"
             placeholder="Set reminder (minutes before)"
             v-model="rem_minutes_beforee"
-            class="modal-input"
             style="margin-top: 20px"
           />
         </div>
@@ -452,6 +455,14 @@ const isTaskLate = computed(() => {
   return taskDateTime < now
 })
 
+function formatDate(date) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  }).format(new Date(date))
+}
+
 const popup = ref({
   show: false,
   type: 'success',
@@ -709,7 +720,7 @@ body {
 }
 
 .modal-content {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(92, 92, 92, 0.7);
   padding: 40px 24px;
   display: flex;
   flex-direction: column;
@@ -1082,6 +1093,24 @@ body {
   margin-top: 20px;
 }
 
+.modal-inputt {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 0;
+  background: var(--dashboard-inputs);
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(2px);
+  box-sizing: border-box;
+}
+
+.modal-inputt::placeholder {
+  color: white;
+}
+
 .modal-input,
 .modal-textarea,
 .modal-select {
@@ -1095,17 +1124,16 @@ body {
   font-weight: 500;
   outline: none;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(2px);
   box-sizing: border-box;
 }
 
-/* Placeholder */
 .modal-input::placeholder,
 .modal-textarea::placeholder {
   color: var(--text-color);
 }
 
-/* Focus effect */
+.modal-inputt:focus,
 .modal-input:focus,
 .modal-textarea:focus,
 .modal-select:focus,
@@ -1113,6 +1141,7 @@ body {
   background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
   transform: scale(1.02);
+  border: 0;
 }
 
 /* Textarea */
@@ -1355,5 +1384,11 @@ body {
     font-size: 12px;
     padding: 10px 14px;
   }
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

@@ -38,7 +38,6 @@
     </div>
     <div v-else class="noresult">
       <img src="/src/components/icons/noremindersss.png" class="no-results" />
-      <button @click="openAddModal">Add reminder</button>
     </div>
 
     <div v-if="showAddModal" class="modal-overlay">

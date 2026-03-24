@@ -36,7 +36,11 @@
       </div>
 
       <div class="under-head">
-        <button v-if="overdueTasks.length > 0" class="late-btn" @click="seeAllLateTasks">
+        <button
+          v-if="overdueTasks.length > 0"
+          :class="['late-btn', { active: showOverdueOnly }]"
+          @click="toggleOverdueTasks"
+        >
           Overdue tasks ({{ overdueTasks.length }})
         </button>
       </div>
@@ -53,7 +57,7 @@
         :style="{ borderLeft: '6px solid ' + task.cat_color }"
       >
         <div class="task-header">
-          <h3 style="color: var(--text-color)">{{ task.tsk_title }}</h3>
+          <h3 class="task-title">{{ task.tsk_title }}</h3>
           <div class="task-actions">
             <button class="edit-btn" @click="openEditModal(task)">✎</button>
             <button class="delete-btn" @click="openDeleteModal(task.tsk_id)">✕</button>
@@ -67,7 +71,9 @@
         </p>
 
         <div class="task-footer">
-          <span style="color: var(--text-color)">{{ task.tsk_date }} • {{ task.tsk_time }}</span>
+          <span style="color: var(--text-color)"
+            >{{ formatDate(task.tsk_date) }} • {{ task.tsk_time }}</span
+          >
           <span class="category" :style="{ backgroundColor: task.cat_color }">
             {{ task.cat_name }}
           </span>
@@ -197,6 +203,7 @@ const showEditModal = ref(false)
 const showDeleteModal = ref(false)
 const taskToDelete = ref(null)
 const editTask = ref(null)
+const showOverdueOnly = ref(false)
 
 const overdueTasks = ref([])
 
@@ -218,20 +225,28 @@ async function filterByTitle() {
   }
 }
 
-async function seeAllLateTasks() {
+async function getOverdueTasks() {
   try {
     const res = await api.tasksLate(session.sid)
-    console.log(res.data)
-    tasks.value = res.data.data
+    overdueTasks.value = res.data.data
   } catch (error) {
     console.log(error)
   }
 }
 
-async function getOverdueTasks() {
+async function toggleOverdueTasks() {
   try {
-    const res = await api.tasksLate(session.sid)
-    overdueTasks.value = res.data.data
+    showOverdueOnly.value = !showOverdueOnly.value
+
+    if (showOverdueOnly.value) {
+      const res = await api.tasksLate(session.sid)
+      tasks.value = res.data.data
+      filterCategory.value = ''
+      filterStatus.value = ''
+      searchQuery.value = ''
+    } else {
+      getTasks()
+    }
   } catch (error) {
     console.log(error)
   }
@@ -284,9 +299,17 @@ async function getStatuses() {
 onMounted(() => {
   getTasks()
   getCategories()
-  getStatuses()
   getOverdueTasks()
+  getStatuses()
 })
+
+function formatDate(date) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric',
+  }).format(new Date(date))
+}
 
 // DELETE
 function openDeleteModal(id) {
@@ -299,7 +322,6 @@ async function confirmDelete() {
     tasks.value = tasks.value.filter((t) => t.tsk_id !== taskToDelete.value)
     showDeleteModal.value = false
     taskToDelete.value = null
-    getOverdueTasks()
     triggerSuccess(`Task successfully deleted`)
   } catch (error) {
     console.log(error)
@@ -349,7 +371,6 @@ async function saveEdit() {
 
     await reminderStore.loadLateTasks()
     await reminderStore.loadReminders()
-    getOverdueTasks()
   } catch (error) {
     console.log(error)
     triggerError('Cannot save edit for task')
@@ -448,6 +469,10 @@ body {
   opacity: 0.8;
   margin: 10px 0;
   color: var(--text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* 👈 BROJ LINIJA */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .task-footer {
@@ -634,6 +659,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
 }
 
 .delete-btn {
@@ -802,9 +828,9 @@ body {
 }
 
 .late-btn {
-  background: #e53935;
-  color: white;
-  border: none;
+  background: transparent;
+  color: #e53935;
+  border: 2px solid #e53935;
   padding: 9px 16px;
   border-radius: 12px;
   font-weight: 600;
@@ -812,9 +838,16 @@ body {
   transition: 0.2s;
 }
 
+/* hover */
 .late-btn:hover {
-  background: #771a1a;
-  transform: translateY(-1px);
+  background: rgba(229, 57, 53, 0.1);
+}
+
+/* AKTIVNO stanje */
+.late-btn.active {
+  background: #e53935;
+  color: white;
+  border: 2px solid #e53935;
 }
 
 .popup {
@@ -836,6 +869,17 @@ body {
 
 .popup.error {
   background: #e74c3c;
+}
+
+.task-title {
+  color: var(--text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  flex: 1; /* 🔥 KLJUČNO */
+  min-width: 0; /* 🔥 KLJUČNO (bez ovoga ne radi kako treba) */
 }
 
 @keyframes slideIn {

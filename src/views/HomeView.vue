@@ -21,33 +21,33 @@
         <RouterLink to="/register" class="btn btn-secondary">Register</RouterLink>
       </div>
     </div>
+
+    <section class="video-section">
+      <div class="video-text glass-card">
+        <div class="text-row">
+          <img src="/src/components/icons/calendar.png" class="video-icon" />
+          <h2>Calendar Management</h2>
+        </div>
+        <p>Add and organize your events with our simple calendar view.</p>
+      </div>
+
+      <div class="video-text glass-card">
+        <div class="text-row">
+          <img src="/src/components/icons/task.png" class="video-icon" />
+          <h2>Task Tracking</h2>
+        </div>
+        <p>Keep track of your tasks and deadlines efficiently.</p>
+      </div>
+
+      <div class="video-text glass-card">
+        <div class="text-row">
+          <img src="/src/components/icons/bell.png" class="video-icon" />
+          <h2>Manage Reminders</h2>
+        </div>
+        <p>Set reminders so you never forget important appointments.</p>
+      </div>
+    </section>
   </main>
-
-  <section class="video-section">
-    <div class="video-text glass-card">
-      <div class="text-row">
-        <img src="/src/components/icons/calendar.png" class="video-icon" />
-        <h2>Calendar Management</h2>
-      </div>
-      <p>Add and organize your events with our simple calendar view.</p>
-    </div>
-
-    <div class="video-text glass-card">
-      <div class="text-row">
-        <img src="/src/components/icons/task.png" class="video-icon" />
-        <h2>Task Tracking</h2>
-      </div>
-      <p>Keep track of your tasks and deadlines efficiently.</p>
-    </div>
-
-    <div class="video-text glass-card">
-      <div class="text-row">
-        <img src="/src/components/icons/bell.png" class="video-icon" />
-        <h2>Manage Reminders</h2>
-      </div>
-      <p>Set reminders so you never forget important appointments.</p>
-    </div>
-  </section>
 </template>
 
 <script setup>
@@ -64,13 +64,25 @@ onMounted(() => {
 </script>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
 .landing-page {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 70px;
+  padding: 100px 20px 40px;
+  margin-top: 100px;
   width: 100%;
-  padding-top: 120px;
   z-index: 1;
+  flex-wrap: wrap;
 }
 
 .bg-video {
@@ -89,26 +101,27 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(10, 20, 40, 0.6);
+  background: rgba(58, 85, 139, 0.96);
   z-index: 0;
 }
 
-/* Hero section content */
 .content-wrapper {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  max-width: 545px;
+  max-width: 605px;
   width: 100%;
+  min-height: 475px;
   padding: 40px;
   border-radius: 20px;
-  background: rgba(46, 110, 230, 0.1);
+  background: rgba(207, 207, 207, 0.1);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(59, 138, 241, 0.7);
+  box-shadow: 5px 30px 70px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(59, 138, 241, 0.7);
   color: #fff;
   z-index: 1;
 }
@@ -125,7 +138,7 @@ onMounted(() => {
 
 .subtitle {
   font-size: 1.1rem;
-  color: rgba(210, 220, 255, 0.9);
+  color: white;
 }
 
 /* Buttons */
@@ -163,40 +176,47 @@ onMounted(() => {
   color: #fff;
 }
 
-/* Video section */
+/* VIDEO SECTION */
 .video-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
-  padding: 80px 10px;
+  gap: 25px;
+
+  width: 100%;
+  max-width: 600px;
+
+  padding: 0 15px; /* 🔥 MARGINE SA STRANE */
 }
 
-/* Glass card / feature card */
+/* GLASS CARD */
 .glass-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+
   width: 100%;
-  max-width: 545px;
+  min-height: 120px;
+
   text-align: center;
-  padding: 40px;
+  padding: 25px 20px;
   border-radius: 20px;
 
-  background: rgba(46, 110, 230, 0.1);
+  background: rgba(207, 207, 207, 0.1);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(59, 138, 241, 0.7);
+  box-shadow: 5px 30px 70px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(59, 138, 241, 0.7);
   color: #fff;
 }
 
-/* Animacija ulaska */
+/* Animacija */
 .video-text {
   transform: translateX(-150vw);
   opacity: 0;
   transition:
+    transform 1s ease-out,
     transform 1s ease-out,
     opacity 1s ease-out;
 }
@@ -222,32 +242,38 @@ onMounted(() => {
 
 .video-text h2 {
   font-size: 2rem;
-  color: #fff;
   margin: 0;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .video-text p {
-  font-size: 1.2rem;
-  color: #fff;
+  font-size: 1.1rem;
   margin: 0;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Responsive */
+/* MOBILE */
 @media (max-width: 768px) {
+  .landing-page {
+    flex-direction: column;
+    gap: 30px;
+    padding: 30px;
+  }
+
   .content-wrapper {
-    padding: 20px;
-    max-width: 80%;
+    max-width: 100%;
+    padding: 0 10px; /* 🔥 kartice ne lepe uz ivicu */
+  }
+
+  .video-section {
+    max-width: 100%;
+    padding: 0 10px; /* 🔥 kartice ne lepe uz ivicu */
+  }
+
+  .glass-card {
+    width: 100%;
   }
 
   .content-wrapper h2 {
     font-size: 28px;
-  }
-
-  .glass-card {
-    padding: 20px;
-    max-width: 80%;
   }
 
   .subtitle {
@@ -260,29 +286,21 @@ onMounted(() => {
 
   .btn,
   .btn-secondary {
-    width: 60%;
+    width: 80%;
     font-size: 14px;
     padding: 12px 10px;
   }
 
-  .video-section {
-    padding: 50px 10px;
-  }
-
-  .glass-card {
-    padding: 20px;
-  }
-
   .video-text h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .video-text p {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .video-icon {
-    height: 40px;
+    height: 35px;
   }
 }
 </style>
