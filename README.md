@@ -30,7 +30,9 @@ HTTP Client: Axios
 
 Styling: CSS (responsive design)
 
-## ⚙️ Installation### Make sure you have pnpm installed
+## ⚙️ Installation
+
+### Make sure you have pnpm installed
 
 npm install -g pnpm
 
