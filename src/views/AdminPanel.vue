@@ -522,6 +522,9 @@ h2 {
   backdrop-filter: blur(15px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0, 0.25);
   margin-right: 20px;
+
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .btn {

@@ -57,7 +57,7 @@ export const useReminderStore = defineStore('reminders', {
 
         setTimeout(() => {
           this.showPopup = false
-        }, 5000)
+        }, 20000)
       }
     },
 
@@ -70,13 +70,23 @@ export const useReminderStore = defineStore('reminders', {
         return taskTime < now
       })
 
-      if (lateTasks.length > 0) {
-        this.lateTasksPopup = lateTasks
+      let tasksToShow = lateTasks
+      let moreCount = 0
+
+      if (lateTasks.length > 5) {
+        tasksToShow = lateTasks.slice(0, 5) // prikazuje prvih 5
+        moreCount = lateTasks.length - 5
+      }
+
+      if (tasksToShow.length > 0) {
+        // ovde postavljaš podatke za popup
+        this.lateTasksPopup = tasksToShow
+        this.moreLateTasksCount = moreCount // napravi ovu promenljivu u data()
         this.showLatePopup = true
 
         setTimeout(() => {
           this.showLatePopup = false
-        }, 5000)
+        }, 20000)
       }
     },
 
@@ -104,7 +114,7 @@ export const useReminderStore = defineStore('reminders', {
         this.showPopup = true
         setTimeout(() => {
           this.showPopup = false
-        }, 5000)
+        }, 20000)
       } else {
         this.showPopup = false
       }

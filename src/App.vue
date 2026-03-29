@@ -118,12 +118,14 @@
       </ul>
     </div>
 
-    <!-- Late tasks popup -->
     <div v-if="reminderStore.showLatePopup" class="taskslate-popup">
       <strong>Overdue tasks:</strong>
       <ul>
         <li v-for="task in reminderStore.lateTasksPopup" :key="task.tsk_id">
           {{ task.tsk_title }} ({{ task.tsk_date }} • {{ task.tsk_time }})
+        </li>
+        <li v-if="reminderStore.moreLateTasksCount > 0" class="more-tasks">
+          +{{ reminderStore.moreLateTasksCount }} more
         </li>
       </ul>
     </div>

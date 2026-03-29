@@ -6,7 +6,8 @@
       <h1>My Statistics</h1>
     </div>
 
-    <div class="bar-section">
+    <div class="charts-row">
+      <!-- Productivity -->
       <div class="glass-card big">
         <p class="title">Productivity</p>
 
@@ -25,11 +26,8 @@
           <Bar :data="barChartData" :options="barOptions" />
         </div>
       </div>
-    </div>
 
-    <hr />
-
-    <div class="charts-row">
+      <!-- All Progress -->
       <div class="glass-card small">
         <div class="chart-container">
           <p class="title">All Progress</p>
@@ -238,12 +236,8 @@ onMounted(() => {
 <style scoped>
 .statistics {
   padding: 40px 80px;
-  min-height: 100vh;
+  min-height: 80vh;
   background: var(--bg-main);
-}
-
-hr {
-  margin: 100px;
 }
 
 .head {
@@ -278,10 +272,10 @@ hr {
 
 .charts-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* omogućava prelazak u novi red na mobilnom */
   justify-content: center;
-  margin-top: 60px;
-  margin-bottom: 80px;
+  gap: 40px; /* razmak između kartica */
+  margin-top: 120px;
 }
 
 .chart-container {
@@ -293,10 +287,6 @@ hr {
   flex-direction: column;
   justify-content: center;
   align-items: center; /* centriranje */
-}
-
-.bar-section {
-  margin-top: 40px; /* bilo 60px */
 }
 
 .bar-chart {
@@ -366,8 +356,10 @@ hr {
 }
 
 .glass-card.big {
-  max-width: 900px;
+  max-width: 600px;
   width: 100%;
+
+  max-height: 382px;
 
   margin: 0 auto;
 
@@ -379,8 +371,10 @@ hr {
 }
 
 .glass-card.small {
-  max-width: 420px;
+  max-width: 300px;
   width: 100%;
+
+  max-height: 450px;
 
   padding: 70px 10px;
 
@@ -422,10 +416,6 @@ body {
     font-size: 22px;
   }
 
-  .bar-section {
-    margin-top: 20px;
-  }
-
   .bar-chart {
     width: 100% !important; /* zauzima 100% širine kontejnera */
     max-width: 100% !important; /* ne prelazi ekran */
@@ -446,10 +436,9 @@ body {
   }
 
   .charts-row {
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-top: 25px;
+    flex-direction: column; /* jedan ispod drugog */
+    gap: 20px;
+    margin-top: 55px;
     margin-bottom: 30px;
   }
 

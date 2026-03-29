@@ -22,7 +22,7 @@
         <p>tasks done</p>
       </div>
 
-      <div class="info-card late">
+      <div class="info-card late" @click="showLateTasks">
         <h2>{{ tasksLates }}</h2>
         <span>Tasks <span style="color: red; font-weight: bold">late</span></span>
       </div>
@@ -60,7 +60,7 @@
           <p style="opacity: 0.5">- No document for this task!</p>
         </div>
 
-        <div>
+        <div v-if="!isTaskLate">
           <input
             class="modal-inputt"
             type="number"
@@ -167,6 +167,34 @@
       </div>
     </div>
   </div>
+
+  <div v-if="showLateModal" class="modal-overlay" @click.self="closeLateModal">
+    <div class="modal">
+      <div class="headerLateModal">
+        <h2 style="margin-bottom: 10px">⏰ Late Tasks</h2>
+        <button @click="closeLateModal">✖</button>
+      </div>
+
+      <div v-if="overdueTasks.length">
+        <div
+          v-for="task in overdueTasks"
+          :key="task.tsk_id"
+          class="late-task-item"
+          @click="openLateTask(task)"
+        >
+          <strong>{{ task.tsk_title }}</strong>
+
+          <p>{{ task.tsk_date }} • {{ task.tsk_time }}</p>
+        </div>
+      </div>
+
+      <p v-else style="opacity: 0.6">No late tasks 🎉</p>
+
+      <div class="modal-actions">
+        <button class="cancel" @click="closeLateModal">Close</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -200,6 +228,15 @@ const rem_minutes_before = ref()
 const rem_minutes_beforee = ref()
 
 const showModal = ref(false)
+const showLateModal = ref(false)
+
+function showLateTasks() {
+  showLateModal.value = true
+}
+
+function closeLateModal() {
+  showLateModal.value = false
+}
 
 function openAddModal() {
   resetForm()
@@ -213,6 +250,25 @@ function closeModal() {
 
 function onFileChange(e) {
   file.value = e.target.files[0]
+}
+
+function openLateTask(task) {
+  const mappedTask = {
+    id: task.tsk_id,
+    title: task.tsk_title,
+    description: task.tsk_description,
+    category: task.cat_name,
+    time: task.tsk_time,
+    date: task.tsk_date,
+    status: task.sts_id,
+    color: task.cat_color,
+    fileName: task.atc_file_name,
+    file: task.atc_file,
+  }
+
+  taskModal.openTask(mappedTask)
+
+  showLateModal.value = false
 }
 
 async function saveTask() {
@@ -500,16 +556,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
-html,
-body {
-  background: var(--bg-main);
-  margin: 0;
-  padding: 0;
-}
-
 .dashboard {
   padding: 40px 80px;
   min-height: 100vh;
+  gap: 20px;
 
   background: var(--bg-main);
 }
@@ -537,8 +587,7 @@ body {
 }
 
 .info-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 60px rgba(37, 99, 235, 0.6);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6);
 }
 
 .info-card span {
@@ -554,7 +603,7 @@ body {
 }
 
 .task-left:hover {
-  box-shadow: 0 20px 60px rgba(243, 156, 18, 0.3);
+  box-shadow: 0 10px 20px rgba(243, 156, 18, 0.3);
 }
 
 .info-card h2 {
@@ -570,11 +619,12 @@ body {
 
 .info-card.late {
   border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
 }
 
 .info-card.late:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(239, 68, 68, 0.6);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.6);
 }
 
 .calendar-container {
@@ -1078,6 +1128,9 @@ body {
   backdrop-filter: blur(20px);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
   transition: all 0.3s ease;
+
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .modal-select option {
@@ -1296,7 +1349,6 @@ body {
   /* Modal za Task */
   .modall {
     max-width: 320px;
-    padding: 12px;
   }
 
   .modal-header h2 {
@@ -1337,7 +1389,6 @@ body {
   .modal {
     max-width: 280px;
     max-height: 50vh;
-    padding: 20px;
     margin: 15px;
     overflow-y: auto;
   }
@@ -1390,5 +1441,42 @@ input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.late-task-item {
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  cursor: pointer;
+}
+
+.headerLateModal {
+  display: flex;
+  align-items: center; /* vertikalno centriranje */
+  justify-content: space-between; /* h2 levo, dugme desno */
+  padding: 0 10px; /* malo prostora sa strane */
+}
+
+.headerLateModal h2 {
+  margin: 0; /* uklanja default margin h2 */
+  font-size: 20px;
+  line-height: 1; /* da ne bi bio veći od dugmeta */
+}
+
+.headerLateModal button {
+  border: 0;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: red;
+  line-height: 1; /* isto kao h2 */
+  padding-bottom: 10px;
+}
+
+.headerLateModal button:hover {
+  transform: scale(1.2);
+  transition: 0.3s;
 }
 </style>
