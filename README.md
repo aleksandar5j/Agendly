@@ -1,44 +1,50 @@
-# agendly-project
+# Agendly
 
-This template should help get you started developing with Vue 3 in Vite.
+## https://577z123.e2.mars-hosting.com
 
-## Recommended IDE Setup
+### Agendly is a modern web application designed to help users efficiently manage their daily tasks, reminders, and schedules in a clean and intuitive way.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 🚀 Features
 
-## Recommended Browser Setup
+✅ Create, edit, and delete tasks
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+⏰ Set reminders for important events
 
-## Customize configuration
+📅 Organize tasks by date and time
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+🔔 Real-time reminder notifications
 
-## Project Setup
+📱 Responsive design for desktop and mobile devices
 
-```sh
+🔐 User authentication system
+
+## 🛠️ Technologies Used
+
+Frontend: Vue 3
+
+Backend: REST API
+
+Database: MySQL
+
+HTTP Client: Axios
+
+Styling: CSS (responsive design)
+
+## ⚙️ Installation
+
+### Make sure you have pnpm installed
+
+npm install -g pnpm
+git clone https://github.com/your-username/agendly.git
+
+### Navigate into the project folder
+
+cd agendly
+
+### Install dependencies
+
 pnpm install
-```
 
-### Compile and Hot-Reload for Development
+### Run the development server
 
-```sh
 pnpm dev
-```
-
-### Compile and Minify for Production
-
-```sh
-pnpm build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
